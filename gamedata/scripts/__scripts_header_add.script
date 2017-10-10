@@ -1,0 +1,35 @@
+-- -*- mode: lua; coding: windows-1251-dos -*-
+-- KRodin (c) 2017
+-- Эта тулза сканирует все скрипты в папке gamedata\\scripts и добавляет в них заголовок, если его нет.
+-- Без него гитхаб считает что это не скрипты на lua, а простые txt. Соотв. не работает подсветка синтаксиса и тд.
+-- Добавил 'file_name', чтобы в консоли выводилось только название файла. (added by Shkiper2012)
+
+local HEADER = "-- -*- mode: lua; coding: windows-1251-dos -*-"
+
+local function process(file, file_name)
+	local f = io.open(file, "r+") 											-- Пытаемся открыть файл в режиме "чтения/записи"
+	if f then
+		local first_line = f:read("*line") 									-- Читаем первую строку из файла
+		if not first_line or not first_line:find(HEADER, 1, true) then 		-- Если заголовка в ней нет
+--			log1("-- Adding header in file: ["..tostring(file).."]") 		-- Здесь будет указан полный путь и название файла (file).
+			log1("-- Adding header in file: ["..tostring(file_name).."]") 	-- Здесь только название файла (file_name).
+			f:seek("set", 0) 												-- Переходим в начало файла
+			local full_file_txt = f:read("*a") 								-- Читаем всё содержимое файла
+			f:seek("set", 0)
+			f:write(HEADER.."\n\n"..full_file_txt) 							-- Дописываем заголовок в самое начало.
+			f:flush() 														-- Сохраняем изменения
+		end
+		f:close() 															-- Закрываем файл
+	end
+end
+
+
+function add_header()
+	local flist = getFS():file_list_open_ex( "$game_scripts$", FS.FS_ListFiles, "*.script" )
+	for i = 0, flist:Size() - 1 do
+		local file  = flist:GetAt( i )
+		local fname = file:NameFull()
+		local full_path = getFS():update_path("$game_scripts$", fname)
+		process(full_path, fname)
+	end
+end
