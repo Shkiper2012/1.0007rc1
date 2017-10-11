@@ -14,7 +14,7 @@ str_container				verbosity_filters; // набор фильтров для вывода регулярных сооб
  u32						verbosity_level = 3;
 
 #define	LOG_TIME_PRECISE
-bool __declspec(dllexport) force_flush_log = true;	// alpet: выставить в true если лог все-же записывается плохо при вылете. Слишком частая запись лога вредит SSD и снижает произволительность.
+bool __declspec(dllexport) force_flush_log = false;	// alpet: выставить в true если лог все-же записывается плохо при вылете. Слишком частая запись лога вредит SSD и снижает произволительность.
 
 #ifdef PROFILE_CRITICAL_SECTIONS
 	static xrCriticalSection	logCS(MUTEX_PROFILE_ID(log));

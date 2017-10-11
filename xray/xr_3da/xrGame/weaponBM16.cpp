@@ -11,20 +11,28 @@ void CWeaponBM16::Load	(LPCSTR section)
 {
 	inherited::Load		(section);
 
-	animGet	(mhud_reload1,	pSettings->r_string(*hud_sect,"anim_reload_1"));
-	animGet	(mhud_shot1,	pSettings->r_string(*hud_sect,"anim_shoot_1"));
-	animGet	(mhud_idle1,		pSettings->r_string(*hud_sect,"anim_idle_1"));
-	animGet	(mhud_idle2,		pSettings->r_string(*hud_sect,"anim_idle_2"));
+	animGet	(mhud_reload1,			pSettings->r_string(*hud_sect,"anim_reload_1"));
+	animGet	(mhud_shot1,			pSettings->r_string(*hud_sect,"anim_shoot_1"));
+	animGet	(mhud_idle1,			pSettings->r_string(*hud_sect,"anim_idle_1"));
+	animGet	(mhud_idle2,			pSettings->r_string(*hud_sect,"anim_idle_2"));
 	animGet	(mhud_zoomed_idle1,		pSettings->r_string(*hud_sect,"anim_zoomed_idle_1"));
 	animGet	(mhud_zoomed_idle2,		pSettings->r_string(*hud_sect,"anim_zoomedidle_2"));
 
-// Real Wolf. 03.08.2014.
+// Real Wolf. 03.08.2014.   (с) НаноБот фикс вылета: если не нашли нужной анимацией для класса БМ16. 26.09.2016
 #if defined(BM16_ANIMS_FIX)
+	LPCSTR anim;
+	anim = READ_IF_EXISTS(pSettings, r_string, *hud_sect, "anim_draw_empty_both", "draw");
+	animGet	(mhud_draw_empty_both, anim);
+	anim = READ_IF_EXISTS(pSettings, r_string, *hud_sect, "anim_draw_empty_right", "draw");
+	animGet	(mhud_draw_empty_right, anim);
+	/*	// DELME_shkiper_marker //	
+		http://www.amk-team.ru/forum/topic/13126-kurilka-programmistov/?page=37#entry1038850
 	LPCSTR anim;
 	anim = pSettings->r_string(*hud_sect, "anim_draw_empty_both");
 	animGet	(mhud_draw_empty_both, anim ? anim : "draw"	);
 	anim = pSettings->r_string(*hud_sect, "anim_draw_empty_right");
 	animGet	(mhud_draw_empty_right, anim ? anim : "draw" );
+	*/
 #endif
 	HUD_SOUND::LoadSound(section, "snd_reload_1", m_sndReload1, m_eSoundShot);
 }

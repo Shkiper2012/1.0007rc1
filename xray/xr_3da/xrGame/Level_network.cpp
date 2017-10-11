@@ -23,7 +23,7 @@ extern bool	g_b_ClearGameCaptions;
 
 void CLevel::remove_objects	()
 {
-	if (!IsGameTypeSingle()) Msg("CLevel::remove_objects - Start");
+	if (!IsGameTypeSingle()) 	Msg("CLevel::remove_objects - Start");
 	BOOL						b_stored = psDeviceFlags.test(rsDisableObjectsAsCrows);
 
 	Game().reset_ui				();
@@ -124,8 +124,8 @@ void CLevel::net_Stop		()
 
 void CLevel::ClientSend()
 {
-	// if (GameID() == GAME_SINGLE || OnClient())
-	if (GameID() != GAME_SINGLE && OnClient())
+	// if (GameID() == GAME_SINGLE || OnClient()) // DELME_shkiper_marker //
+	if (GameID() != GAME_SINGLE && OnClient()) 		// fixed by Shoker //
 	{
 		if ( !net_HasBandwidth() ) return;
 	};

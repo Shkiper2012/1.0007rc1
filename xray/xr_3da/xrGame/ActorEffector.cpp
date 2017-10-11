@@ -104,7 +104,7 @@ void AddEffector(CActor* A, int type, const shared_str& sect_name, float factor)
 
 void RemoveEffector		(CActor* A, int type)
 {
-	A->Cameras().RemoveCamEffector	((ECamEffectorType)type);
+	A->Cameras().RemoveCamEffector		((ECamEffectorType)type);
 	A->Cameras().RemovePPEffector		((EEffectorPPType)type);
 }
 
@@ -169,7 +169,8 @@ BOOL CAnimatorCamEffector::Process (Fvector &p, Fvector &d, Fvector &n, float& f
 
 BOOL CAnimatorCamLerpEffector::Process(Fvector &p, Fvector &d, Fvector &n, float& fFov, float& fFar, float& fAspect)
 {
-	if(!inherited::inherited::Process(p,d,n,fFov,fFar,fAspect))	return FALSE;
+	// if(!inherited::inherited::Process(p,d,n,fFov,fFar,fAspect))	return FALSE; // DELME_shkiper_marker //
+	if(!CEffectorCam::Process(p,d,n,fFov,fFar,fAspect))	return FALSE;
 
 	const Fmatrix& m			= m_objectAnimator->XFORM();
 	m_objectAnimator->Update	(Device.fTimeDelta);

@@ -463,7 +463,7 @@ void CLevel::ProcessGameEvents		()
 				if (parent_id < 0xffff) // откладывать спавн только объектов в контейнеры
 				{
 					if (!spawn_events->available(svT))
-						Msg("* ProcessGameEvents, spawn event postponed. Events rest = %d", game_events->queue.size());					
+						// Msg("* ProcessGameEvents, spawn event postponed. Events rest = %d", game_events->queue.size());					
 					
 					spawn_events->insert(P);					
 					continue;

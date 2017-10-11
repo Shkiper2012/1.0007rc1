@@ -16,6 +16,7 @@
 #include "PHWorld.h"
 extern CPHWorld			*ph_world;
 #endif
+
 CDestroyablePhysicsObject ::CDestroyablePhysicsObject()
 {
 	m_fHealth=1.f;
@@ -25,6 +26,7 @@ CDestroyablePhysicsObject::~CDestroyablePhysicsObject()
 {
 
 }
+
 void CDestroyablePhysicsObject::OnChangeVisual()
 {
 	if (m_pPhysicsShell){
@@ -34,7 +36,8 @@ void CDestroyablePhysicsObject::OnChangeVisual()
 	}
 	inherited::OnChangeVisual();
 }
-CPhysicsShellHolder*	 CDestroyablePhysicsObject ::	PPhysicsShellHolder			()
+
+CPhysicsShellHolder* CDestroyablePhysicsObject::PPhysicsShellHolder()
 {
 	return cast_physics_shell_holder();
 }
@@ -69,7 +72,7 @@ BOOL CDestroyablePhysicsObject::net_Spawn(CSE_Abstract* DC)
 }
 
 //void CDestroyablePhysicsObject::Hit							(float P,Fvector &dir,CObject *who,s16 element,Fvector p_in_object_space, float impulse,  ALife::EHitType hit_type)
-void	CDestroyablePhysicsObject::Hit					(SHit* pHDS)
+void CDestroyablePhysicsObject::Hit(SHit* pHDS)
 {
 	SHit	HDS = *pHDS;
 	callback(GameObject::eHit)(
@@ -97,8 +100,8 @@ void CDestroyablePhysicsObject::Destroy()
 {
 	VERIFY(!ph_world->Processing());
 	const CGameObject *who_object = smart_cast<const CGameObject*>(FatalHit().initiator());
-	// callback(GameObject::eDeath)(lua_game_object(),who_object  ? who_object : 0);
-	callback(GameObject::eDeath)(lua_game_object(), who_object ? (who_object->lua_game_object()) : 0); // https://github.com/OpenXRay/xray-16/commit/32005e8e253ff084469ca19e405de2b2a35c4c90	
+// 	callback(GameObject::eDeath)(lua_game_object(), who_object ? who_object : 0); // DELME_shkiper_marker //
+	callback(GameObject::eDeath)(lua_game_object(), who_object ? (who_object->lua_game_object()) : 0); // fixed by Alundaio //
 	CPHDestroyable::Destroy(ID(),"physic_destroyable_object");
 	if(m_destroy_sound._handle())
 	{

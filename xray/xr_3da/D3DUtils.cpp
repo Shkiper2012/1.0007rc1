@@ -147,7 +147,7 @@ void CDrawUtilities::UpdateGrid(int number_of_cell, float square_size, int subdi
 	left.p.y = right.p.y = 0;
 
 	for(int thin=0; thin<2; thin++){
-		for(int i=-m_GridCounts[0]; i<=m_GridCounts[0]; i++){
+		for(int i=-m_GridCounts[0]; i<=m_GridCounts[0]; ++i){
 			if( (!!thin) != !!(i%m_GridSubDiv[0]) ){
 				left.p.z = -m_GridCounts[1]*m_GridStep.y;
 				right.p.z = m_GridCounts[1]*m_GridStep.y;
@@ -159,7 +159,7 @@ void CDrawUtilities::UpdateGrid(int number_of_cell, float square_size, int subdi
 				m_GridPoints.push_back( right );
 			}
 		}
-		for(i=-m_GridCounts[1]; i<=m_GridCounts[1]; i++){
+		for(int i=-m_GridCounts[1]; i<=m_GridCounts[1]; ++i){
 			if( (!!thin) != !!(i%m_GridSubDiv[1]) ){
 				left.p.x = -m_GridCounts[0]*m_GridStep.x;
 				right.p.x = m_GridCounts[0]*m_GridStep.x;
@@ -189,7 +189,7 @@ void CDrawUtilities::OnDeviceCreate()
 	m_WireSpherePart.CreateFromData	(D3DPT_LINELIST,	DU_SPHERE_PART_NUMLINES,D3DFVF_XYZ|D3DFVF_DIFFUSE,du_sphere_part_vertices,	DU_SPHERE_PART_NUMVERTEX,	du_sphere_part_lines,	DU_SPHERE_PART_NUMLINES*2);
     m_WireCylinder.CreateFromData	(D3DPT_LINELIST,	DU_CYLINDER_NUMLINES,	D3DFVF_XYZ|D3DFVF_DIFFUSE,du_cylinder_vertices,	DU_CYLINDER_NUMVERTEX,		du_cylinder_lines,		DU_CYLINDER_NUMLINES*2);
 
-	for(int i=0;i<LINE_DIVISION;i++){                                
+	for(int i=0; i<LINE_DIVISION; ++i ){                                
 		float angle = M_PI * 2.f * (i / (float)LINE_DIVISION);
         float _sa=_sin(angle), _ca=_cos(angle);
 		circledef1[i].x = _ca;
@@ -205,7 +205,7 @@ void CDrawUtilities::OnDeviceCreate()
     // initialize identity box
 	Fbox bb;
 	bb.set(-0.505f,-0.505f,-0.505f, 0.505f,0.505f,0.505f);
-	for (i=0; i<8; i++){
+	for(int i=0; i<8; ++i ){
     	Fvector S;
     	Fvector p;
         bb.getpoint(i,p);
