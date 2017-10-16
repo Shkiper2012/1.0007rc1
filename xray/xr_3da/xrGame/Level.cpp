@@ -43,6 +43,7 @@
 #include "MainMenu.h"
 #include "..\XR_IOConsole.h"
 #include <functional>  // добавлено alpet для успешной сборки в VS 2013
+#include "../../../build_config_defines.h" // for: SPAWN_ANTIFREEZE
 
 #ifdef DEBUG
 #	include "level_debug.h"
@@ -448,7 +449,7 @@ void CLevel::ProcessGameEvents		()
 		{
 			u16 ID,dest,type;
 			game_events->get	(ID,dest,type,P);		
-#ifdef   SPAWN_ANTIFREEZE
+#ifdef SPAWN_ANTIFREEZE
 			// не отправлять события не заспавненным объектам
 			if (g_bootComplete && M_EVENT == ID && PostponedSpawn(dest))
 			{

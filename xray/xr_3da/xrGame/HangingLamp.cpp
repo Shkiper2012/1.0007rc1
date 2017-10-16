@@ -12,6 +12,8 @@
 #include "script_game_object.h"
 #include "alife_simulator.h"
 #include "alife_object_registry.h"
+#include "../../../build_config_defines.h" // for: HLAMP_AFFECT_IMMUNITIES
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////

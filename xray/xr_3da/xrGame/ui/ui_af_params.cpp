@@ -6,6 +6,7 @@
 #include "../Actor.h"
 #include "../ActorCondition.h"
 #include "UIXmlInit.h"
+#include "../../../../build_config_defines.h" // for: AF_SHOW_DYNAMIC_PARAMS
 
 CUIArtefactParams::CUIArtefactParams()
 {
@@ -158,7 +159,8 @@ void CUIArtefactParams::SetInfo(CGameObject *obj)
 			_color = (_val>0)?"%c[red]":"%c[green]";
 
 
-		sprintf_s					(	_buff, "%s %s %+.0f %s", 
+//		sprintf_s					(	_buff, "%s %s %+.0f %s", 		// original //
+		sprintf_s					(	_buff, "%s %s %+.2f %s", 		// ADD_shkiper_marker //
 									CStringTable().translate(af_item_param_names[i]).c_str(), 
 									_color, 
 									_val, 

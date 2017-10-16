@@ -11,6 +11,7 @@
 #include "inventory_space.h"
 #include "hit_immunity.h"
 #include "attachable_item.h"
+#include "../../../build_config_defines.h" // for: INV_NEW_SLOTS_SYSTEM
 
 class CUIInventoryCellItem;
 

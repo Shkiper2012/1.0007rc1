@@ -13,6 +13,7 @@
 #include "UIMotionIcon.h"
 #include "../hudsound.h"
 #include "../script_export_space.h"
+#include "../../../../build_config_defines.h" // for: SCRIPT_ICONS_CONTROL
 
 //для режима настройки HUD
 extern int				g_bHudAdjustMode;
@@ -44,7 +45,7 @@ public:
 
 protected:
 
-	CUIStatic			UIStaticDiskIO;
+//	CUIStatic			UIStaticDiskIO;	// COMMENT_shkiper_marker //
 	CUIStatic			UIStaticHealth;
 	CUIStatic			UIStaticArmor;
 	CUIStatic			UIStaticQuickHelp;

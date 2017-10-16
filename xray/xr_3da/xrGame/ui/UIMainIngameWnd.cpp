@@ -42,6 +42,7 @@
 #include "UIArtefactPanel.h"
 #include "UIMap.h"
 #include <functional>  // добавлено alpet для успешной сборки в VS 2013
+#include "../../../../build_config_defines.h" // for: SCRIPT_ICONS_CONTROL
 
 #ifdef DEBUG
 #	include "../attachable_item.h"
@@ -180,7 +181,6 @@ void CUIMainIngameWnd::Init()
 
 	Enable(false);
 
-
 	AttachChild					(&UIStaticHealth);
 	xml_init.InitStatic			(uiXml, "static_health", 0, &UIStaticHealth);
 
@@ -233,8 +233,6 @@ void CUIMainIngameWnd::Init()
 	UIStaticArmor.AttachChild	(&UIArmorBar);
 //.	xml_init.InitAutoStaticGroup(uiXml,"static_armor", &UIStaticArmor);
 	xml_init.InitProgressBar	(uiXml, "progress_bar_armor", 0, &UIArmorBar);
-
-	
 
 	// Подсказки, которые возникают при наведении прицела на объект
 	AttachChild					(&UIStaticQuickHelp);
@@ -324,33 +322,39 @@ void CUIMainIngameWnd::Init()
 		this->AttachChild					(m_artefactPanel);	
 	}
 
+	// COMMENT_shkiper_marker //
+	/*
 	AttachChild								(&UIStaticDiskIO);
 	UIStaticDiskIO.SetWndRect				(1000,750,16,16);
 	UIStaticDiskIO.GetUIStaticItem().SetRect(0,0,16,16);
 	UIStaticDiskIO.InitTexture				("ui\\ui_disk_io");
 	UIStaticDiskIO.SetOriginalRect			(0,0,32,32);
 	UIStaticDiskIO.SetStretchTexture		(TRUE);
-		
+	*/
 
 	HUD_SOUND::LoadSound					("maingame_ui", "snd_new_contact"		, m_contactSnd		, SOUND_TYPE_IDLE);
 }
 
-float UIStaticDiskIO_start_time = 0.0f;
+// float UIStaticDiskIO_start_time = 0.0f;
 void CUIMainIngameWnd::Draw()
 {
 #ifdef DEBUG
 	test_draw				();
 #endif
-	// show IO icon
+
+	// show IO icon // COMMENT_shkiper_marker //
+	/*
 	bool IOActive	= (FS.dwOpenCounter>0);
 	if	(IOActive)	UIStaticDiskIO_start_time = Device.fTimeGlobal;
 
-	if ((UIStaticDiskIO_start_time+1.0f) < Device.fTimeGlobal)	UIStaticDiskIO.Show(false); 
-	else {
+	if( (UIStaticDiskIO_start_time+1.0f) < Device.fTimeGlobal ){
+		UIStaticDiskIO.Show(false); 
+	}else{
 		u32		alpha			= clampr(iFloor(255.f*(1.f-(Device.fTimeGlobal-UIStaticDiskIO_start_time)/1.f)),0,255);
 		UIStaticDiskIO.Show		( true  ); 
 		UIStaticDiskIO.SetColor	(color_rgba(255,255,255,alpha));
 	}
+	*/
 	FS.dwOpenCounter = 0;
 
 	if(!IsGameTypeSingle())
@@ -377,7 +381,7 @@ void CUIMainIngameWnd::Draw()
 }
 
 
-void CUIMainIngameWnd::SetMPChatLog(CUIWindow* pChat, CUIWindow* pLog){
+void CUIMainIngameWnd::SetMPChatLog(CUIWindow* pChat, CUIWindow* pLog){ 	// INFO_shkiper_marker // for_MP //
 	m_pMPChatWnd = pChat;
 	m_pMPLogWnd  = pLog;
 }
@@ -1543,3 +1547,4 @@ void CUIMainIngameWnd::draw_adjust_mode()
 	}
 }
 #endif
+

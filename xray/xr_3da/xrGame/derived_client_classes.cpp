@@ -17,6 +17,8 @@
 #include "ui/UIDialogWnd.h"
 #include "ui/UIInventoryWnd.h"
 #include "../lua_tools.h"
+#include "../../../build_config_defines.h" // for: INV_NEW_SLOTS_SYSTEM
+
 
 /* Декларация о стиле экспорта свойств и методов:
      * Свойства объектов экспортируются по возможности так, как они выглядят в файлах конфигурации (*.ltx), а не так как они названы в исходниках движка
@@ -104,7 +106,7 @@ void CEatableItemScript::script_register(lua_State *L)
 			.def_readwrite("eat_max_power"				,			&CEatableItem::m_fMaxPowerUpInfluence)
 			.def_readwrite("wounds_heal_perc"			,			&CEatableItem::m_fWoundsHealPerc)
 			.def_readwrite("eat_portions_num"			,			&CEatableItem::m_iPortionsNum)
-			.def_readwrite("eat_start_portions_num"		,			&CEatableItem::m_iStartPortionsNum)			
+			.def_readwrite("eat_start_portions_num"		,			&CEatableItem::m_iStartPortionsNum)			// fixed by Карлан //
 			,
 			class_<CEatableItemObject, bases<CEatableItem, CGameObject>>("CEatableItemObject")
 		];
@@ -376,9 +378,6 @@ void CWeaponScript::set_hit_power(CWeapon *wpn, luabind::object const& t)
 
 void CWeaponScript::script_register(lua_State *L)
 {
-#ifdef NLC_EXTENSIONS
-	attach_upgrades (L);
-#endif
 	module(L)
 		[
 			class_<CWeaponHUD>("CWeaponHUD")

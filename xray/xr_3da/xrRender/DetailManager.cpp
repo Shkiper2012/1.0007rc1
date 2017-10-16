@@ -19,6 +19,7 @@
 #	include "..\igame_persistent.h"
 #	include "..\environment.h"
 #endif
+#include "../../../build_config_defines.h" // for: ECO_RENDER
 
 const float dbgOffset			= 0.f;
 const int	dbgItems			= 128;

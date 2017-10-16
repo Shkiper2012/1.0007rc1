@@ -53,7 +53,8 @@ void CScriptGameObject::explode	(u32 level_time)
 	else {
 		Fvector normal;
 		explosive->FindNormal(normal);
-		explosive->SetInitiator(object().ID());
+		// explosive->SetInitiator(object().ID());			// DELME_shkiper_marker //
+		explosive->SetInitiator(explosive->Initiator()); 	// устанавливаем инициатор только если он неизвестен. // by NanoBot //
 		explosive->GenExplodeEvent(object().Position(), normal);
 	}
 }

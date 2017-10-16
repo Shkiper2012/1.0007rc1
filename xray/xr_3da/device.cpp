@@ -306,8 +306,8 @@ void CRenderDevice::Run			()
 					u32 time_diff = frame_timer.GetElapsed_ms();
 					if (time_diff < optimal)   // если более 100 кадров в секунду, как в меню например
 					{
-						SleepEx(1, (optimal - time_diff) > 10);	   // попытка обойти разно-платформные особенности	 
-						Statistic->RenderTOTAL.cycles++;      // idle cycles count
+						SleepEx(1, (optimal - time_diff) > 10);	   	// попытка обойти разно-платформные особенности	 
+						Statistic->RenderTOTAL.cycles++;      		// idle cycles count
 					}
 				}				
 #else

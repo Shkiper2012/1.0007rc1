@@ -1220,6 +1220,10 @@ void CWeaponMagazined::OnH_A_Chield()
 
 void CWeaponMagazined::SetQueueSize(int size)
 {
+	if( size < WEAPON_ININITE_QUEUE ) // by NanoBot //
+		size = WEAPON_ININITE_QUEUE;
+	
+	
 	m_iQueueSize = size;
 	if (m_iQueueSize == -1)
 		strcpy_s(m_sCurFireMode, " (A)");

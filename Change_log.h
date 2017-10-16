@@ -1,4 +1,4 @@
-#ifndef Changes_log
+#ifndef Change_log
 
 	/*		30_09_2017
 			-----------------------------------------------------------------------------------------------------------------------
@@ -101,7 +101,6 @@
 			-----------------------------------------------------------------------------------------------------------------------
 	(+)		xr_3da\device.cpp 					---> #pragma warning(push) и (pop)
 	(+)		libtheora\lib\analyze.c 			---> ... = {0, 0}; 					// CHANGE_shkiper_marker // 02_10_2017 // fixed C4132 //
-	(+)		libtheora\lib\mcenc.c 				---> #pragma warning(disable:4127) 	// CHANGE_shkiper_marker // 02_10_2017 // fixed C4132 //
 	(+)		libtheora\lib\x86_vc\mmxencfrag.c 	---> ret --> ret1 и ret2 			// CHANGE_shkiper_marker // 02_10_2017 // fixed C4405 //
 			-----------------------------------------------------------------------------------------------------------------------
 	(~)		Переименовал проект 'libvorbisfile' в 'libvorbisfile_static'. Всё равно используется только статическая либа.
@@ -144,7 +143,7 @@
 	(/)		#pragma todo
 	(/)		#pragma message
 	(=)		// fixed warnings and errors //
-	(+)		task_manager.script 		---> из репо KRodinn ---> чтобы не вылетало из-за диалогов.
+	(+)		task_manager.script 		---> из репо KRodinn [НС2016] ---> чтобы не вылетало из-за диалогов.
 	*/
 	
 	/* 		07_10_2017
@@ -153,19 +152,19 @@
 	*/
 	
 	/* 		09_10_2017
-	(+)		xrCore\xrCore.cpp ---> CoUninitialize();
-	(-)		xrCore\xrCore.cpp ---> CoInitializeEx	(NULL, COINIT_MULTITHREADED);
+	(+)		xrCore\xrCore.cpp 						---> CoUninitialize();
+	(-)		xrCore\xrCore.cpp 						---> CoInitializeEx	(NULL, COINIT_MULTITHREADED);
 	(=)		xrGame\hit_memory_manager.cpp   		---> Исправление неправильной загрузки памяти нпс: revolucas/CoC-Xray@01e05b0
 	(=)		xrGame\sound_memory_manager.cpp 		---> Исправление неправильной загрузки памяти нпс: revolucas/CoC-Xray@01e05b0
 	(=)		xrGame\visual_memory_manager.cpp 		---> Исправление неправильной загрузки памяти нпс: revolucas/CoC-Xray@01e05b0
 	(=)		xrGame\DestroyablePhysicsObject.cpp 	---> who_object ? (who_object->lua_game_object()) : 0 	// fixed by Alundaio //
-	(=)		gamedata\config\misc\task_manager.ltx 	---> Ошибки в конфиге task_manager'a ---> запятые 		// fixed by KRodin //
+	(=)		gamedata\config\misc\task_manager.ltx 	---> Ошибки в конфиге task_manager.ltx ---> запятые 		// fixed by KRodin //
 	(=)		xrGame\ui\uiabstract.h 					---> SetTextureVisible(bool vis)	{m_bTextureVisible = vis;}
-	(+)		xr_3da\xrGame\Weapon.cpp 				---> ONE_CLICK_ZOOM // Зум в один клик. Теперь не нужно удерживать клавишу прицеливания.
+	(+)		xr_3da\xrGame\Weapon.cpp 				---> ONE_CLICK_ZOOM // Зум в один клик. Теперь не нужно удерживать клавишу прицеливания. //
 	*/
 	
 	/* 		10_10_2017
-	(=)		xrCore\_cylinder.h 					--->  _valid(c.m_radius); // by OpenXRay //
+	(=)		xrCore\_cylinder.h 					---> _valid(c.m_radius); // by OpenXRay //
 	(=)		xrGame\ActorEffector.cpp 			---> OpenXRay/xray-16@741031c
 	(=)		xrGame\ai\stalker\ai_stalker.cpp 	---> OpenXRay/xray-16@741031c
 	(/)		xr_3da\xrGame\shared_data.h 		---> Log("DestroySingleton::RefCounter:",_refcount);
@@ -175,15 +174,46 @@
 	(=)		xrGame\derived_client_classes.cpp 	---> ("eat_start_portions_num", &CEatableItem::m_iStartPortionsNum) // by Карлан //
 	(=)		xrRender\WallmarksEngine.cpp 		---> Правка на 100% появление бладмарков // by SkyLoader //
 	*/
-
+	
+	/* 		11_10_2017
+	(=)		xrGame\CustomMonster.h 			---> protected: // fixed by Alundaio //
+	(=)		xrGame\entity_alive.h 			---> protected: // fixed by Alundaio //
+	(=)		xrGame\ActorEffector.h 			---> protected: // fixed by Alundaio //
+	(=)		xrGame\script_game_object2.cpp 	---> устанавливаем инициатор только если он неизвестен. // by NanoBot //
+	(=)		xr_3da\xrSheduler.cpp 			---> "../../build_config_defines.h" // fixed by KRodin: добавил забытый инклуд //
+	(-)		xrGame\derived_client_classes.cpp 	---> NLC_EXTENSIONS
+	(+)		xrGame\WeaponMagazined.h 			---> // by NanoBot //
+	======= build 6824 =======		
+	*/
+	
+	/*		13_10_2017
+	(+)		xrGame\ui\ui_af_params.cpp 			--->  %+.2f ---> для артефактов.
+	(/)		xrGame\alife_simulator_base.cpp 	---> Msg("#SE_DBG: CALifeSimulatorBase '%s' ->m_objects = 0x%p ",
+	(/)		xrGame\ui\uiinventorywnd2.cpp		---> Bad slot
+	(+)		xrGame\inventory_item.h 			---> ../build_config_defines.h
+	(+)		xrGame\inventory_item.cpp 			---> ../build_config_defines.h
+	(+)		xrGame\ui\UIInventoryWnd.h 			---> ../build_config_defines.h
+	(+)		xrGame\ui\UIInventoryWnd3.cpp 		---> ../build_config_defines.h
+	(/)		xrGame\ui\UIMainIngameWnd.h 		---> ui_disk_io ---> убрал с худа мигающую иконку дискеты.
+	(/)		xrGame\ui\UIMainIngameWnd.cpp 		---> ui_disk_io ---> убрал с худа мигающую иконку дискеты.
+	(+)		xrGame\console_commands.cpp 		---> Показать гл.меню если нет сохранения. ---> MainMenu()->Activate(true);
+	======= build 6825 (не удачный, вылетает из-за новых слотов) =======
+	*/
+	
+	/*		16_10_2017
+			Отключил: INV_NEW_SLOTS_SYSTEM, INV_NO_ACTIVATE_APPARATUS_SLOT, INV_MOVE_ITM_INTO_QUICK_SLOTS.
+			xrGame\xrServer_process_event_ownership.cpp 	---> #ifdef DEBUG "sv !ownership ... " #endif
+	======= build 6828 =======
+	*/
+	
 #endif
 
-#ifndef Shkiper_Marker's
+#ifndef Legend & Shkiper_Marker's
 	// UNKNOW_shkiper_marker // 	-  (?)  - узнать, что это, для чего, как используется, если используется.
 	// TODO_shkiper_marker // 		-  (#)  - (нужно/желательно) сделать!
 	// WIP_shkiper_marker //		-  (@)  - делаю сейчас!
 	// ADD_shkiper_marker // 		-  (+)  - добавлено
-	// DELME_shkiper_marker //  	-  (-)  - (можно/нужно) удалить!
+	// DELME_shkiper_marker //  	-  (-)  - уже удалено! или (можно/нужно) удалить!
 	// CHANGE_shkiper_marker //  	-  (~)  - изменено
 	// BUG_FIX_shkiper_marker //  	-  (=)  - пофикшено
 	// FIXME_shkiper_marker //  	-  (!)  - !!!Нужно исправить!!!
@@ -191,5 +221,5 @@
 	// COMMENT_shkiper_marker //  	-  (/) 	- закомментировал.
  	// >>> ---> -- начало куска кода/сообщения -- >>> begin >>>
  	// <<< <--- --  конец куска кода/сообщения -- <<< end <<<
-	// Формат даты изменения: 	00_00_000
+	// Формат даты изменения: 	00_00_0000
 #endif

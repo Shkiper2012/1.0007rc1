@@ -22,6 +22,7 @@
 #include "string_table.h"
 #include "../igame_persistent.h"
 #include "script_vars_storage.h"
+#include "../../../build_config_defines.h"	// for: SCRIPT_VARS_STORAGE
 
 using namespace ALife;
 

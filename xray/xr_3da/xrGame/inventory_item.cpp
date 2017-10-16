@@ -23,6 +23,7 @@
 #include "object_broker.h"
 #include "../igame_persistent.h"
 #include "eatable_item.h"
+#include "../../../build_config_defines.h" // for: INV_NEW_SLOTS_SYSTEM
 
 #ifdef DEBUG
 #	include "debug_renderer.h"

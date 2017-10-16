@@ -11,7 +11,7 @@ private:
 public:
 					CWeaponCustomPistol	(LPCSTR name);
 	virtual			~CWeaponCustomPistol();
-	virtual	int		GetCurrentFireMode	() { return 1; };
+	// virtual	int		GetCurrentFireMode	() { return 1; }; // by NanoBot // DELME_shkiper_marker //
 protected:
 	virtual void	FireEnd				();
 	virtual void	switch2_Fire		();

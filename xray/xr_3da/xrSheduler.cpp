@@ -2,6 +2,7 @@
 #include "xrSheduler.h"
 #include "xr_object.h"
 #include <mmsystem.h>
+#include "../../build_config_defines.h" // for: ECO_RENDER, LUAICP_COMPAT
 
 //#define DEBUG_SCHEDULER
 
@@ -284,7 +285,8 @@ void CSheduler::ProcessStep			()
 	// Normal priority
 	u32		dwTime					= Device.dwTimeGlobal;
 	CTimer							eTimer;	
-	for (int i=0;!Items.empty() && Top().dwTimeForExecute < dwTime; ++i) {
+	for (int i=0;!Items.empty() && Top().dwTimeForExecute < dwTime; ++i)
+	{
 		u32		delta_ms			= dwTime - Top().dwTimeForExecute;
 
 		// Update
@@ -301,7 +303,8 @@ void CSheduler::ProcessStep			()
 			condition				= (NULL==T.Object || !T.Object->shedule_Needed());
 #ifndef DEBUG
 		}
-		__except(EXCEPTION_EXECUTE_HANDLER) {
+		__except(EXCEPTION_EXECUTE_HANDLER)
+		{
 			Msg						("Scheduler tried to update object %s",*T.scheduled_name);
 			FlushLog				();
 			T.Object				= 0;
@@ -378,14 +381,14 @@ void CSheduler::ProcessStep			()
 #endif
 #ifndef DEBUG
 		}
-		__except(EXCEPTION_EXECUTE_HANDLER) {
+		__except(EXCEPTION_EXECUTE_HANDLER)
+		{
 			Msg						("Scheduler tried to update object %s",*T.scheduled_name);
 			FlushLog				();
 			T.Object				= 0;
 			continue;
 		}
 #endif // DEBUG
-
 		// 
 		if ((i % 3) != (3 - 1))
 			continue;
@@ -471,7 +474,6 @@ void CSheduler::Update				()
 	{
 		Msg("# Sheduler Items.size = %5d, ItemsRT.size = %5d ", Items.size(), ItemsRT.size());
 	}
-
 #else
 	clamp							(psShedulerTarget,3.f,66.f);
 #endif
