@@ -5,11 +5,12 @@
 #include "stdafx.h"
 #pragma hdrstop
 
+#pragma warning(push)
 #pragma warning(disable:4995)
 #include <direct.h>
 #include <fcntl.h>
 #include <sys\stat.h>
-#pragma warning(default:4995)
+#pragma warning(pop)
 
 #include "FS_internal.h"
 #include "stream_reader.h"
@@ -163,7 +164,7 @@ XRCORE_API void _dump_open_files(int mode)
 					Log("----opened files");
 
 				bShow = true;
-				Msg("[%d] fname:%s", _of._used ,_of._fn.c_str());
+				Msg(" [%d] fname:%s", _of._used ,_of._fn.c_str());
 			}
 		}
 	}else
@@ -173,7 +174,7 @@ XRCORE_API void _dump_open_files(int mode)
 		{
 			_open_file& _of = *it;
 			if(_of._reader==NULL)
-				Msg("[%d] fname:%s", _of._used ,_of._fn.c_str());
+				Msg(" [%d] fname:%s", _of._used ,_of._fn.c_str());
 		}
 	}
 	if(bShow)
@@ -299,7 +300,7 @@ void CLocatorAPI::ProcessArchive(LPCSTR _path, LPCSTR base_path)
 	// find existing archive
 	if (strstr(_path, "gamedata\\") || strstr(_path, "bin\\")) 
 	{
-		Msg("CLocatorAPI::ProcessArchive ignoring file %s", _path); // добавлено alpet: предотвращает exception при распакованной gamedata
+		Msg(" CLocatorAPI::ProcessArchive ignoring file %s", _path); // добавлено alpet: предотвращает exception при распакованной gamedata
 		return;
 	}
 	
@@ -327,7 +328,7 @@ void CLocatorAPI::ProcessArchive(LPCSTR _path, LPCSTR base_path)
 	R_ASSERT							(A.hSrcMap!=INVALID_HANDLE_VALUE);
 	A.size			= GetFileSize		(A.hSrcFile,0);
 	R_ASSERT							(A.size>0);
-	Msg("CLocatorAPI::ProcessArchive, path = %s ", *path);
+	Msg("* CLocatorAPI::ProcessArchive, path = %s ", *path);
 	// Create base path
 	string_path			base;
 	if(!base_path)
@@ -511,8 +512,6 @@ bool CLocatorAPI::Recurse		(const char* path)
     return true;
 }
 
-
-
 void CLocatorAPI::_initialize	(u32 flags, LPCSTR target_folder, LPCSTR fs_name)
 {
 	char _delimiter = '|'; //','
@@ -541,8 +540,8 @@ void CLocatorAPI::_initialize	(u32 flags, LPCSTR target_folder, LPCSTR fs_name)
 		append_path	("$fs_root$", "", 0, FALSE);
 	else
 	{ //find nearest fs.ltx and set fs_root correctly
-		fs_ltx					= (fs_name && fs_name[0])?fs_name:FSLTX;
-		pFSltx						= r_open(fs_ltx); 
+		fs_ltx		= (fs_name && fs_name[0])?fs_name:FSLTX;
+		pFSltx		= r_open(fs_ltx); 
 		
 		if (!pFSltx && m_Flags.is(flScanAppRoot) )
 			pFSltx			= r_open("$app_root$",fs_ltx); 
@@ -561,7 +560,7 @@ void CLocatorAPI::_initialize	(u32 flags, LPCSTR target_folder, LPCSTR fs_name)
 			}else
 				append_path				("$fs_root$", "", 0, FALSE);
 
-			pFSltx							= r_open("$fs_root$",fs_ltx); 
+			pFSltx						= r_open("$fs_root$",fs_ltx); 
 		}
 		 else
 			append_path					("$fs_root$", "", 0, FALSE);
@@ -676,8 +675,8 @@ void CLocatorAPI::_initialize	(u32 flags, LPCSTR target_folder, LPCSTR fs_name)
 	{
 		string1024				c_newAppPathRoot;
 		sscanf					(strstr(Core.Params,"-overlaypath ")+13,"%[^ ] ",c_newAppPathRoot);
-		FS_Path* pLogsPath = FS.get_path("$logs$");
-		FS_Path* pAppdataPath = FS.get_path("$app_data_root$");
+		FS_Path* pLogsPath 		= FS.get_path("$logs$");
+		FS_Path* pAppdataPath 	= FS.get_path("$app_data_root$");
 
 		if (pLogsPath) pLogsPath->_set_root(c_newAppPathRoot);
 		if (pAppdataPath) 
@@ -806,7 +805,7 @@ xr_vector<char*>* CLocatorAPI::file_list_open			(const char* _path, u32 flags)
 	return dest;
 }
 
-void	CLocatorAPI::file_list_close	(xr_vector<char*>* &lst)
+void CLocatorAPI::file_list_close	(xr_vector<char*>* &lst)
 {
 	if (lst) 
 	{
@@ -1133,7 +1132,7 @@ bool CLocatorAPI::check_for_file	(LPCSTR path, LPCSTR _fname, string_path& fname
 	files_it				I = files.find(desc_f);
 	if (I == files.end())
 	{
-		Msg("!WARNING: CLocatorAPI::check_for_file not found file %s in files list (size = %d) ", desc_f.name, files.size () );		
+		Msg("! WARNING: CLocatorAPI::check_for_file not found file %s in files list (size = %d) ", desc_f.name, files.size () );		
 		return				(false);
 	}
 		
@@ -1416,7 +1415,7 @@ void CLocatorAPI::set_file_age(LPCSTR nm, u32 age)
     tm.modtime	= age;
     int res 	= _utime(nm,&tm);
     if (0!=res){
-    	Msg			("!Can't set file age: '%s'. Error: '%s'",nm,_sys_errlist[errno]);
+    	Msg			("! Can't set file age: '%s'. Error: '%s'", nm, _sys_errlist[errno] );
     }else{
         // update record
         files_it I 		= file_find_it(nm);
@@ -1548,7 +1547,7 @@ void CLocatorAPI::ProcessExternalArch()
 		Msg					("--found external arch %s",(*it).name.c_str());
 		update_path			(full_mod_name,"$mod_dir$",(*it).name.c_str());
 
-		FS_Path* pFSRoot		= FS.get_path("$fs_root$");
+		FS_Path* pFSRoot	= FS.get_path("$fs_root$");
 		
 		strconcat			(sizeof(_path), _path, pFSRoot->m_Path, "gamedata");
 

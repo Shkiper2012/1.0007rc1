@@ -1072,16 +1072,10 @@ bool CInventory::CanPutInSlot(PIItem pIItem) const
 
 	if( !GetOwner()->CanPutInSlot(pIItem, pIItem->GetSlot() ) ) return false;
 
-	// DELME_shkiper_marker // Чтобы не было строки в выпадающем списке с действиями "Перенести в слот", когда предмет итак уже в слоте. //
-	/*
-	if(pIItem->GetSlot() < m_slots.size() && 
-	  ( m_slots[pIItem->GetSlot()].m_pIItem == NULL || 
-	    m_slots[pIItem->GetSlot()].m_pIItem == pIItem ) ) // alpet: бывает странная ситуация, когда предмет сразу и в слоте, и в инвентаре
+	if( pIItem->GetSlot() < m_slots.size() && 
+	  ( m_slots[pIItem->GetSlot()].m_pIItem == NULL ) ) // alpet: бывает странная ситуация, когда предмет сразу и в слоте, и в инвентаре
 		return true;
-	*/
-	if( pIItem->GetSlot() < m_slots.size() && (m_slots[pIItem->GetSlot()].m_pIItem == NULL) ){ 
-		return true;
-	}
+
 	return false;
 }
 //проверяет можем ли поместить вещь на пояс,

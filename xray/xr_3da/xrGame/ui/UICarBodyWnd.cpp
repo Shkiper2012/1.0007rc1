@@ -25,6 +25,12 @@
 #include "../script_callback_ex.h"
 #include "../script_game_object.h"
 #include "../BottleItem.h"
+#include "../../../../build_config_defines.h" // for: HIDE_WEAPON_IN_INV
+#ifdef HIDE_WEAPON_IN_INV
+#	include "../actor.h"
+#	include "../smart_cast.h"
+#	include "../level.h"
+#endif
 
 #define				CAR_BODY_XML		"carbody_new.xml"
 #define				CARBODY_ITEM_XML	"carbody_item.xml"
@@ -232,6 +238,17 @@ void CUICarBodyWnd::Hide()
 	inherited::Hide								();
 	if(m_pInventoryBox)
 		m_pInventoryBox->m_in_use				= false;
+
+	// Покажем/достанем предмет в руках, когда после обыска тело/ящик. // by Shkiper2012 //
+#ifdef HIDE_WEAPON_IN_INV
+	if( IsGameTypeSingle() )
+	{
+		CActor* pAct = smart_cast<CActor*>(Level().CurrentEntity());
+		if( pAct ){
+			pAct->SetWeaponHideState(INV_STATE_BLOCK_ALL, false);		
+		}
+	}	
+#endif
 }
 
 void CUICarBodyWnd::UpdateLists()
@@ -313,7 +330,6 @@ void CUICarBodyWnd::Draw()
 	inherited::Draw	();
 }
 
-
 void CUICarBodyWnd::Update()
 {
 	if(	m_b_need_update||
@@ -330,13 +346,23 @@ void CUICarBodyWnd::Update()
 	inherited::Update();
 }
 
-
 void CUICarBodyWnd::Show() 
 { 
 	InventoryUtilities::SendInfoToActor		("ui_car_body");
 	inherited::Show							();
 	SetCurrentItem							(NULL);
 	InventoryUtilities::UpdateWeight		(*m_pUIOurBagWnd);
+	
+	// Прячем предмет в руках, когда обыскиваем тело/ящик. // by Shkiper2012 //
+#ifdef HIDE_WEAPON_IN_INV
+	if( IsGameTypeSingle() )
+	{
+		CActor* pAct = smart_cast<CActor*>(Level().CurrentEntity());
+		if( pAct ){
+			pAct->SetWeaponHideState(INV_STATE_BLOCK_ALL, true);		
+		}
+	}
+#endif
 }
 
 void CUICarBodyWnd::DisableAll()

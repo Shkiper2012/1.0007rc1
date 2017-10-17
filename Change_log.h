@@ -25,7 +25,7 @@
 			-----------------------------------------------------------------------------------------------------------------------
 	(+) 	SoundRender_Source_loader.cpp 	---> При отсутствии звукового файла будет сообщение в консоли. 	// by Zagolski //
 	(=)		actor_statistic_mgr.cpp 		---> Исправление учета статистики 								// by lvg_brest //
-	(=)		HangingLamp.cpp 				---> if(!PPhysicsShell()) 	// Очень странный вылет 			// by SkyLoader //	
+	(=)		HangingLamp.cpp 				---> if(!PPhysicsShell()) 			// Очень странный вылет 	// by SkyLoader //	
 	(+)		UIInventoryWnd.cpp 				---> #define HIDE_WEAPON_IN_INV 	// Спрячем/показываем предмет в руках, когда откр./закр. инвентарь. // by Shkiper2012 //
 			-----------------------------------------------------------------------------------------------------------------------
 	(=)		Inventory.cpp 			---> Если на ГГ надет броник с включенным ПНВ, то надо его выключить. // by Kondr48 //
@@ -115,9 +115,9 @@
 	*/
 	
 	/** 	XX_10_2017 ******** // fixed warnings and errors // ********
-			xrgame\game_cl_artefacthunt.cpp(442): 		warning C4723: potential divide by 0
-			xrGame\ui\UIProgressShape.cpp				warning C4723: potential divide by 0
-			x:\trunk\3rd party\xiph\libtheora\lib\decode.c(1582): 			warning C4701: potentially uninitialized local variable 'last_zzi' used
+			xrgame\game_cl_artefacthunt.cpp(442): 	warning C4723: potential divide by 0
+			xrGame\ui\UIProgressShape.cpp			warning C4723: potential divide by 0
+			xiph\libtheora\lib\decode.c(1582): 		warning C4701: potentially uninitialized local variable 'last_zzi' used
 			base_client_classes_script.cpp(488): 	warning C4800: 'BOOL' : forcing value to bool 'true' or 'false' (performance warning)
 			HUDCrosshair.cpp(46): 					warning C4800: 'BOOL' : forcing value to bool 'true' or 'false' (performance warning)
 			script_game_object_script4.cpp(325): 	warning C4800: 'BOOL' : forcing value to bool 'true' or 'false' (performance warning)
@@ -157,58 +157,55 @@
 	(=)		xrGame\hit_memory_manager.cpp   		---> Исправление неправильной загрузки памяти нпс: revolucas/CoC-Xray@01e05b0
 	(=)		xrGame\sound_memory_manager.cpp 		---> Исправление неправильной загрузки памяти нпс: revolucas/CoC-Xray@01e05b0
 	(=)		xrGame\visual_memory_manager.cpp 		---> Исправление неправильной загрузки памяти нпс: revolucas/CoC-Xray@01e05b0
-	(=)		xrGame\DestroyablePhysicsObject.cpp 	---> who_object ? (who_object->lua_game_object()) : 0 	// fixed by Alundaio //
+	(=)		xrGame\DestroyablePhysicsObject.cpp 	---> who_object ? (who_object->lua_game_object()) : 0 		// fixed by Alundaio //
 	(=)		gamedata\config\misc\task_manager.ltx 	---> Ошибки в конфиге task_manager.ltx ---> запятые 		// fixed by KRodin //
 	(=)		xrGame\ui\uiabstract.h 					---> SetTextureVisible(bool vis)	{m_bTextureVisible = vis;}
 	(+)		xr_3da\xrGame\Weapon.cpp 				---> ONE_CLICK_ZOOM // Зум в один клик. Теперь не нужно удерживать клавишу прицеливания. //
+	(+)		xr_3da\xrGame\Weapon.cpp 				---> if( ... (flags&CMD_START) ... ) // fixed by Sin! // Corrected zooming in/out command handler //
+	======= build 6822 =======		
 	*/
 	
-	/* 		10_10_2017
+	/*		17_10_2017
 	(=)		xrCore\_cylinder.h 					---> _valid(c.m_radius); // by OpenXRay //
-	(=)		xrGame\ActorEffector.cpp 			---> OpenXRay/xray-16@741031c
-	(=)		xrGame\ai\stalker\ai_stalker.cpp 	---> OpenXRay/xray-16@741031c
 	(/)		xr_3da\xrGame\shared_data.h 		---> Log("DestroySingleton::RefCounter:",_refcount);
 	(/)		xr_3da\xrGame\Level.cpp 			---> Msg("* ProcessGameEvents, spawn event postponed. Events rest = %d", game_events->queue.size());	
 	(/)		xr_3da\xrGame\Inventory.cpp			---> Чтобы не было строки в выпадающем списке с действиями "Перенести в слот", когда предмет итак уже в слоте.
-	(=)		xrGame\weaponBM16.cpp 				---> (с) НаноБот фикс вылета: если не нашли нужной анимацией для класса БМ16. 26.09.2016
 	(=)		xrGame\derived_client_classes.cpp 	---> ("eat_start_portions_num", &CEatableItem::m_iStartPortionsNum) // by Карлан //
 	(=)		xrRender\WallmarksEngine.cpp 		---> Правка на 100% появление бладмарков // by SkyLoader //
-	*/
-	
-	/* 		11_10_2017
-	(=)		xrGame\CustomMonster.h 			---> protected: // fixed by Alundaio //
-	(=)		xrGame\entity_alive.h 			---> protected: // fixed by Alundaio //
-	(=)		xrGame\ActorEffector.h 			---> protected: // fixed by Alundaio //
-	(=)		xrGame\script_game_object2.cpp 	---> устанавливаем инициатор только если он неизвестен. // by NanoBot //
-	(=)		xr_3da\xrSheduler.cpp 			---> "../../build_config_defines.h" // fixed by KRodin: добавил забытый инклуд //
-	(-)		xrGame\derived_client_classes.cpp 	---> NLC_EXTENSIONS
-	(+)		xrGame\WeaponMagazined.h 			---> // by NanoBot //
-	======= build 6824 =======		
-	*/
-	
-	/*		13_10_2017
-	(+)		xrGame\ui\ui_af_params.cpp 			--->  %+.2f ---> для артефактов.
-	(/)		xrGame\alife_simulator_base.cpp 	---> Msg("#SE_DBG: CALifeSimulatorBase '%s' ->m_objects = 0x%p ",
-	(/)		xrGame\ui\uiinventorywnd2.cpp		---> Bad slot
-	(+)		xrGame\inventory_item.h 			---> ../build_config_defines.h
-	(+)		xrGame\inventory_item.cpp 			---> ../build_config_defines.h
-	(+)		xrGame\ui\UIInventoryWnd.h 			---> ../build_config_defines.h
-	(+)		xrGame\ui\UIInventoryWnd3.cpp 		---> ../build_config_defines.h
+	(=)		xr_3da\xrSheduler.cpp 				---> "../../build_config_defines.h" // fixed by KRodin: добавил забытый инклуд //
 	(/)		xrGame\ui\UIMainIngameWnd.h 		---> ui_disk_io ---> убрал с худа мигающую иконку дискеты.
 	(/)		xrGame\ui\UIMainIngameWnd.cpp 		---> ui_disk_io ---> убрал с худа мигающую иконку дискеты.
-	(+)		xrGame\console_commands.cpp 		---> Показать гл.меню если нет сохранения. ---> MainMenu()->Activate(true);
-	======= build 6825 (не удачный, вылетает из-за новых слотов) =======
+	(+)		xrGame\ui\UIInventoryWnd3.cpp 		---> ../build_config_defines.h
+	(+)		xrGame\ui\UIInventoryWnd.h 			---> ../build_config_defines.h
+	(+)		xrGame\inventory_item.h 			---> ../build_config_defines.h
+	(+)		xrGame\inventory_item.cpp 			---> ../build_config_defines.h
+	(+)		xrGame\xrServer_process_event_ownership.cpp 	---> #ifdef DEBUG "sv !ownership ... " #endif
+			-------------------------------------------------------------------------------------------------------------------------------
+	(+)		gamedata\config\m_netpk.ltx				---> NET-packet -- by Artos --
+	(+)		gamedata\scripts\m_netpk.script 		---> NET-packet -- by Artos --
+	(+)		gamedata\scripts\m_netpk_readme.txt		---> NET-packet -- by Artos --
+	(+)		gamedata\scripts\xr_box.script 			---> Правка проваливания предметов через текстуры при разбивании ящиков. -- Автор Bak. --
+	(~)		gamedata\config\weapons\w_binoc.ltx 	---> force_grow_speed	= 15 ;; скорость набора силы броска (метры в секунду)
+	(~)		gamedata\config\ui\inventory_new.xml
+	(~)		gamedata\config\ui\inventory_new_16.xml
+	(+)		gamedata\scripts\ui_main_menu.script
+	(+)		gamedata\scripts\ui_cheat_base.script 			---> Спаун-меню -- by naxac --
+	(+)		gamedata\scripts\ui_cheat_naxac.script 			---> Спаун-меню -- by naxac --
+	(+)		gamedata\textures\ui\ui_cheat_naxac.dds			---> Спаун-меню -- by naxac --
+	(+)		gamedata\textures\ui\ui_inv_belt_w_slots.dds 	---> Текстура для инвентаря.
+			-------------------------------------------------------------------------------------------------------------------------------
+	(+)		xrGame\ui\UICarBodyWnd.cpp 			---> HIDE_WEAPON_IN_INV
+	(+)		xrGame\ui\UIPdaWnd.cpp				---> HIDE_WEAPON_IN_INV
+	(+)		xrGame\ui\UIWpnParams.cpp 			---> wpn_knife ---> Чтобы не отображались полоски точности, скорострельности для ножа.
+ 	(/)		xrGame\alife_simulator_base.cpp 	---> Msg("#SE_DBG: CALifeSimulatorBase '%s' ->m_objects = 0x%p ",
+	(+)		xrCore\LocatorAPI.cpp 				---> #pragma warning(pop)
+			-------------------------------------------------------------------------------------------------------------------------------
+	======= build 6829 =======			
 	*/
-	
-	/*		16_10_2017
-			Отключил: INV_NEW_SLOTS_SYSTEM, INV_NO_ACTIVATE_APPARATUS_SLOT, INV_MOVE_ITM_INTO_QUICK_SLOTS.
-			xrGame\xrServer_process_event_ownership.cpp 	---> #ifdef DEBUG "sv !ownership ... " #endif
-	======= build 6828 =======
-	*/
-	
 #endif
 
 #ifndef Legend & Shkiper_Marker's
+	// xxx - откат правки. //
 	// UNKNOW_shkiper_marker // 	-  (?)  - узнать, что это, для чего, как используется, если используется.
 	// TODO_shkiper_marker // 		-  (#)  - (нужно/желательно) сделать!
 	// WIP_shkiper_marker //		-  (@)  - делаю сейчас!
@@ -221,5 +218,5 @@
 	// COMMENT_shkiper_marker //  	-  (/) 	- закомментировал.
  	// >>> ---> -- начало куска кода/сообщения -- >>> begin >>>
  	// <<< <--- --  конец куска кода/сообщения -- <<< end <<<
-	// Формат даты изменения: 	00_00_0000
+	// Формат даты изменения: 00_00_0000 //
 #endif

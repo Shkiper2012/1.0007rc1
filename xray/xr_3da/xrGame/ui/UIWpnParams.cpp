@@ -111,6 +111,8 @@ bool CUIWpnParams::Check(const shared_str& wpn_section){
             return false;
         if (0==xr_strcmp(wpn_section, "mp_wpn_binoc"))
             return false;
+        if (0==xr_strcmp(wpn_section, "wpn_knife"))
+            return false;
 
         return true;		
 	}

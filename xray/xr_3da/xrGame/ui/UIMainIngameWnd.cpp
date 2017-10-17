@@ -342,19 +342,15 @@ void CUIMainIngameWnd::Draw()
 	test_draw				();
 #endif
 
-	// show IO icon // COMMENT_shkiper_marker //
-	/*
-	bool IOActive	= (FS.dwOpenCounter>0);
-	if	(IOActive)	UIStaticDiskIO_start_time = Device.fTimeGlobal;
+	// bool IOActive	= (FS.dwOpenCounter>0);
+	// if	(IOActive)	UIStaticDiskIO_start_time = Device.fTimeGlobal;
 
-	if( (UIStaticDiskIO_start_time+1.0f) < Device.fTimeGlobal ){
-		UIStaticDiskIO.Show(false); 
-	}else{
-		u32		alpha			= clampr(iFloor(255.f*(1.f-(Device.fTimeGlobal-UIStaticDiskIO_start_time)/1.f)),0,255);
-		UIStaticDiskIO.Show		( true  ); 
-		UIStaticDiskIO.SetColor	(color_rgba(255,255,255,alpha));
-	}
-	*/
+	// if ((UIStaticDiskIO_start_time+1.0f) < Device.fTimeGlobal)	UIStaticDiskIO.Show(false); 
+	// else {
+		// u32		alpha			= clampr(iFloor(255.f*(1.f-(Device.fTimeGlobal-UIStaticDiskIO_start_time)/1.f)),0,255);
+		// UIStaticDiskIO.Show		( true  ); 
+		// UIStaticDiskIO.SetColor	(color_rgba(255,255,255,alpha));
+	// }
 	FS.dwOpenCounter = 0;
 
 	if(!IsGameTypeSingle())

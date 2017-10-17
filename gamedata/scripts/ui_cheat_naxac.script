@@ -1,0 +1,343 @@
+-- -*- mode: lua; coding: windows-1251-dos -*-
+
+--[[-----------------------------------------------------------------------------------------------
+ File              : ui_cheat_naxac.script
+ Description       : Спавн-меню
+ Created           : 07.09.2013
+ Lasd edit         : 04.11.2013
+ Copyright         : naxac
+--]]-----------------------------------------------------------------------------------------------
+
+class "cheat_menu"  (CUIScriptWnd)
+
+function cheat_menu:__init(owner) super()
+	if self.menu_index == nil then self.menu_index = 1 end
+	local eng = [[qwertyuiop[]asdfghjkl;'zxcvbnm,./QWERTYUIOP{}ASDFGHJKL:"ZXCVBNM<>?!@#$%^&*()-_+=\| 0123456789]]
+	local rus = [[йцукенгшщзхъфывапролджэячсмитьбю.ЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ,!"№;%:?*()-_+=\/ 0123456789]]
+	self.translit = {}
+	for i = 1, string.len(rus) do
+		self.translit[string.sub(eng, i, i)] = string.sub(rus, i, i)
+	end
+	self:InitControls()
+	self:InitCallBacks()
+	self:FillList()
+end
+
+function cheat_menu:__finalize()
+end
+
+function cheat_menu:FillList()
+	local list = self:GetListWnd("list_window")
+	if list:GetSize() > 0 then list:RemoveAll() end
+	self.tbl = ui_cheat_base.cheat_list[self.menu_index]
+	for i = 1,#(self.tbl) do
+		local item = self.tbl[i]
+		self:AddItemToList(item)
+	end
+end
+
+function cheat_menu:InitControls()
+	self:Init(0,0, 1024, 768)
+	local xml = CScriptXmlInit()
+	xml:ParseFile("ui_naxac_cheat.xml")
+	xml:InitStatic("back_video", self)
+	xml:InitStatic("background", self)
+	xml:InitStatic("rug_video", self)
+	
+	self.dialog = xml:InitStatic("main_dialog:dialog", self)
+	xml:InitStatic("main_dialog:cap_cheat", self.dialog)
+	
+	xml:InitFrame("frame",	self.dialog)
+	
+	self.tab = xml:InitTab("main_dialog:tab", self.dialog)
+	self:Register(self.tab,	"tab")
+	
+	xml:InitFrame("main_dialog:list_frame",			self.dialog)
+	
+	local ctrl
+	ctrl = xml:InitList("main_dialog:list_window", 	self.dialog)
+	ctrl:ShowSelectedItem(true)
+	self:Register(ctrl, "list_window")
+	
+	ctrl = xml:Init3tButton("main_dialog:btn_spawn", self.dialog)
+	self:Register(ctrl, "btn_spawn")
+	ctrl = xml:Init3tButton("main_dialog:btn_cancel", self.dialog)
+	self:Register(ctrl, "btn_cancel")
+	
+	-- Описание
+	xml:InitFrame("frame_descr", self)
+	self.cap_descr = CUIStatic()
+	self.cap_descr:SetWindowName("cap_descr")
+	self.cap_descr:SetAutoDelete(true)
+	self.cap_descr:SetText("Описание:")
+	self.cap_descr:SetFont(GetFontGraffiti19Russian())
+	self.cap_descr:Init(25,58,70,25)
+    self:AttachChild(self.cap_descr)
+	self.descr = xml:InitStatic("descr_list", self)
+	-- Поиск по имени
+	self.edit_box = xml:InitEditBox("frame_search",	self)
+	self.search = CUIStatic()
+	self.search:SetWindowName("search")
+	self.search:SetAutoDelete(true)
+	self.search:SetText("Поиск")
+	self.search:SetTextColor(255,0,255,0)
+	self.search:SetFont(GetFontLetterica18Russian())
+    self.search:Init(745,255,134,23)
+    self:AttachChild(self.search)
+	
+	self.text = ""
+	-- переключение раскладки клавиатуры (EN/RU)
+	self.lang = "RUS"
+	self.btn_lang = CUIButton()
+	self.btn_lang:Init("ui\\ui_hud",913,253,37,25)
+	self.btn_lang:SetText(self.lang)
+	self.btn_lang:SetTextAlign(CGameFont.alCenter)
+	self.btn_lang:SetTextY(1)
+	self.btn_lang:SetTextColor(255,240,165,25)
+	self.btn_lang:SetOriginalRect(65,704,37,25)
+	self:Register(self.btn_lang, "btn_lang")
+	self:AttachChild(self.btn_lang)
+	self:AddCallback("btn_lang", ui_events.BUTTON_DOWN, self.ClickBtnLang, self)
+	
+	self:LoadCaption()
+end
+
+function cheat_menu:InitCallBacks()
+	self:AddCallback("tab",				ui_events.TAB_CHANGED,				self.OnTabChange,			self)
+	self:AddCallback("btn_cancel",		ui_events.BUTTON_CLICKED,			self.OnBtnCancel,			self)
+	self:AddCallback("btn_spawn",		ui_events.BUTTON_CLICKED,			self.OnBtnSpawn,			self)
+	self:AddCallback("list_window",		ui_events.LIST_ITEM_CLICKED, 		self.OnListItemClicked,		self)
+	self:AddCallback("list_window",		ui_events.WINDOW_LBUTTON_DB_CLICK,	self.OnListItemDbClicked,	self)
+end
+
+function cheat_menu:OnBtnCancel()
+	self:GetHolder():start_stop_menu	(self.owner, true) --new(show main window)
+	self:GetHolder():start_stop_menu	(self,true)
+	self.owner:Show						(true)
+end
+
+function cheat_menu:OnTabChange()
+	local i = self.tab:GetActiveIndex()
+	self.menu_index = i+1
+	self:FillList()
+	self:LoadCaption()
+	self:OnListItemClicked()
+	
+	local list = self:GetListWnd("list_window")
+	local itm_index = list:GetSelectedItem()
+	if itm_index then list:ScrollToPos(itm_index) end
+end
+
+function cheat_menu:LoadCaption()
+	local names = {"оружие","аммуницию","броню","артефакт","предмет"}
+	
+	if self.subCapt then self:DetachChild(self.subCapt) end
+	
+	self.subCapt = CUIStatic()
+	self.subCapt:SetWindowName("subCapt")
+	self.subCapt:SetAutoDelete(true)
+	self.subCapt:SetText("Выберите "..names[self.menu_index]..":")
+	self.subCapt:SetTextColor(255,249,230,182)
+	self.subCapt:SetFont(GetFontGraffiti19Russian())	 		
+    self.subCapt:Init(394,253,150,21)
+    self:AttachChild(self.subCapt)
+end
+
+function cheat_menu:OnListItemClicked()
+	local list = self:GetListWnd("list_window")
+	if list:GetSize()==0 then return end
+	
+	local itm_index = list:GetSelectedItem()
+	if itm_index < 0 or #self.tbl<itm_index+1 then return end
+	
+	if self.pict then self:DetachChild(self.pict) end
+	local sect = self.tbl[itm_index+1]
+	local sizes = give_icon_params(sect)
+	
+	local px = 367+(300-(sizes.width/2))
+	local py = 191+(150-(sizes.height/2))
+	
+	self.pict = CUIStatic()
+	self.pict:SetWindowName("pict")
+	self.pict:SetAutoDelete(true)
+	self.pict:InitTexture("ui\\ui_icon_equipment")
+	self.pict:SetOriginalRect(sizes.x,sizes.y,sizes.width,sizes.height)
+	self.pict:Init(px,py,sizes.width,sizes.height)
+	self:AttachChild(self.pict)
+	
+	self:GetDescription(sect)
+end
+
+function cheat_menu:OnListItemDbClicked()
+	self:OnBtnSpawn()
+end
+
+function cheat_menu:GetDescription(section)
+	local ini = system_ini()
+	local description = "<no description>"
+	if ini and ini:section_exist(section) and ini:line_exist(section, "description") then
+		description = game.translate_string(ini:r_string(section, "description"))
+	end
+	if string.len(description)>=1000 then description = string.sub(description,1,1050).."..." end
+	self.descr:SetText(description)
+end
+
+function cheat_menu:ClickBtnLang()
+	self.lang = (self.lang == "RUS" and "ENG") or "RUS"
+	self.btn_lang:SetText(self.lang)
+end
+
+function cheat_menu:SearchText(letter)
+	local lett = letter and (self.lang=="RUS" and self.translit[letter] or letter) or ""
+	if string.len(self.text)>=18 then return end
+	self.text = self.text..lett
+	
+	self.search:SetText(self.text)
+	self:SearchItem()
+end
+
+function cheat_menu:BackSpace()
+	if self.text ~= "" and string.len(self.text)>1 then
+		self.text = string.sub(self.text,1,string.len(self.text)-1)
+		self.search:SetText(self.text)
+	else
+		self.text = ""
+	end
+	self.search:SetText(self.text)
+end
+
+function cheat_menu:SearchItem()
+	local list = self:GetListWnd("list_window")
+	local size = list:GetSize()
+	for i=0,size-1 do
+		local item = list:GetItem(i)
+		local item_text = item.fn:GetText()
+		if string.len(item_text)>=string.len(self.text) and string.find(item_text,self.text) then
+			list:ScrollToPos(i)
+			break
+		end
+	end
+end
+
+function cheat_menu:OnBtnSpawn()
+	local list = self:GetListWnd("list_window")
+	if list:GetSize()==0 then return end
+	local itm_index		= list:GetSelectedItem()
+	if (not itm_index) or itm_index < 0 then return end
+
+	local sect = self.tbl[itm_index+1]
+	local ini = system_ini()
+	if not (ini and ini:section_exist(sect)) then return end
+	this.spawn_item(sect)
+end
+
+function cheat_menu:OnKeyboard(dik, keyboard_action)
+	CUIScriptWnd.OnKeyboard(self,dik,keyboard_action)
+	if keyboard_action == ui_events.WINDOW_KEY_PRESSED then
+		if dik == DIK_keys.DIK_ESCAPE then self:OnBtnCancel()
+		elseif dik == DIK_keys.DIK_RETURN then self:OnBtnSpawn()
+		elseif dik == DIK_keys.DIK_TAB then self:OnKeyNewTab()
+		elseif dik == DIK_keys.DIK_BACK then self:BackSpace()
+		else
+			local letter = string.sub(self.edit_box:GetText(),-1)
+			if letter and letter~="" then
+				self:SearchText(letter)
+				self.edit_box:SetText("")
+			end
+		end
+	end
+	return true
+end
+
+function cheat_menu:OnKeyNewTab()
+	local i = self.tab:GetActiveIndex()
+	if i == nil or i == 4 then i = 0
+	else i = i+1 end
+	self.tab:SetNewActiveTab(i)
+	self:OnTabChange()
+end
+
+function cheat_menu:AddItemToList(sect)
+	local list = self:GetListWnd("list_window")
+	local ini = system_ini()
+	local itm_name = ""
+	local color_text_flag = false
+	if ini and ini:section_exist(sect) then
+		color_text_flag = false
+		 itm_name = game.translate_string(ini:r_string(sect, "inv_name")) or sect
+		 -- Если вещь квестовая - напишем об этом
+		if (ini:line_exist(sect, "quest_item") and ini:r_string(sect, "quest_item") == "true")
+		or (ini:line_exist(sect, "can_trade") and ini:r_string(sect, "can_trade") == "false") then
+			itm_name = itm_name.." (квестовый)"
+		end
+	elseif string.find(sect, "======>") then	
+		-- Это чтобы, можно было в спискок вносить свои сообщения, в которых есть строка "======>". -- (added Shkiper2012) --
+		color_text_flag = true
+		itm_name = sect
+	else
+		-- Если в таблицу итемов написали какую-то хрень - сообщаем об этом
+		color_text_flag = false
+		itm_name = "Секция \""..sect.."\" отсутствует в игре!"
+	end
+	
+	-- Укоротим нах длинные названия, а то некрасиво
+	if string.len(itm_name)>50 then itm_name = string.sub(itm_name,1,48).."..." end
+	
+	local _itm				= load_item()
+	if color_text_flag then
+		_itm.fn:SetText(itm_name)
+		_itm.fn:SetTextColor(255,0,255,0)
+	else
+	_itm.fn:SetText			(itm_name)
+	end
+	list:AddItem		(_itm)
+end
+------------------------------------------------------------------------------------------
+function give_icon_params(sect)
+	local ini = system_ini()
+	local t = {}
+	if ini and ini:section_exist(sect) then
+		t.width = ini:r_float(sect, "inv_grid_width")*50 or 176
+		t.height = ini:r_float(sect, "inv_grid_height")*50 or 78
+		t.x = ini:r_float(sect, "inv_grid_x")*50 or 1867
+		t.y = ini:r_float(sect, "inv_grid_y")*50 or 6
+	else
+		t.width = 176
+		t.height = 78
+		t.x = 1867
+		t.y = 6
+	end
+	return t
+end
+
+function spawn_item(sect)
+	if not sect then return end
+	-- Страховка на случай отсутствия актора. -- (added Shkiper2012) --
+	if level.present() and db.actor and db.actor:alive() then
+		alife():create(sect,db.actor:position(),db.actor:level_vertex_id(),db.actor:game_vertex_id(),db.actor:id())
+		local snd = xr_sound.get_safe_sound_object([[device\decoder]])
+		snd:play(db.actor, 0, sound_object.s2d)
+	end
+end
+
+------------------------------------------------------------------------------------------
+class "load_item" (CUIListItemEx)
+
+function load_item:__init() super()
+	self:SetWndRect		(0,0,430,22)
+	
+	local ca = 255
+	local cr = 255
+	local cg = 234
+	local cb = 104
+	
+	self.fn					= CUIStatic	()
+	self.fn:SetAutoDelete	(true)
+	self:AttachChild		(self.fn)
+	self.fn:SetWndRect		(0,0,230,22)
+	self.fn:SetText			("item")
+	self.fn:SetFont			(GetFontLetterica18Russian())
+	self.fn:SetTextColor	(ca,cr,cg,cb)
+end
+
+	
