@@ -71,8 +71,8 @@ void CEatableItemObject::OnH_A_Independent	()
 	// If we are dropping used item before removing - don't show it // by Sin!
 	if (!Useful())
 	{
-		setVisible(false);
-		setEnabled(false);
+		setVisible(FALSE);
+		setEnabled(FALSE);
 	}
 }
 

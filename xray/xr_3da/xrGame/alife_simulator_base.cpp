@@ -90,7 +90,6 @@ void CALifeSimulatorBase::reload			(LPCSTR section)
 	m_groups					= xr_new<CALifeGroupRegistry>		();
 	m_registry_container		= xr_new<CALifeRegistryContainer>	();
 	m_initialized				= true;
-	// Msg("#SE_DBG: CALifeSimulatorBase '%s' ->m_objects = 0x%p ", section, (LPVOID)m_objects);
 }
 
 CSE_Abstract *CALifeSimulatorBase::spawn_item	(LPCSTR section, const Fvector &position, u32 level_vertex_id, GameGraph::_GRAPH_ID game_vertex_id, u16 parent_id, bool registration)

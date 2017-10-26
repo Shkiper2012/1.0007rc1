@@ -36,8 +36,7 @@ class CCustomMonster :
 	public Feel::Sound,
 	public Feel::Touch
 {
-// private: 	// DELME_shkiper_marker // 
-protected: // fixed by Alundaio //
+private:
 	typedef	CEntityAlive	inherited;
 	friend	class CCustomMonsterScript;
 

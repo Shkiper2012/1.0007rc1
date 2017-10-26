@@ -561,7 +561,7 @@ static int oc_enc_pipeline_set_stripe(oc_enc_ctx *_enc,
   int                      pli;
   mcu_nvsbs=_enc->mcu_nvsbs;
   sby_end=_enc->state.fplanes[0].nvsbs;
-  notdone=_sby+mcu_nvsbs<sby_end;
+  notdone=_sby+(int)mcu_nvsbs<sby_end;
   if(notdone)sby_end=_sby+mcu_nvsbs;
   vdec=0;
   for(pli=0;pli<3;pli++){
@@ -1547,7 +1547,7 @@ static void oc_skip_cost(oc_enc_ctx *_enc,oc_enc_pipeline_state *_pipe,
     uncoded_ssd-=uncoded_dc*uncoded_dc>>2;
     /*DC is a special case; if there's more than a full-quantizer improvement
        in the effective DC component, always force-code the block.*/
-    dc_flag=abs(uncoded_dc)>dc_dequant<<1;
+    dc_flag=abs(uncoded_dc)>(int)dc_dequant<<1;
     uncoded_ssd|=-dc_flag;
     _pipe->skip_ssd[0][fragi-_pipe->froffset[0]]=_ssd[bi]=uncoded_ssd;
   }
@@ -1586,7 +1586,7 @@ static void oc_skip_cost(oc_enc_ctx *_enc,oc_enc_pipeline_state *_pipe,
       uncoded_ssd-=uncoded_dc*uncoded_dc>>2;
       /*DC is a special case; if there's more than a full-quantizer improvement
          in the effective DC component, always force-code the block.*/
-      dc_flag=abs(uncoded_dc)>dc_dequant<<1;
+      dc_flag=abs(uncoded_dc)>(int)dc_dequant<<1;
       uncoded_ssd|=-dc_flag;
       _pipe->skip_ssd[pli][fragi-_pipe->froffset[pli]]=_ssd[mapii]=uncoded_ssd;
     }
@@ -1726,7 +1726,7 @@ static void oc_cost_inter(oc_enc_ctx *_enc,oc_mode_choice *_modec,
 static void oc_cost_inter_nomv(oc_enc_ctx *_enc,oc_mode_choice *_modec,
  unsigned _mbi,int _mb_mode,const oc_fr_state *_fr,const oc_qii_state *_qs,
  const unsigned _skip_ssd[12]){
-  static const oc_mv OC_MV_ZERO;
+  static const oc_mv OC_MV_ZERO = {0,0};
   oc_cost_inter(_enc,_modec,_mbi,_mb_mode,OC_MV_ZERO,_fr,_qs,_skip_ssd);
 }
 

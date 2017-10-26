@@ -23,11 +23,11 @@
 #include "object_broker.h"
 #include "../igame_persistent.h"
 #include "eatable_item.h"
-#include "../../../build_config_defines.h" // for: INV_NEW_SLOTS_SYSTEM
 
 #ifdef DEBUG
 #	include "debug_renderer.h"
 #endif
+#include "../../../build_config_defines.h" // for: INV_NEW_SLOTS_SYSTEM
 
 #define ITEM_REMOVE_TIME		30000
 struct net_update_IItem {	u32					dwTimeStamp;

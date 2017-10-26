@@ -147,8 +147,8 @@ void CGrenade::Throw()
 	m_thrown = true;
 	
 	// Real Wolf.Start.18.12.14
-	auto parent = smart_cast<CGameObject*>(H_Parent());
-	auto obj	= smart_cast<CGameObject*>(m_fake_missile);
+	CGameObject* parent = smart_cast<CGameObject*>(H_Parent());
+	CGameObject* obj	= smart_cast<CGameObject*>(m_fake_missile);
 	if (parent && obj)
 	{
 		parent->callback(GameObject::eOnThrowGrenade)(obj->lua_game_object());

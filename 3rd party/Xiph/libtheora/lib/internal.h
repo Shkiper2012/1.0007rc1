@@ -197,9 +197,12 @@ typedef signed char     oc_mv[2];
 
 /*Super block information.*/
 struct oc_sb_flags{
-  unsigned char coded_fully:1;
-  unsigned char coded_partially:1;
-  unsigned char quad_valid:4;
+  //unsigned char coded_fully:1;
+  //unsigned char coded_partially:1;
+  //unsigned char quad_valid:4;
+  unsigned int coded_fully:1;
+  unsigned int coded_partially:1;
+  unsigned int quad_valid:4;
 };
 
 

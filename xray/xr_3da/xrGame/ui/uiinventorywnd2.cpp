@@ -244,7 +244,7 @@ bool CUIInventoryWnd::ToSlot(CUICellItem* itm, bool force_place)
 		
 		if (!new_owner)
 		{
-			// Msg("! ERROR: Bad slot %d ", _slot); 	// COMMENT_shkiper_marker //
+			Msg("! ERROR: Bad slot %d ", _slot);
 			GetSlotList(_slot);  // for tracing
 			return false;
 		}

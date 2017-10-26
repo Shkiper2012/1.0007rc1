@@ -15,8 +15,8 @@
 #include "entity_alive.h"
 #include "EntityCondition.h"
 #include "InventoryOwner.h"
-
 #include "xrServer_Objects_ALife_Items.h"
+#include "../../../build_config_defines.h" // for: EAT_PORTIONS_INFLUENCE
 
 CEatableItem::CEatableItem()
 {
@@ -51,8 +51,11 @@ void CEatableItem::Load(LPCSTR section)
 	m_fWoundsHealPerc			= pSettings->r_float(section, "wounds_heal_perc");
 	clamp						(m_fWoundsHealPerc, 0.f, 1.f);
 	
-	m_iStartPortionsNum			= pSettings->r_s32	(section, "eat_portions_num");
-	m_fMaxPowerUpInfluence		= READ_IF_EXISTS	(pSettings,r_float,section,"eat_max_power",0.0f);
+	m_iStartPortionsNum			= READ_IF_EXISTS	(pSettings,r_s32,section,"eat_start_portions_num", int(-1) );
+	if( m_iStartPortionsNum == -1 )
+		m_iStartPortionsNum		= pSettings->r_s32	(section,"eat_portions_num");
+	
+	m_fMaxPowerUpInfluence		= READ_IF_EXISTS	(pSettings, r_float, section, "eat_max_power",0.0f);
 	VERIFY						(m_iPortionsNum<10000);
 }
 
@@ -60,12 +63,12 @@ BOOL CEatableItem::net_Spawn				(CSE_Abstract* DC)
 {
 	if (!inherited::net_Spawn(DC)) return FALSE;
 
-	if (auto se_eat = smart_cast<CSE_ALifeItemEatable*>(DC))
+	if (CSE_ALifeItemEatable* se_eat = smart_cast<CSE_ALifeItemEatable*>(DC))
 	{
 		m_iPortionsNum = se_eat->m_portions_num;
 #if defined(EAT_PORTIONS_INFLUENCE)
-		m_weight	-= m_weight / m_iStartPortionsNum * m_iPortionsNum;
-		m_cost		-= m_cost	/ m_iStartPortionsNum * m_iPortionsNum;
+		m_weight	-= m_weight / (float)m_iStartPortionsNum * (float)m_iPortionsNum;
+		m_cost		-= m_cost	/ (u32)m_iStartPortionsNum   * (u32)m_iPortionsNum;
 #endif
 	}
 	else
@@ -125,20 +128,21 @@ void CEatableItem::UseBy (CEntityAlive* entity_alive)
 
 #if defined(EAT_PORTIONS_INFLUENCE)
 	// Real Wolf: Уменьшаем вес и цену после использования.
-	auto sect	= object().cNameSect().c_str();
-	auto weight = READ_IF_EXISTS(pSettings, r_float, sect, "inv_weight",	0.0f);
-	auto cost	= READ_IF_EXISTS(pSettings, r_float, sect, "cost",			0.0f);
+	const char*	sect	= object().cNameSect().c_str();
+	float		weight	= READ_IF_EXISTS(pSettings, r_float, sect, "inv_weight",	0.01f);
+	u32			cost	= READ_IF_EXISTS(pSettings, r_u32,   sect, "cost",			1);
 
-	m_weight	-= weight / m_iStartPortionsNum;
-	m_cost		-= cost / m_iStartPortionsNum;
+	m_weight	-= weight / (float)m_iStartPortionsNum;
+	m_cost		-= cost   / (u32)m_iStartPortionsNum;
 #endif
 
 	/* Real Wolf: После использования предмета, удаляем его иконку и добавляем заново.
 	Таким образом вызовется колбек на группировку, где пользователь решит, группировать или нет предмета. 13.08.2014.*/
 	if (!Empty() && m_cell_item && m_cell_item->ChildsCount() )
 	{
-		auto owner = m_cell_item->OwnerList();
-		auto itm = m_cell_item->PopChild();
+		CUIDragDropListEx*	owner	= m_cell_item->OwnerList();
+		CUICellItem*		itm		= m_cell_item->PopChild();
+
 		owner->SetItem(itm);
 		
 		// TODO: После сортировки надо удалять все старые иконки и создавать новые, чтобы было отсортировано.

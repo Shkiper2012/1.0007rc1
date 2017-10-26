@@ -455,7 +455,7 @@ void CSheduler::Update				()
 		VERIFY						(T.Object->dbg_startframe != Device.dwFrame);
 		T.Object->dbg_startframe	= Device.dwFrame;
 #endif
-T.Object->shedule_Update	(Elapsed);
+		T.Object->shedule_Update	(Elapsed);
 		Device.Statistic->Sheduler.cycles++;
 		T.dwTimeOfLastExecute		= dwTime;
 	}

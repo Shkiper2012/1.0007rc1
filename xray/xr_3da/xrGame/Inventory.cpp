@@ -1072,10 +1072,9 @@ bool CInventory::CanPutInSlot(PIItem pIItem) const
 
 	if( !GetOwner()->CanPutInSlot(pIItem, pIItem->GetSlot() ) ) return false;
 
-	if( pIItem->GetSlot() < m_slots.size() && 
-	  ( m_slots[pIItem->GetSlot()].m_pIItem == NULL ) ) // alpet: бывает странная ситуация, когда предмет сразу и в слоте, и в инвентаре
+	if( pIItem->GetSlot() < m_slots.size() && ( m_slots[pIItem->GetSlot()].m_pIItem == NULL ) )
 		return true;
-
+	
 	return false;
 }
 //проверяет можем ли поместить вещь на пояс,

@@ -95,6 +95,9 @@ void CAI_Crow::init		()
 	fIdleSoundDelta		= 10.f;
 	fIdleSoundTime		= fIdleSoundDelta;
 	bPlayDeathIdle		= false;
+	// ADD_shkiper_marker // [Bugfix] Crows fix // by Sin! // 
+	o_workload_frame 	= 0;
+	o_workload_rframe 	= 0;
 }
 
 void CAI_Crow::Load( LPCSTR section )
@@ -137,8 +140,26 @@ BOOL CAI_Crow::net_Spawn		(CSE_Abstract* DC)
 	m_Anims.m_fly.Load			(M,"norm_fly_fwd");
 	m_Anims.m_idle.Load			(M,"norm_idle");
 
-	// disable UpdateCL, enable only on HIT
-	processing_deactivate		();
+	// ---> // ADD_shkiper_marker // [Bugfix] Crows fix // by Sin! // 
+	o_workload_frame  = 0;
+	o_workload_rframe = 0;
+
+	if (GetfHealth() > 0)
+	{
+		st_current = eFlyIdle;
+		st_target = eFlyIdle;
+		// disable UpdateCL, enable only on HIT
+		processing_deactivate();
+	}
+	else
+	{
+		st_current = eDeathFall;
+		st_target = eDeathDead;
+		// Crow is already dead, need to enable physics
+		processing_activate();
+		CreateSkeleton();
+	}
+	// <--- //
 
 	return		R;
 }

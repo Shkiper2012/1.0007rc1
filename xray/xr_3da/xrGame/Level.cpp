@@ -43,7 +43,6 @@
 #include "MainMenu.h"
 #include "..\XR_IOConsole.h"
 #include <functional>  // добавлено alpet для успешной сборки в VS 2013
-#include "../../../build_config_defines.h" // for: SPAWN_ANTIFREEZE
 
 #ifdef DEBUG
 #	include "level_debug.h"
@@ -51,6 +50,7 @@
 #	include "debug_renderer.h"
 #	include "physicobject.h"
 #endif
+#include "../../../build_config_defines.h" // for: SPAWN_ANTIFREEZE
 
 ENGINE_API bool g_dedicated_server;
 ENGINE_API BOOL	g_bootComplete;
@@ -449,7 +449,7 @@ void CLevel::ProcessGameEvents		()
 		{
 			u16 ID,dest,type;
 			game_events->get	(ID,dest,type,P);		
-#ifdef SPAWN_ANTIFREEZE
+#ifdef   SPAWN_ANTIFREEZE
 			// не отправлять события не заспавненным объектам
 			if (g_bootComplete && M_EVENT == ID && PostponedSpawn(dest))
 			{
@@ -463,7 +463,7 @@ void CLevel::ProcessGameEvents		()
 				//-------------------------------------------------				
 				if (parent_id < 0xffff) // откладывать спавн только объектов в контейнеры
 				{
-					// if (!spawn_events->available(svT))
+					if (!spawn_events->available(svT))
 						// Msg("* ProcessGameEvents, spawn event postponed. Events rest = %d", game_events->queue.size());					
 					
 					spawn_events->insert(P);					

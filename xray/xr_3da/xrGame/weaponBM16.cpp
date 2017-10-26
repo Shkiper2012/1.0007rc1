@@ -25,14 +25,6 @@ void CWeaponBM16::Load	(LPCSTR section)
 	animGet	(mhud_draw_empty_both, anim);
 	anim = READ_IF_EXISTS(pSettings, r_string, *hud_sect, "anim_draw_empty_right", "draw");
 	animGet	(mhud_draw_empty_right, anim);
-	/*	// DELME_shkiper_marker //	
-		http://www.amk-team.ru/forum/topic/13126-kurilka-programmistov/?page=37#entry1038850
-	LPCSTR anim;
-	anim = pSettings->r_string(*hud_sect, "anim_draw_empty_both");
-	animGet	(mhud_draw_empty_both, anim ? anim : "draw"	);
-	anim = pSettings->r_string(*hud_sect, "anim_draw_empty_right");
-	animGet	(mhud_draw_empty_right, anim ? anim : "draw" );
-	*/
 #endif
 	HUD_SOUND::LoadSound(section, "snd_reload_1", m_sndReload1, m_eSoundShot);
 }

@@ -19,14 +19,12 @@
 #include "../lua_tools.h"
 #include "../../../build_config_defines.h" // for: INV_NEW_SLOTS_SYSTEM
 
-
 /* Декларация о стиле экспорта свойств и методов:
      * Свойства объектов экспортируются по возможности так, как они выглядят в файлах конфигурации (*.ltx), а не так как они названы в исходниках движка
 	 * Методы объектов экспортируются согласно стилю экспорта для game_object, т.е без использования прописных букв. 
 	    Это позволяет сохранить единый стиль программирования в скриптах и отделить новые методы от исконно движковых версии 1.0006.
    Alexander Petrov
 */
-
 
 using namespace luabind;
 #pragma optimize("s", on)
@@ -42,12 +40,15 @@ Fvector get_restrictor_center(CSpaceRestrictor *SR)
 	return result;
 }
 
-u32 get_zone_state(CCustomZone *obj)  { return (u32)obj->ZoneState(); }
+u32 get_zone_state(CCustomZone *obj)
+{ 
+	return (u32)obj->ZoneState(); 
+}
+
 void CAnomalyZoneScript::set_zone_state(CCustomZone *obj, u32 new_state)
 { 
 	obj->SwitchZoneState ( (CCustomZone::EZoneState) new_state); 
 }
-
 
 void CAnomalyZoneScript::script_register(lua_State *L)
 {
@@ -112,7 +113,10 @@ void CEatableItemScript::script_register(lua_State *L)
 		];
 }
 
-void set_io_money(CInventoryOwner *IO, u32 money) { IO->set_money(money, true); }
+void set_io_money(CInventoryOwner *IO, u32 money) 
+{ 
+	IO->set_money(money, true); 
+}
 
 CScriptGameObject  *item_lua_object(PIItem itm)
 {	
@@ -124,8 +128,11 @@ CScriptGameObject  *item_lua_object(PIItem itm)
 	return NULL;
 }
 
+CScriptGameObject  *inventory_active_item(CInventory *I) 
+{ 
+	return item_lua_object (I->ActiveItem()); 
+}
 
-CScriptGameObject  *inventory_active_item(CInventory *I)	{ return item_lua_object (I->ActiveItem()); }
 CScriptGameObject  *inventory_selected_item(CInventory *I)
 {
 	CUIDialogWnd *IR = HUD().GetUI()->MainInputReceiver();
@@ -136,10 +143,13 @@ CScriptGameObject  *inventory_selected_item(CInventory *I)
 	return item_lua_object( wnd->CurrentIItem() );	
 }
 
-CScriptGameObject  *get_inventory_target(CInventory *I)		{ return item_lua_object(I->m_pTarget); }
+CScriptGameObject  *get_inventory_target(CInventory *I)
+{ 
+	return item_lua_object(I->m_pTarget); 
+}
 
-LPCSTR get_item_name				(CInventoryItem *I) { return I->Name(); }
-LPCSTR get_item_name_short			(CInventoryItem *I) { return I->NameShort(); }
+LPCSTR get_item_name		(CInventoryItem *I) { return I->Name(); 	 }
+LPCSTR get_item_name_short	(CInventoryItem *I) { return I->NameShort(); }
 
 #include "string_table.h"
 void set_item_name(CInventoryItem *item, LPCSTR name)
@@ -158,7 +168,10 @@ void set_item_name_short(CInventoryItem *item, LPCSTR name)
 	item->m_nameShort = CStringTable().translate(name);
 }
 
-LPCSTR get_item_description				(CInventoryItem *I) { return I->m_Description.c_str(); }
+LPCSTR get_item_description(CInventoryItem *I) 
+{ 
+	return I->m_Description.c_str(); 
+}
 
 void set_item_description(CInventoryItem *item, LPCSTR text)
 {
@@ -167,7 +180,6 @@ void set_item_description(CInventoryItem *item, LPCSTR text)
 
 	item->m_Description = CStringTable().translate(text);
 }
-
 
 void item_to_belt(CInventory *I, lua_State *L)
 {   // 1st param: CInventory*, 2nd param: item?
@@ -212,7 +224,6 @@ void get_slots(luabind::object O)
 			lua_settable(L, tidx);
 		}
 	}
-
 }
 
 void fake_set_slots(CInventoryItem *I, luabind::object T) { } // модифицировать слоты можно, если GetSlots не будет возвращать константу
@@ -285,10 +296,10 @@ void CMonsterScript::script_register(lua_State *L)
 		];
 }
 
-
-int curr_fire_mode(CWeaponMagazined *wpn) { return wpn->GetCurrentFireMode(); }
-
-
+int curr_fire_mode(CWeaponMagazined *wpn) 
+{ 
+	return wpn->GetCurrentFireMode(); 
+}
 
 void COutfitScript::script_register(lua_State *L)
 {
@@ -313,14 +324,10 @@ void COutfitScript::script_register(lua_State *L)
 
 }
 
-int			get_fire_bone(CWeaponHUD *hud)  { return hud->FireBone();  }
-const Fvector&	get_fire_point1 (CWeaponHUD *hud) { return hud->FirePoint(); }
-const Fvector&	get_fire_point2 (CWeaponHUD *hud) { return hud->FirePoint2(); }
-IRender_Visual* get_hud_visual(CWeaponHUD *hud)   { return hud->Visual(); }
-
-#ifdef NLC_EXTENSIONS
-extern void attach_upgrades(lua_State *L);
-#endif
+int 				get_fire_bone   (CWeaponHUD *hud) { return hud->FireBone();  	}
+const Fvector&		get_fire_point1 (CWeaponHUD *hud) { return hud->FirePoint(); 	}
+const Fvector&		get_fire_point2 (CWeaponHUD *hud) { return hud->FirePoint2(); 	}
+IRender_Visual* 	get_hud_visual  (CWeaponHUD *hud) { return hud->Visual(); 		}
 
 SRotation& CWeaponScript::FireDeviation(CWeapon *wpn)
 {
@@ -331,7 +338,7 @@ luabind::object CWeaponScript::get_fire_modes(CWeaponMagazined *wpn)
 {
    lua_State *L = wpn->lua_game_object()->lua_state();
    luabind::object t = newtable(L);   
-   auto &vector = wpn->m_aFireModes;
+   xr_vector<int> &vector = wpn->m_aFireModes;
    int index = 1;
    for (auto it = vector.begin(); it != vector.end(); ++it, ++index)
 	   t[index] = *it;
@@ -342,7 +349,7 @@ luabind::object CWeaponScript::get_fire_modes(CWeaponMagazined *wpn)
 void CWeaponScript::set_fire_modes(CWeaponMagazined *wpn, luabind::object const& t)
 {
 	if (LUA_TTABLE != t.type()) return;
-	auto &vector = wpn->m_aFireModes;
+	xr_vector<int> &vector = wpn->m_aFireModes;
 	vector.clear();
 	for (auto it = t.begin(); it != t.end(); ++it)
 	{
@@ -353,9 +360,9 @@ void CWeaponScript::set_fire_modes(CWeaponMagazined *wpn, luabind::object const&
 
 luabind::object CWeaponScript::get_hit_power(CWeapon *wpn)
 {
-   lua_State *L = wpn->lua_game_object()->lua_state();
-   luabind::object t = newtable(L);   
-   auto &vector = wpn->fvHitPower;
+   lua_State *L			= wpn->lua_game_object()->lua_state();
+   luabind::object t	= newtable(L);   
+   Fvector4 &vector		= wpn->fvHitPower;
    
    t[1] = vector.x;
    t[2] = vector.y;
@@ -368,7 +375,7 @@ luabind::object CWeaponScript::get_hit_power(CWeapon *wpn)
 void CWeaponScript::set_hit_power(CWeapon *wpn, luabind::object const& t)
 {
 	if (LUA_TTABLE != t.type()) return;
-	auto &vector = wpn->fvHitPower;
+	Fvector4 &vector = wpn->fvHitPower;
 
 	vector.x = object_cast<float>(t[1]);
 	vector.y = object_cast<float>(t[2]);
@@ -479,7 +486,6 @@ void CWeaponScript::script_register(lua_State *L)
 			
 		];
 }
-
 
 void CCustomMonsterScript::script_register(lua_State *L)
 {

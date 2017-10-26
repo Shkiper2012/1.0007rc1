@@ -405,7 +405,7 @@ u8 CWeaponShotgun::AddCartridge		(u8 cnt)
 	return cnt;
 }
 
-void	CWeaponShotgun::net_Export	(NET_Packet& P)
+void CWeaponShotgun::net_Export	(NET_Packet& P)
 {
 	inherited::net_Export(P);	
 	P.w_u8(u8(m_magazine.size()));	
@@ -416,7 +416,7 @@ void	CWeaponShotgun::net_Export	(NET_Packet& P)
 	}
 }
 
-void	CWeaponShotgun::net_Import	(NET_Packet& P)
+void CWeaponShotgun::net_Import	(NET_Packet& P)
 {
 	inherited::net_Import(P);	
 	u8 AmmoCount = P.r_u8();

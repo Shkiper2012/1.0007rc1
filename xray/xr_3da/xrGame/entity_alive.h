@@ -16,8 +16,7 @@ class CMaterialManager;
 class CVisualMemoryManager;
 class CBlend;
 class CEntityAlive : public CEntity {
-// private: 	// DELME_shkiper_marker // 
-protected: // fixed by Alundaio //
+private:
 	typedef	CEntity			inherited;			
 public:
 	virtual CEntityAlive*				cast_entity_alive		()						{return this;}

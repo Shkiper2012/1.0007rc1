@@ -58,7 +58,7 @@ class CUIMultiTextureOwner : public IUIMultiTextureOwner{
 public:
 	CUIMultiTextureOwner(){m_bTextureAvailable = false; m_bTextureVisible = false;}
 	virtual bool		GetTextureAvailability()	{return m_bTextureAvailable;}
-	virtual void		SetTextureVisible(bool vis)	{m_bTextureVisible = vis;}
+	virtual void		SetTextureVisible(bool vis)	{m_bTextureVisible = true;}
 	virtual bool		GetTextureVisible()			{return m_bTextureVisible;}
 protected:
 	bool m_bTextureAvailable;

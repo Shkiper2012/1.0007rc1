@@ -255,6 +255,7 @@ public:
 	void					LoadZoomOffset(LPCSTR section, LPCSTR prefix);
 
 	virtual float			Weight();
+	virtual float			GetMagazineWeight();
 
 public:
 	virtual EHandDependence	HandDependence()	const		{ return eHandDependence; }

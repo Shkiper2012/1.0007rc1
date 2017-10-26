@@ -26,12 +26,6 @@
 #include "UIMessagesWindow.h"
 #include "UIMainIngameWnd.h"
 #include "UITabButton.h"
-#include "../../../../build_config_defines.h" // for: HIDE_WEAPON_IN_INV
-#ifdef HIDE_WEAPON_IN_INV
-#	include "../actor.h"
-#	include "../smart_cast.h"
-#	include "../level.h"
-#endif
 
 #define		PDA_XML					"pda.xml"
 u32			g_pda_info_state		= 0;
@@ -166,13 +160,19 @@ void CUIPdaWnd::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 	}
 }
 
+#include "../../../../build_config_defines.h" // for: UI_LOCK_PDA_WITHOUT_PDA_IN_SLOT, HIDE_WEAPON_IN_INV
+#if defined(UI_LOCK_PDA_WITHOUT_PDA_IN_SLOT)
+	#include "../Actor.h"
+	#include "../Inventory.h"
+	#include "../Level.h"
+	#include "../smart_cast.h"
+#endif
+
 void CUIPdaWnd::Show()
 {
 	InventoryUtilities::SendInfoToActor("ui_pda");
 
 	inherited::Show();
-
-	// Прячем предмет в руках, когда открываем ПДА. // by Shkiper2012 //
 #ifdef HIDE_WEAPON_IN_INV
 	if( IsGameTypeSingle() )
 	{
@@ -191,7 +191,6 @@ void CUIPdaWnd::Hide()
 	InventoryUtilities::SendInfoToActor("ui_pda_hide");
 	HUD().GetUI()->UIMainIngameWnd->SetFlashIconState_(CUIMainIngameWnd::efiPdaTask, false);
 
-	// Покажем/достанем предмет в руках, после закрытия ПДА. // by Shkiper2012 //
 #ifdef HIDE_WEAPON_IN_INV
 	if( IsGameTypeSingle() )
 	{
@@ -216,12 +215,6 @@ void CUIPdaWnd::UpdateDateTime()
 		prevStrTime = strTime.c_str();
 	}
 }
-
-#include "../../../../build_config_defines.h" // for: UI_LOCK_PDA_WITHOUT_PDA_IN_SLOT
-#if defined(UI_LOCK_PDA_WITHOUT_PDA_IN_SLOT)
-	#include "../Actor.h"
-	#include "../Inventory.h"
-#endif
 
 void CUIPdaWnd::Update()
 {

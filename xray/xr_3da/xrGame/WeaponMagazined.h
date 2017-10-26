@@ -172,7 +172,6 @@ public:
 	virtual	void	OnNextFireMode		();
 	virtual	void	OnPrevFireMode		();
 	virtual bool	HasFireModes		() { return m_bHasDifferentFireModes; };
-//	virtual	int		GetCurrentFireMode	() { return m_aFireModes[m_iCurFireMode]; }; 	// DELME_shkiper_marker //
 	virtual int 	GetCurrentFireMode	() { return m_bHasDifferentFireModes ? (m_aFireModes[m_iCurFireMode]) : 1; }; // by NanoBot //
 	virtual LPCSTR	GetCurrentFireModeStr	() {return m_sCurFireMode;};
 

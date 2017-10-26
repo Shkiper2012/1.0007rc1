@@ -107,7 +107,6 @@ void CUIDragDropListEx::CreateDragItem(CUICellItem* itm)
 
 	Fvector2 p;
 	itm->GetAbsolutePos(p);
-	//itm->OnMouse(p.x, p.y, EUIMessages::DRAG_DROP_ITEM_DRAG); // DELME_shkiper_marker // 
 	itm->OnMouse(p.x, p.y, DRAG_DROP_ITEM_DRAG);
 }
 
@@ -158,7 +157,6 @@ void CUIDragDropListEx::OnItemDrop(CUIWindow* w, void* pData)
 	{
 		Fvector2 p;
 		itm->GetAbsolutePos(p);
-		//itm->OnMouse(p.x, p.y, EUIMessages::DRAG_DROP_ITEM_DROP);  // DELME_shkiper_marker // 
 		itm->OnMouse(p.x, p.y, DRAG_DROP_ITEM_DROP);
 	}
 

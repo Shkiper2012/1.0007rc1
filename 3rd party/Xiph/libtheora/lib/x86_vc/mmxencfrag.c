@@ -21,7 +21,7 @@
 
 unsigned oc_enc_frag_sad_mmxext(const unsigned char *_src,
  const unsigned char *_ref,int _ystride){
-  ptrdiff_t ret;
+  ptrdiff_t ret1;
   __asm{
 #define SRC esi
 #define REF edx
@@ -70,13 +70,13 @@ unsigned oc_enc_frag_sad_mmxext(const unsigned char *_src,
     psadbw mm2,mm3
     paddw mm0,mm6
     paddw mm0,mm2
-    movd [ret],mm0
+    movd [ret1],mm0
 #undef SRC
 #undef REF
 #undef YSTRIDE
 #undef YSTRIDE3
   }
-  return (unsigned)ret;
+  return (unsigned)ret1;
 }
 
 unsigned oc_enc_frag_sad_thresh_mmxext(const unsigned char *_src,
@@ -142,7 +142,7 @@ unsigned oc_enc_frag_sad_thresh_mmxext(const unsigned char *_src,
 unsigned oc_enc_frag_sad2_thresh_mmxext(const unsigned char *_src,
  const unsigned char *_ref1,const unsigned char *_ref2,int _ystride,
  unsigned _thresh){
-  ptrdiff_t ret;
+  ptrdiff_t ret2;
   __asm{
 #define REF1 ecx
 #define REF2 edi
@@ -167,14 +167,14 @@ unsigned oc_enc_frag_sad2_thresh_mmxext(const unsigned char *_src,
     OC_SAD2_LOOP
     OC_SAD2_LOOP
     OC_SAD2_TAIL
-    mov [ret],RET
+    mov [ret2],RET
 #undef REF1
 #undef REF2
 #undef YSTRIDE
 #undef SRC
 #undef RET
   }
-  return (unsigned)ret;
+  return (unsigned)ret2;
 }
 
 /*Load an 8x4 array of pixel values from %[src] and %[ref] and compute their

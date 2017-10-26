@@ -11,7 +11,7 @@ class CInventory;
 
 #include "UIOutfitInfo.h"
 #include "UIItemInfo.h"
-#include "../../../../build_config_defines.h" // for: INV_NEW_SLOTS_SYSTEM, INV_OUTFIT_FULL_ICON_HIDE
+#include "../../../../build_config_defines.h" // for: INV_NEW_SLOTS_SYSTEM, INV_OUTFIT_FULL_ICON_HIDE, HIDE_WEAPON_IN_INV
 
 #if defined(INV_NEW_SLOTS_SYSTEM)
 	#include "UISleepWnd.h"

@@ -431,7 +431,6 @@ DLL_API void log_script_error(LPCSTR format, ...)
 	line_buf[sizeof(line_buf) - 1] = 0;
 	va_end(mark);
 
-	//ai().script_engine().script_log(ScriptStorage::ELuaMessageType::eLuaMessageTypeError, line_buf); // DELME_shkiper_marker //
 	ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, line_buf);
 }
  

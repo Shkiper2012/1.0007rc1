@@ -6,6 +6,7 @@ class CCartridge
 public:
 	CCartridge();
 	void Load(LPCSTR section, u8 LocalAmmoType);
+	float Weight();
 
 	shared_str	m_ammoSect;
 	enum{

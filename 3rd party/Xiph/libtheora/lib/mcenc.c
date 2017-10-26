@@ -629,7 +629,7 @@ static unsigned oc_mcenc_ysatd_halfpel_mbrefine(const oc_enc_ctx *_enc,
     mvoffset1=mvoffset_base+(dx&~xmask)+(offset_y[site]&~ymask);
     err=oc_satd16_halfpel(_enc,frag_buf_offs,fragis,
      mvoffset0,mvoffset1,src,ref,ystride,_best_err);
-    if(err<_best_err){
+    if(err<(int)_best_err){
       _best_err=err;
       best_site=site;
     }

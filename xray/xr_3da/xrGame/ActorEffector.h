@@ -31,9 +31,7 @@ public:
 
 class CAnimatorCamEffector :public CEffectorCam
 {
-protected:	// ADD_shkiper_marker // fixed by Alundaio //
 	typedef				CEffectorCam			inherited;
-private:	// ADD_shkiper_marker // fixed by Alundaio //
 	bool				m_bCyclic;
 protected:
 	virtual bool		Cyclic					() const		{return m_bCyclic;}
@@ -52,9 +50,7 @@ public:
 
 class CAnimatorCamEffectorScriptCB :public CAnimatorCamEffector 
 {
-protected:	// ADD_shkiper_marker // fixed by Alundaio //
 	typedef 	CAnimatorCamEffector			inherited;
-private:	// ADD_shkiper_marker // fixed by Alundaio //
 
 	shared_str			cb_name;
 public:
@@ -95,7 +91,6 @@ public:
 
 class SndShockEffector:public CEffectorController
 {
-protected:	// ADD_shkiper_marker // fixed by Alundaio //
 	typedef CEffectorController inherited;
 public:
 	float						m_snd_length;	//ms
@@ -118,9 +113,8 @@ public:
 
 //////////////////////////////////////////////////////////////////////////
 class CControllerPsyHitCamEffector :public CEffectorCam {
-protected:	// ADD_shkiper_marker // fixed by Alundaio //
 	typedef CEffectorCam inherited;
-private:	// ADD_shkiper_marker // fixed by Alundaio //
+	
 	float				m_time_total;
 	float				m_time_current;
 	Fvector				m_dangle_target;

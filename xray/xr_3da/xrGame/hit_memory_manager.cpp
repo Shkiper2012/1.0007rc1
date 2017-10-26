@@ -57,7 +57,7 @@ CHitMemoryManager::~CHitMemoryManager		()
 #endif
 }
 
-const CHitObject *CHitMemoryManager::hit (const CEntityAlive *object) const
+const CHitObject *CHitMemoryManager::hit					(const CEntityAlive *object) const
 {
 	VERIFY					(m_hits);
 	HITS::const_iterator	I = std::find_if(m_hits->begin(),m_hits->end(),CHitObjectPredicate(object));

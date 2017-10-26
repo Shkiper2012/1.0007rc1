@@ -15,7 +15,7 @@
 #include "UICellItem.h"
 #include "UIListBoxItem.h"
 #include "../CustomOutfit.h"
-#include "../../../../build_config_defines.h" // for: INV_NEW_SLOTS_SYSTEM, GRENADE_FROM_BELT
+#include "../../../../build_config_defines.h"	// for: INV_NEW_SLOTS_SYSTEM, GRENADE_FROM_BELT
 
 void CUIInventoryWnd::EatItem(PIItem itm)
 {

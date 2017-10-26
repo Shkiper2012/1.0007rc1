@@ -1578,6 +1578,28 @@ LPCSTR CWeapon::GetCurrentAmmo_ShortName()
 	return *(l_cartridge.m_InvShortName);
 }
 
+float CWeapon::GetMagazineWeight()
+{
+	if( !m_magazine.empty() ){
+		float rest 				= 0.0f;
+		float last_ammo_weight 	= 0.0f;
+		const char* last_type 	= nullptr;
+		
+		for (u32 i=0; i<m_magazine.size(); ++i )
+		{
+			CCartridge& l_cartridge =  *(m_magazine.begin()+i);
+			
+			if( last_type != l_cartridge.m_ammoSect.c_str() ){
+				last_type  = l_cartridge.m_ammoSect.c_str();
+				last_ammo_weight = l_cartridge.Weight();
+			}
+			rest += last_ammo_weight;
+		}
+		return rest;
+	}
+	return 0;
+}
+
 float CWeapon::Weight()
 {
 	float res = CInventoryItemObject::Weight();
@@ -1591,13 +1613,8 @@ float CWeapon::Weight()
 		res += pSettings->r_float(GetSilencerName(), "inv_weight");
 	}
 
-	if (iAmmoElapsed)
-	{
-		float w = pSettings->r_float(*m_ammoTypes[m_ammoType], "inv_weight");
-		float bs = pSettings->r_float(*m_ammoTypes[m_ammoType], "box_size");
+	res += GetMagazineWeight();
 
-		res += w*(iAmmoElapsed / bs);
-	}
 	return res;
 }
 

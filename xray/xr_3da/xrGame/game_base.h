@@ -17,7 +17,7 @@ struct		RPoint
 	bool	Blocked;
 	u32		BlockedByID;
 	u32		BlockTime;
-	RPoint(){P.set(.0f,0.f,.0f);A.set(.0f,0.f,.0f); TimeToUnfreeze = 0; Blocked = false;}
+	RPoint(){P.set(.0f,0.f,.0f);A.set(.0f,0.f,.0f); TimeToUnfreeze = 0; Blocked = false; BlockedByID = 0; BlockTime = 0;}
 	bool	operator ==		(const u32& ID)	const			{ return (Blocked && BlockedByID == ID);		}
 	DECLARE_SCRIPT_REGISTER_FUNCTION_STRUCT
 };

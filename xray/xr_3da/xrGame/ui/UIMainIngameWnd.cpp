@@ -42,7 +42,6 @@
 #include "UIArtefactPanel.h"
 #include "UIMap.h"
 #include <functional>  // добавлено alpet для успешной сборки в VS 2013
-#include "../../../../build_config_defines.h" // for: SCRIPT_ICONS_CONTROL
 
 #ifdef DEBUG
 #	include "../attachable_item.h"
@@ -63,7 +62,7 @@ void test_draw	();
 void test_key	(int dik);
 void test_update();
 #endif
-
+#include "../../../../build_config_defines.h" // for: SCRIPT_ICONS_CONTROL
 
 using namespace InventoryUtilities;
 using namespace luabind;
@@ -181,6 +180,7 @@ void CUIMainIngameWnd::Init()
 
 	Enable(false);
 
+
 	AttachChild					(&UIStaticHealth);
 	xml_init.InitStatic			(uiXml, "static_health", 0, &UIStaticHealth);
 
@@ -209,7 +209,6 @@ void CUIMainIngameWnd::Init()
 	m_iPickUpItemIconX			= UIPickUpItemIcon.GetWndRect().left;
 	m_iPickUpItemIconY			= UIPickUpItemIcon.GetWndRect().top;
 	//---------------------------------------------------------
-
 
 	UIWeaponIcon.Enable			(false);
 
@@ -322,35 +321,15 @@ void CUIMainIngameWnd::Init()
 		this->AttachChild					(m_artefactPanel);	
 	}
 
-	// COMMENT_shkiper_marker //
-	/*
-	AttachChild								(&UIStaticDiskIO);
-	UIStaticDiskIO.SetWndRect				(1000,750,16,16);
-	UIStaticDiskIO.GetUIStaticItem().SetRect(0,0,16,16);
-	UIStaticDiskIO.InitTexture				("ui\\ui_disk_io");
-	UIStaticDiskIO.SetOriginalRect			(0,0,32,32);
-	UIStaticDiskIO.SetStretchTexture		(TRUE);
-	*/
-
 	HUD_SOUND::LoadSound					("maingame_ui", "snd_new_contact"		, m_contactSnd		, SOUND_TYPE_IDLE);
 }
 
-// float UIStaticDiskIO_start_time = 0.0f;
 void CUIMainIngameWnd::Draw()
 {
 #ifdef DEBUG
 	test_draw				();
 #endif
 
-	// bool IOActive	= (FS.dwOpenCounter>0);
-	// if	(IOActive)	UIStaticDiskIO_start_time = Device.fTimeGlobal;
-
-	// if ((UIStaticDiskIO_start_time+1.0f) < Device.fTimeGlobal)	UIStaticDiskIO.Show(false); 
-	// else {
-		// u32		alpha			= clampr(iFloor(255.f*(1.f-(Device.fTimeGlobal-UIStaticDiskIO_start_time)/1.f)),0,255);
-		// UIStaticDiskIO.Show		( true  ); 
-		// UIStaticDiskIO.SetColor	(color_rgba(255,255,255,alpha));
-	// }
 	FS.dwOpenCounter = 0;
 
 	if(!IsGameTypeSingle())
@@ -377,7 +356,7 @@ void CUIMainIngameWnd::Draw()
 }
 
 
-void CUIMainIngameWnd::SetMPChatLog(CUIWindow* pChat, CUIWindow* pLog){ 	// INFO_shkiper_marker // for_MP //
+void CUIMainIngameWnd::SetMPChatLog(CUIWindow* pChat, CUIWindow* pLog){
 	m_pMPChatWnd = pChat;
 	m_pMPLogWnd  = pLog;
 }
@@ -1196,11 +1175,14 @@ CUIStatic* init_addon(
 	CUIStatic *addon = xr_new<CUIStatic>();
 	addon->SetAutoDelete(true);
 
-	auto pos		= cell_item->get_addon_offset(idx); pos.x *= scale*scale_x; pos.y *= scale;
-	auto width		= (float)pSettings->r_u32(sect, "inv_grid_width")*INV_GRID_WIDTH;
-	auto height		= (float)pSettings->r_u32(sect, "inv_grid_height")*INV_GRID_HEIGHT;
-	auto tex_x		= (float)pSettings->r_u32(sect, "inv_grid_x")*INV_GRID_WIDTH;
-	auto tex_y		= (float)pSettings->r_u32(sect, "inv_grid_y")*INV_GRID_HEIGHT;
+	Fvector2 pos	= cell_item->get_addon_offset(idx); 
+	pos.x *= scale*scale_x; 
+	pos.y *= scale;
+	
+	float width		= (float)pSettings->r_u32(sect, "inv_grid_width")*INV_GRID_WIDTH;
+	float height	= (float)pSettings->r_u32(sect, "inv_grid_height")*INV_GRID_HEIGHT;
+	float tex_x		= (float)pSettings->r_u32(sect, "inv_grid_x")*INV_GRID_WIDTH;
+	float tex_y		= (float)pSettings->r_u32(sect, "inv_grid_y")*INV_GRID_HEIGHT;
 
 	addon->SetStretchTexture	(true);
 	addon->InitTexture			("ui\\ui_icon_equipment");
@@ -1230,10 +1212,10 @@ void CUIMainIngameWnd::UpdatePickUpItem	()
 	int m_iYPos			= pSettings->r_u32(sect_name, "inv_grid_y");
 
 	float scale_x = m_iPickUpItemIconWidth/
-		float(m_iGridWidth*INV_GRID_WIDTH);
+	float(m_iGridWidth*INV_GRID_WIDTH);
 
 	float scale_y = m_iPickUpItemIconHeight/
-		float(m_iGridHeight*INV_GRID_HEIGHT);
+	float(m_iGridHeight*INV_GRID_HEIGHT);
 
 	scale_x = (scale_x>1) ? 1.0f : scale_x;
 	scale_y = (scale_y>1) ? 1.0f : scale_y;
@@ -1261,36 +1243,30 @@ void CUIMainIngameWnd::UpdatePickUpItem	()
 
 	UIPickUpItemIcon.SetColor(color_rgba(255,255,255,192));
 
-#pragma warning(push) 			// <--- ADD_shkiper_marker // 30_09_2017 //
-#pragma warning(disable:4238) 	// <---
 	// Real Wolf: Добавляем к иконке аддоны оружия. 10.08.2014.
-	if (auto wpn = m_pPickUpItem->cast_weapon() )
+	if (CWeapon* wpn = m_pPickUpItem->cast_weapon() )
 	{
-		auto cell_item = xr_new<CUIWeaponCellItem>(wpn);
+		CUIWeaponCellItem* cell_item = xr_new<CUIWeaponCellItem>(wpn);
 
 		if (wpn->SilencerAttachable() && wpn->IsSilencerAttached() )
 		{
-			//auto sil = init_addon(cell_item, *wpn->GetSilencerName(), scale, scale_x, eAddonType::eSilencer); // DELME_shkiper_marker //
-			auto sil = init_addon(cell_item, *wpn->GetSilencerName(), scale, scale_x, CUIWeaponCellItem::eSilencer);
+			CUIWindow* sil = init_addon(cell_item, *wpn->GetSilencerName(), scale, scale_x, CUIWeaponCellItem::eSilencer);
 			UIPickUpItemIcon.AttachChild(sil);
 		}
 
 		if (wpn->ScopeAttachable() && wpn->IsScopeAttached() )
 		{
-			//auto scope = init_addon(cell_item, *wpn->GetScopeName(), scale, scale_x, eAddonType::eScope);
-			auto scope = init_addon(cell_item, *wpn->GetScopeName(), scale, scale_x, CUIWeaponCellItem::eScope); // DELME_shkiper_marker //
+			CUIWindow* scope = init_addon(cell_item, *wpn->GetScopeName(), scale, scale_x, CUIWeaponCellItem::eScope);
 			UIPickUpItemIcon.AttachChild(scope);
 		}
 
 		if (wpn->GrenadeLauncherAttachable() && wpn->IsGrenadeLauncherAttached() )
 		{
-			//auto launcher = init_addon(cell_item, *wpn->GetGrenadeLauncherName(), scale, scale_x, eAddonType::eLauncher); // DELME_shkiper_marker //
-			auto launcher = init_addon(cell_item, *wpn->GetGrenadeLauncherName(), scale, scale_x, CUIWeaponCellItem::eLauncher);
+			CUIWindow* launcher = init_addon(cell_item, *wpn->GetGrenadeLauncherName(), scale, scale_x, CUIWeaponCellItem::eLauncher);
 			UIPickUpItemIcon.AttachChild(launcher);
 		}
 		delete_data(cell_item);
 	}
-#pragma warning(pop) 			// <--- ADD_shkiper_marker // 30_09_2017 //
 
 	// Real Wolf: Колбек для скриптового добавления своих иконок. 10.08.2014.
 	g_actor->callback(GameObject::eUIPickUpItemShowing)(m_pPickUpItem->object().lua_game_object(), &UIPickUpItemIcon);
@@ -1543,4 +1519,3 @@ void CUIMainIngameWnd::draw_adjust_mode()
 	}
 }
 #endif
-

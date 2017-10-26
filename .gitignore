@@ -1,4 +1,4 @@
-.gitignore
+# .gitignore
 *.gch
 *.pch
 *.ipch
@@ -6,3 +6,7 @@
 *.suo
 *.sdf
 /xray/xr_3da/ipch
+/3rd party
+*.bpf
+*.bpr
+*.dsk

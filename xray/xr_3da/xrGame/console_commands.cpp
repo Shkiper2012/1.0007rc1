@@ -495,15 +495,11 @@ public:
 
 		if (!CSavedGameWrapper::saved_game_exist(saved_game)) {
 			Msg						("! Cannot find saved game %s",saved_game);
-			if( !MainMenu()->IsActive() ) 	// ADD_shkiper_marker // 
-				 MainMenu()->Activate(true);
 			return;
 		}
 
 		if (!CSavedGameWrapper::valid_saved_game(saved_game)) {
 			Msg						("! Cannot load saved game %s, version mismatch or saved game is corrupted",saved_game);
-			if( !MainMenu()->IsActive() ) 	// ADD_shkiper_marker // 
-				 MainMenu()->Activate(true);
 			return;
 		}
 /*     moved to level_network_messages.cpp

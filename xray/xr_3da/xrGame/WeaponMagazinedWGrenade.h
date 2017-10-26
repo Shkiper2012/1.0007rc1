@@ -57,7 +57,9 @@ public:
 	void			OnAnimationEnd	(u32 state);
 
 	virtual bool	IsNecessaryItem	    (const shared_str& item_sect);
-
+	virtual float	Weight();
+	virtual float	GetMagazineWeightGL();
+	
 	//виртуальные функции для проигрывания анимации HUD
 	virtual void	PlayAnimShow();
 	virtual void	PlayAnimHide();

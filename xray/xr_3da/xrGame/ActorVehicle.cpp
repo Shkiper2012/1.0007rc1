@@ -125,7 +125,7 @@ bool CActor::use_Vehicle(CHolderCustom* object)
 				attach_Vehicle(vehicle);
 			}
 			// Real Wolf: колбек на использование машины (но не посадку) без учета расстояния. 01.08.2014.
-			else if (auto car = smart_cast<CCar*>(vehicle) )
+			else if (CCar* car = smart_cast<CCar*>(vehicle) )
 				this->callback(GameObject::eUseVehicle)(car->lua_game_object() );
 
 			return true;

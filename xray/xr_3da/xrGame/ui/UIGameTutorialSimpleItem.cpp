@@ -236,6 +236,7 @@ bool CUISequenceSimpleItem::Stop			(bool bForce)
     if (!g_pGameLevel){
         GetUICursor()->SetUICursorPosition        (m_desired_cursor_pos);
     }
+
 	if (g_pGameLevel){
 		CUIGameSP* ui_game_sp	= smart_cast<CUIGameSP*>(HUD().GetUI()->UIGame());
 		if( ui_game_sp && ui_game_sp->PdaMenu->IsShown() ) 

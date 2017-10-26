@@ -336,7 +336,7 @@ IReader* CLocatorAPI::r_open	(LPCSTR path, LPCSTR _fname)
                     }
                 }
             }else{
-            	Log			("!Can't build:",source_name);
+            	Log			("! Can't build:",source_name);
             }
 		}
 	}

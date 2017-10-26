@@ -17,7 +17,7 @@
 	(=)		UICellItem.cpp 			= condition_prog_ess_bar ---> condition_progRess_bar (3/3)
 	(+)		3rd party\Xiph\libvorbis\lib\info.c ---> #pragma warning(disable:4238) 
 	(+)		base_client_classes_script.cpp 		---> #pragma warning(disable:4482)
-	(+)		UIMainIngameWnd.cpp.cpp 			---> #pragma warning(disable:4482)
+	(+)		UIMainIngameWnd.cpp 				---> #pragma warning(disable:4482)
 			-----------------------------------------------------------------------------------------------------------------------
 	(=)		script_game_object_script.cpp 	---> 'ePostSave' ---> eBeforeSave'
 	(+)		FStaticRender.cpp 				---> KD_DETAIL_RADIUS ---> #include "../../../build_config_defines.h"
@@ -29,7 +29,7 @@
 	(+)		UIInventoryWnd.cpp 				---> #define HIDE_WEAPON_IN_INV 	// Спрячем/показываем предмет в руках, когда откр./закр. инвентарь. // by Shkiper2012 //
 			-----------------------------------------------------------------------------------------------------------------------
 	(=)		Inventory.cpp 			---> Если на ГГ надет броник с включенным ПНВ, то надо его выключить. // by Kondr48 //
-	(=) 	WeaponMagazined.cpp 	---> m_set_next_ammoType_on_reload 	// by 'Gunslinger mod' // 
+	(=) 	WeaponMagazined.cpp 	---> m_set_next_ammoType_on_reload 	// by Sin! // 
 	(=) 	WeaponMagazined.cpp 	---> #define NO_AUTO_RELOAD_WPN 	// Блокируем авто-перезарядку и сброс зума, когда закончились патроны. // by Shkiper2012 //
 	(=) 	x_ray.cpp 				--->  Фикс полосы загрузки 			// by SkyLoader //	
 			-----------------------------------------------------------------------------------------------------------------------
@@ -100,8 +100,8 @@
 	/*		03_10_2017
 			-----------------------------------------------------------------------------------------------------------------------
 	(+)		xr_3da\device.cpp 					---> #pragma warning(push) и (pop)
-	(+)		libtheora\lib\analyze.c 			---> ... = {0, 0}; 					// CHANGE_shkiper_marker // 02_10_2017 // fixed C4132 //
-	(+)		libtheora\lib\x86_vc\mmxencfrag.c 	---> ret --> ret1 и ret2 			// CHANGE_shkiper_marker // 02_10_2017 // fixed C4405 //
+	(+)		libtheora\lib\analyze.c 			---> OC_MV_ZERO = {0,0}; 		// fixed C4132 //
+	(+)		libtheora\lib\x86_vc\mmxencfrag.c 	---> ret --> ret1 и ret2 		// fixed C4405 //
 			-----------------------------------------------------------------------------------------------------------------------
 	(~)		Переименовал проект 'libvorbisfile' в 'libvorbisfile_static'. Всё равно используется только статическая либа.
 	(+)		Прописал в свойствах проектов пути к инклудам и либа от dx9sdk 2007 и 2010.
@@ -157,11 +157,11 @@
 	(=)		xrGame\hit_memory_manager.cpp   		---> Исправление неправильной загрузки памяти нпс: revolucas/CoC-Xray@01e05b0
 	(=)		xrGame\sound_memory_manager.cpp 		---> Исправление неправильной загрузки памяти нпс: revolucas/CoC-Xray@01e05b0
 	(=)		xrGame\visual_memory_manager.cpp 		---> Исправление неправильной загрузки памяти нпс: revolucas/CoC-Xray@01e05b0
-	(=)		xrGame\DestroyablePhysicsObject.cpp 	---> who_object ? (who_object->lua_game_object()) : 0 		// fixed by Alundaio //
-	(=)		gamedata\config\misc\task_manager.ltx 	---> Ошибки в конфиге task_manager.ltx ---> запятые 		// fixed by KRodin //
-	(=)		xrGame\ui\uiabstract.h 					---> SetTextureVisible(bool vis)	{m_bTextureVisible = vis;}
+	(=)		xrGame\DestroyablePhysicsObject.cpp 	---> who_object ? (who_object->lua_game_object()) : 0 		// by Alundaio //
+	(=)		gamedata\config\misc\task_manager.ltx 	---> Ошибки в конфиге task_manager.ltx ---> запятые 		// by KRodin //
+xxx	(=)		xrGame\ui\uiabstract.h 					---> SetTextureVisible(bool vis)	{m_bTextureVisible = vis;}
 	(+)		xr_3da\xrGame\Weapon.cpp 				---> ONE_CLICK_ZOOM // Зум в один клик. Теперь не нужно удерживать клавишу прицеливания. //
-	(+)		xr_3da\xrGame\Weapon.cpp 				---> if( ... (flags&CMD_START) ... ) // fixed by Sin! // Corrected zooming in/out command handler //
+	(+)		xr_3da\xrGame\Weapon.cpp 				---> if( ... (flags&CMD_START) ... ) // Corrected zooming in/out command handler // by Sin! //
 	======= build 6822 =======		
 	*/
 	
@@ -171,14 +171,13 @@
 	(/)		xr_3da\xrGame\Level.cpp 			---> Msg("* ProcessGameEvents, spawn event postponed. Events rest = %d", game_events->queue.size());	
 	(/)		xr_3da\xrGame\Inventory.cpp			---> Чтобы не было строки в выпадающем списке с действиями "Перенести в слот", когда предмет итак уже в слоте.
 	(=)		xrGame\derived_client_classes.cpp 	---> ("eat_start_portions_num", &CEatableItem::m_iStartPortionsNum) // by Карлан //
-	(=)		xrRender\WallmarksEngine.cpp 		---> Правка на 100% появление бладмарков // by SkyLoader //
-	(=)		xr_3da\xrSheduler.cpp 				---> "../../build_config_defines.h" // fixed by KRodin: добавил забытый инклуд //
-	(/)		xrGame\ui\UIMainIngameWnd.h 		---> ui_disk_io ---> убрал с худа мигающую иконку дискеты.
-	(/)		xrGame\ui\UIMainIngameWnd.cpp 		---> ui_disk_io ---> убрал с худа мигающую иконку дискеты.
-	(+)		xrGame\ui\UIInventoryWnd3.cpp 		---> ../build_config_defines.h
-	(+)		xrGame\ui\UIInventoryWnd.h 			---> ../build_config_defines.h
+	(=)		xrRender\WallmarksEngine.cpp 		---> Правка на 100% появление бладмарков // ssaCLIP // by SkyLoader //
+	(=)		xr_3da\xrSheduler.cpp 				---> "../../build_config_defines.h" // by KRodin: добавил забытый инклуд //
+	(-)		xrGame\ui\UIMainIngameWnd.h 		---> ui_disk_io ---> убрал с худа мигающую иконку дискеты.
+	(-)		xrGame\ui\UIMainIngameWnd.cpp 		---> ui_disk_io ---> убрал с худа мигающую иконку дискеты.
+	(-)		xrGame\ui\UIInventoryWnd.cpp 		---> ../build_config_defines.h
+ 	(+)		xrGame\ui\UIInventoryWnd.h 			---> ../build_config_defines.h
 	(+)		xrGame\inventory_item.h 			---> ../build_config_defines.h
-	(+)		xrGame\inventory_item.cpp 			---> ../build_config_defines.h
 	(+)		xrGame\xrServer_process_event_ownership.cpp 	---> #ifdef DEBUG "sv !ownership ... " #endif
 			-------------------------------------------------------------------------------------------------------------------------------
 	(+)		gamedata\config\m_netpk.ltx				---> NET-packet -- by Artos --
@@ -199,8 +198,27 @@
 	(+)		xrGame\ui\UIWpnParams.cpp 			---> wpn_knife ---> Чтобы не отображались полоски точности, скорострельности для ножа.
  	(/)		xrGame\alife_simulator_base.cpp 	---> Msg("#SE_DBG: CALifeSimulatorBase '%s' ->m_objects = 0x%p ",
 	(+)		xrCore\LocatorAPI.cpp 				---> #pragma warning(pop)
+	(~)		xrGame\ai\monsters\basemonster\base_monster_startup.cpp ---> color_gray, color_add // by PVS-Studio //
 			-------------------------------------------------------------------------------------------------------------------------------
-	======= build 6829 =======			
+	======= build 6834 =======			
+	*/
+	
+	/*		25_10_2017
+			3rd party\Xiph\libvorbis\lib\info.c 				---> #pragma warning(disable:4996)
+			xr_3da\xrGame\ui\UIMainIngameWnd.cpp				---> CUIWindow* sil = ...
+			xr_3da\xrGame\Weapon... 							---> [Bugfix] Incorrect weapon weight calculation // by Sin! //
+	======= build 6837 (Глюк: НПС без оружия, если дальше границы прехода оффлайн-онлайн. TODO: пофиксить это!!! ) =======
+	*/
+	
+	/*		26_10_2017
+	(~)		xrGame\game_base.h 					---> BlockedByID = 0; BlockTime = 0; // by PVS-Studio //
+xxx	(=)		xrGame\ui\uiabstract.h 				---> SetTextureVisible(bool vis)	{m_bTextureVisible = vis;} // by PVS-Studio //
+	(~)		xrGame\ai\crow\ai_crow.cpp 			---> [Bugfix] Crows fix // by Sin! //
+	(+)		xrGame\eatable_item.cpp 			---> EAT_PORTIONS_INFLUENCE ---> Real Wolf: Уменьшаем вес и цену предмета, после использования.
+												---> if( m_iStartPortionsNum == -1 )
+	(~)		xrGame\WeaponMagazinedWGrenade.cpp 	---> [Bugfix] Fix disappearing grenade // by Sin! //
+			
+	
 	*/
 #endif
 

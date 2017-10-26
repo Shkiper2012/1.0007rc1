@@ -12,6 +12,7 @@
 #include "script_callback_ex.h"
 #include "script_game_object.h"
 #include "PhysicsShell.h"
+
 #ifdef DEBUG
 #include "PHWorld.h"
 extern CPHWorld			*ph_world;
@@ -71,7 +72,7 @@ BOOL CDestroyablePhysicsObject::net_Spawn(CSE_Abstract* DC)
 	return res;
 }
 
-//void CDestroyablePhysicsObject::Hit							(float P,Fvector &dir,CObject *who,s16 element,Fvector p_in_object_space, float impulse,  ALife::EHitType hit_type)
+//void CDestroyablePhysicsObject::Hit(float P,Fvector &dir,CObject *who,s16 element,Fvector p_in_object_space, float impulse,  ALife::EHitType hit_type)
 void CDestroyablePhysicsObject::Hit(SHit* pHDS)
 {
 	SHit	HDS = *pHDS;
@@ -96,11 +97,11 @@ void CDestroyablePhysicsObject::Hit(SHit* pHDS)
 		if(CPHDestroyable::CanDestroy())Destroy();
 	}
 }
+
 void CDestroyablePhysicsObject::Destroy()
 {
 	VERIFY(!ph_world->Processing());
 	const CGameObject *who_object = smart_cast<const CGameObject*>(FatalHit().initiator());
-	// callback(GameObject::eDeath)(lua_game_object(),who_object  ? who_object : 0);
 	callback(GameObject::eDeath)(lua_game_object(), who_object ? (who_object->lua_game_object()) : 0); // fixed by Alundaio //
 	CPHDestroyable::Destroy(ID(),"physic_destroyable_object");
 	if(m_destroy_sound._handle())
@@ -129,6 +130,7 @@ void CDestroyablePhysicsObject::Destroy()
 	}
 	SheduleRegister();
 }
+
 void CDestroyablePhysicsObject::InitServerObject(CSE_Abstract* D)
 {
 	CSE_PHSkeleton					*ps = smart_cast<CSE_PHSkeleton*>(D);
@@ -141,6 +143,7 @@ void CDestroyablePhysicsObject::InitServerObject(CSE_Abstract* D)
 	CSE_ALifeObjectPhysic			*PO = smart_cast<CSE_ALifeObjectPhysic*>(D);
 	if(PO)PO->type=epotSkeleton;
 }
+
 void CDestroyablePhysicsObject::shedule_Update(u32 dt)
 {
 	inherited::shedule_Update(dt);
@@ -151,7 +154,8 @@ bool CDestroyablePhysicsObject::CanRemoveObject()
 {
 	return !CParticlesPlayer::IsPlaying()&& !m_destroy_sound._feedback();//&& sound!
 }
-DLL_Pure	*CDestroyablePhysicsObject::_construct()
+
+DLL_Pure *CDestroyablePhysicsObject::_construct()
 {
 	
 	CDamageManager::_construct();

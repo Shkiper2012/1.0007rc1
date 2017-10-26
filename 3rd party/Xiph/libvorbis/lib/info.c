@@ -62,6 +62,9 @@ void vorbis_comment_init(vorbis_comment *vc){
   memset(vc,0,sizeof(*vc));
 }
 
+#pragma warning(push)
+#pragma warning(disable:4996)
+
 void vorbis_comment_add(vorbis_comment *vc,const char *comment){
   vc->user_comments=_ogg_realloc(vc->user_comments,
                             (vc->comments+2)*sizeof(*vc->user_comments));
@@ -129,6 +132,8 @@ int vorbis_comment_query_count(vorbis_comment *vc, const char *tag){
 
   return count;
 }
+
+#pragma warning(pop)
 
 void vorbis_comment_clear(vorbis_comment *vc){
   if(vc){
