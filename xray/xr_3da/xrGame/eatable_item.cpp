@@ -51,11 +51,10 @@ void CEatableItem::Load(LPCSTR section)
 	m_fWoundsHealPerc			= pSettings->r_float(section, "wounds_heal_perc");
 	clamp						(m_fWoundsHealPerc, 0.f, 1.f);
 	
-	m_iStartPortionsNum			= READ_IF_EXISTS	(pSettings,r_s32,section,"eat_start_portions_num", int(-1) );
-	if( m_iStartPortionsNum == -1 )
-		m_iStartPortionsNum		= pSettings->r_s32	(section,"eat_portions_num");
+//	m_iStartPortionsNum			= READ_IF_EXISTS	(pSettings,r_s32,section,"eat_start_portions_num", int(-1) );
+	m_iStartPortionsNum			= pSettings->r_s32	(section,"eat_portions_num");
 	
-	m_fMaxPowerUpInfluence		= READ_IF_EXISTS	(pSettings, r_float, section, "eat_max_power",0.0f);
+	m_fMaxPowerUpInfluence		= READ_IF_EXISTS	(pSettings, r_float, section, "eat_max_power", 0.0f );
 	VERIFY						(m_iPortionsNum<10000);
 }
 
@@ -67,8 +66,15 @@ BOOL CEatableItem::net_Spawn				(CSE_Abstract* DC)
 	{
 		m_iPortionsNum = se_eat->m_portions_num;
 #if defined(EAT_PORTIONS_INFLUENCE)
-		m_weight	-= m_weight / (float)m_iStartPortionsNum * (float)m_iPortionsNum;
-		m_cost		-= m_cost	/ (u32)m_iStartPortionsNum   * (u32)m_iPortionsNum;
+	// Уменьшаем вес и цену после использования. // by Real Wolf //
+	if( m_iPortionsNum > 0 ){
+		float	w			= GetOnePortionWeight();
+		float	weight		= w * m_iPortionsNum;
+		u32		c			= GetOnePortionCost();
+		u32		cost		= c * m_iPortionsNum;
+		SetWeight 			( weight );
+		SetCost				( cost );
+	}
 #endif
 	}
 	else
@@ -121,23 +127,28 @@ void CEatableItem::UseBy (CEntityAlive* entity_alive)
 	entity_alive->conditions().SetMaxPower( entity_alive->conditions().GetMaxPower()+m_fMaxPowerUpInfluence );
 	
 	//уменьшить количество порций
-	if(m_iPortionsNum > 0)
+	if(m_iPortionsNum > 0){
 		--(m_iPortionsNum);
-	else
+	}else{
 		m_iPortionsNum = 0;
+	}
 
 #if defined(EAT_PORTIONS_INFLUENCE)
-	// Real Wolf: Уменьшаем вес и цену после использования.
-	const char*	sect	= object().cNameSect().c_str();
-	float		weight	= READ_IF_EXISTS(pSettings, r_float, sect, "inv_weight",	0.01f);
-	u32			cost	= READ_IF_EXISTS(pSettings, r_u32,   sect, "cost",			1);
-
-	m_weight	-= weight / (float)m_iStartPortionsNum;
-	m_cost		-= cost   / (u32)m_iStartPortionsNum;
+	// Уменьшаем вес и цену после использования. // by Real Wolf //
+	float	w			= GetOnePortionWeight();
+	float	weight		= m_weight - w;
+	u32		c			= GetOnePortionCost();
+	u32		cost		= m_cost - c;
+	SetWeight 			( weight );
+	SetCost				( cost );
 #endif
 
-	/* Real Wolf: После использования предмета, удаляем его иконку и добавляем заново.
-	Таким образом вызовется колбек на группировку, где пользователь решит, группировать или нет предмета. 13.08.2014.*/
+	/*	Real Wolf: 
+		После использования предмета, удаляем его иконку и добавляем заново.
+		Таким образом вызовется коллбек на группировку, 
+		где пользователь решит, группировать или нет предмета. 
+		13.08.2014.
+	*/
 	if (!Empty() && m_cell_item && m_cell_item->ChildsCount() )
 	{
 		CUIDragDropListEx*	owner	= m_cell_item->OwnerList();
@@ -172,3 +183,35 @@ void CEatableItem::net_Import(NET_Packet& P)
 	inherited::net_Import(P);
 	m_iPortionsNum = P.r_s32();
 }
+
+float CEatableItem::GetOnePortionWeight()
+{
+	float	rest		= 0.0f;
+	LPCSTR	sect		= object().cNameSect().c_str();
+	float	weight		= READ_IF_EXISTS( pSettings, r_float, sect, "inv_weight", 0.100f );
+	s32		portions	= pSettings->r_s32( sect, "eat_portions_num" );
+	
+	if( portions > 0 ){
+		rest = weight / portions;
+	}else{
+		rest = weight;
+	}
+	return rest;
+}
+
+u32 CEatableItem::GetOnePortionCost()
+{
+	u32		rest		= 0;
+	LPCSTR	sect		= object().cNameSect().c_str();
+	u32		cost		= READ_IF_EXISTS( pSettings, r_u32, sect, "cost", 1);
+	s32		portions	= pSettings->r_s32( sect, "eat_portions_num" );
+	
+	if( portions > 0 ){
+		rest = cost / portions;
+	}else{
+		rest = cost;
+	}
+	
+	return rest;
+}
+

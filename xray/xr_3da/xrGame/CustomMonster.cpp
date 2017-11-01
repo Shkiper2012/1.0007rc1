@@ -749,7 +749,10 @@ void CCustomMonster::net_Destroy()
 	CScriptEntity::net_Destroy	();
 	sound().unload				();
 	movement().net_Destroy		();
-	
+
+	// Фикс зависания шкалы освещенности/заметности при переходе врага в оффлайн // by KRodin //
+	Actor()->SetActorVisibility( ID(), 0.0f ); 
+
 	Device.remove_from_seq_parallel	(
 		fastdelegate::FastDelegate0<>(
 			this,

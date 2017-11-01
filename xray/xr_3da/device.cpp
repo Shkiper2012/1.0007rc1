@@ -297,7 +297,6 @@ void CRenderDevice::Run			()
 #ifndef DEDICATED_SERVER
 				Statistic->RenderTOTAL_Real.FrameStart	();
 				Statistic->RenderTOTAL_Real.Begin		();
-// дефайн ECO_RENDER лучше определять в свойствах проектов, а не в build_config_defines
 #ifdef ECO_RENDER				
 				u32 optimal = 0;
 				if (TargetRenderLoad() < 50)	optimal = 30;

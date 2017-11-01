@@ -48,6 +48,9 @@ protected:
 	virtual void			net_Export(NET_Packet&);
 	virtual void			net_Import(NET_Packet&);
 public:
-	int						GetPortionsNum() const	{ return m_iPortionsNum; }
+	int						GetPortionsNum()		const	{ return m_iPortionsNum;		};
+	int						GetStartPortionsNum()	const	{ return m_iStartPortionsNum;	};
+	float					GetOnePortionWeight();
+	u32						GetOnePortionCost();
 };
 

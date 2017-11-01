@@ -432,7 +432,7 @@ void CLevel::ProcessGameEvents		()
 		if (!game_events->queue.empty())	
 			Msg("- d[%d],ts[%d] -- E[svT=%d],[evT=%d]",Device.dwTimeGlobal,timeServer(),svT,game_events->queue.begin()->timestamp);
 		*/			
-#ifdef   SPAWN_ANTIFREEZE
+#ifdef SPAWN_ANTIFREEZE
 		while (spawn_events->available(svT))
 		{
 			u16 ID,dest,type;			
@@ -449,14 +449,17 @@ void CLevel::ProcessGameEvents		()
 		{
 			u16 ID,dest,type;
 			game_events->get	(ID,dest,type,P);		
-#ifdef   SPAWN_ANTIFREEZE
+#ifdef SPAWN_ANTIFREEZE
+			
 			// не отправлять события не заспавненным объектам
 			if (g_bootComplete && M_EVENT == ID && PostponedSpawn(dest))
 			{
 				spawn_events->insert(P);
 				continue;
 			}
-			if (g_bootComplete && M_SPAWN == ID && Device.frame_elapsed() > work_limit) // alpet: позволит плавнее выводить объекты в онлайн, без заметных фризов
+			
+			// alpet: позволит плавнее выводить объекты в онлайн, без заметных фризов
+			if (g_bootComplete && M_SPAWN == ID && Device.frame_elapsed() > work_limit)
 			{
 				u16 parent_id;
 				GetSpawnInfo(P, parent_id);				
@@ -464,7 +467,7 @@ void CLevel::ProcessGameEvents		()
 				if (parent_id < 0xffff) // откладывать спавн только объектов в контейнеры
 				{
 					if (!spawn_events->available(svT))
-						// Msg("* ProcessGameEvents, spawn event postponed. Events rest = %d", game_events->queue.size());					
+						Msg("* ProcessGameEvents, spawn event postponed. Events rest = %d", game_events->queue.size());					
 					
 					spawn_events->insert(P);					
 					continue;

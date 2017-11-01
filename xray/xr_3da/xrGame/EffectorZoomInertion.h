@@ -7,7 +7,6 @@
 #include "CameraEffector.h"
 #include "../cameramanager.h"
 #include "WeaponMagazined.h"
-#include "../../../build_config_defines.h" //  for  SCRIPT_EZI_CONTROL  in  EffectorZoomInertion.cpp
 #include "script_export_space.h"
 
 class CEffectorZoomInertion : public CEffectorCam

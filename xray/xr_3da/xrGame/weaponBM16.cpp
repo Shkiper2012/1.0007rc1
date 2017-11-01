@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "weaponBM16.h"
 #include "WeaponHUD.h"
+#include "../../../build_config_defines.h" // for: BM16_ANIMS_FIX
 
 CWeaponBM16::~CWeaponBM16()
 {

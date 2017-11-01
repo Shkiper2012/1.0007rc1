@@ -524,9 +524,8 @@ void CGamePersistent::LoadTitle(LPCSTR str)
 	if (strstr(alt_text, "#ERROR") || strstr(alt_text, "#OK"));
 	else
 		str = alt_text;
-	sprintf_s			(buff, "%s...", CStringTable().translate(str).c_str());
+	sprintf_s			(buff, "%s", CStringTable().translate(str).c_str());
 	pApp->LoadTitleInt	(buff);
-	
 }
 
 bool CGamePersistent::CanBePaused()

@@ -13,7 +13,6 @@ class CUIXml;
 class CGameSpy_Browser;
 class CUIColorAnimatorWrapper;
 class CUIMessageBoxEx;
-class CGameSpy_Browser;
 struct ServerInfo;
 
 #define LST_SERVER		0 

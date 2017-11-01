@@ -44,7 +44,7 @@
 	(=)		HW.cpp 							---> Фикс вертикальной синхронизации (r2) // by SkyLoader //
 	(=)		ActorInput.cpp 					---> #define NO_MOUSE_WHELL_SWITCH_SLOT // Убирает возможность переключаться между слотами колесиком мыши. // by Shkiper2012 //
 			-----------------------------------------------------------------------------------------------------------------------
-	(~) 	xrCore\log.cpp 			---> force_flush_log = true; ---> нужно, чтобы поймать вылет после разговора с НПС, которые что-нибудь передают ГГ.
+xxx	(~) 	xrCore\log.cpp 					---> force_flush_log = true; ---> нужно, чтобы поймать вылет после разговора с НПС, которые что-нибудь передают ГГ.
 			-----------------------------------------------------------------------------------------------------------------------
 	*/
 
@@ -61,7 +61,7 @@
 			-----------------------------------------------------------------------------------------------------------------------
 	(+)		xrGame\ai_space.cpp 						---> + ../ ---> "../../../build_config_defines.h"
 	(+)		xrGame\CustomZone.cpp 						---> + ../ ---> "../../../build_config_defines.h"
-	(+)		xrGame\EffectorZoomInertion.h 				---> + ../ ---> "../../../build_config_defines.h"
+	(+)		xrGame\EffectorZoomInertion.cpp 			---> + ../ ---> "../../../build_config_defines.h"
 	(+)		xrGame\Grenade.cpp 							---> + ../ ---> "../../../build_config_defines.h"
 			-----------------------------------------------------------------------------------------------------------------------
 	(+)		xrGame\Inventory.cpp 						---> + ../ ---> "../../../build_config_defines.h"
@@ -81,6 +81,7 @@
 			-----------------------------------------------------------------------------------------------------------------------
 	(+)		xrGame\Weapon.cpp 							---> + ../ ---> "../../../build_config_defines.h"
 	(+)		xrGame\weaponBM16.h 						---> + ../ ---> "../../../build_config_defines.h"
+	(+)		xrGame\weaponBM16.cpp 						---> + ../ ---> "../../../build_config_defines.h"
 	(+)		xrGame\WeaponKnife.cpp 						---> + ../ ---> "../../../build_config_defines.h"
 	(+)		xrGame\WeaponKnife.h 						---> + ../ ---> "../../../build_config_defines.h"
 	(+)		xrGame\WeaponMagazined.cpp					---> + ../ ---> "../../../build_config_defines.h"
@@ -169,10 +170,12 @@ xxx	(=)		xrGame\ui\uiabstract.h 					---> SetTextureVisible(bool vis)	{m_bTextur
 	(=)		xrCore\_cylinder.h 					---> _valid(c.m_radius); // by OpenXRay //
 	(/)		xr_3da\xrGame\shared_data.h 		---> Log("DestroySingleton::RefCounter:",_refcount);
 	(/)		xr_3da\xrGame\Level.cpp 			---> Msg("* ProcessGameEvents, spawn event postponed. Events rest = %d", game_events->queue.size());	
+			-------------------------------------------------------------------------------------------------------------------------------
 	(/)		xr_3da\xrGame\Inventory.cpp			---> Чтобы не было строки в выпадающем списке с действиями "Перенести в слот", когда предмет итак уже в слоте.
 	(=)		xrGame\derived_client_classes.cpp 	---> ("eat_start_portions_num", &CEatableItem::m_iStartPortionsNum) // by Карлан //
 	(=)		xrRender\WallmarksEngine.cpp 		---> Правка на 100% появление бладмарков // ssaCLIP // by SkyLoader //
 	(=)		xr_3da\xrSheduler.cpp 				---> "../../build_config_defines.h" // by KRodin: добавил забытый инклуд //
+			-------------------------------------------------------------------------------------------------------------------------------
 	(-)		xrGame\ui\UIMainIngameWnd.h 		---> ui_disk_io ---> убрал с худа мигающую иконку дискеты.
 	(-)		xrGame\ui\UIMainIngameWnd.cpp 		---> ui_disk_io ---> убрал с худа мигающую иконку дискеты.
 	(-)		xrGame\ui\UIInventoryWnd.cpp 		---> ../build_config_defines.h
@@ -184,10 +187,12 @@ xxx	(=)		xrGame\ui\uiabstract.h 					---> SetTextureVisible(bool vis)	{m_bTextur
 	(+)		gamedata\scripts\m_netpk.script 		---> NET-packet -- by Artos --
 	(+)		gamedata\scripts\m_netpk_readme.txt		---> NET-packet -- by Artos --
 	(+)		gamedata\scripts\xr_box.script 			---> Правка проваливания предметов через текстуры при разбивании ящиков. -- Автор Bak. --
+			-------------------------------------------------------------------------------------------------------------------------------
 	(~)		gamedata\config\weapons\w_binoc.ltx 	---> force_grow_speed	= 15 ;; скорость набора силы броска (метры в секунду)
 	(~)		gamedata\config\ui\inventory_new.xml
 	(~)		gamedata\config\ui\inventory_new_16.xml
 	(+)		gamedata\scripts\ui_main_menu.script
+			-------------------------------------------------------------------------------------------------------------------------------
 	(+)		gamedata\scripts\ui_cheat_base.script 			---> Спаун-меню -- by naxac --
 	(+)		gamedata\scripts\ui_cheat_naxac.script 			---> Спаун-меню -- by naxac --
 	(+)		gamedata\textures\ui\ui_cheat_naxac.dds			---> Спаун-меню -- by naxac --
@@ -211,14 +216,39 @@ xxx	(=)		xrGame\ui\uiabstract.h 					---> SetTextureVisible(bool vis)	{m_bTextur
 	*/
 	
 	/*		26_10_2017
-	(~)		xrGame\game_base.h 					---> BlockedByID = 0; BlockTime = 0; // by PVS-Studio //
-xxx	(=)		xrGame\ui\uiabstract.h 				---> SetTextureVisible(bool vis)	{m_bTextureVisible = vis;} // by PVS-Studio //
-	(~)		xrGame\ai\crow\ai_crow.cpp 			---> [Bugfix] Crows fix // by Sin! //
-	(+)		xrGame\eatable_item.cpp 			---> EAT_PORTIONS_INFLUENCE ---> Real Wolf: Уменьшаем вес и цену предмета, после использования.
-												---> if( m_iStartPortionsNum == -1 )
-	(~)		xrGame\WeaponMagazinedWGrenade.cpp 	---> [Bugfix] Fix disappearing grenade // by Sin! //
-			
-	
+	(~)		xrGame\game_base.h 								---> BlockedByID = 0; BlockTime = 0; 							// by PVS-Studio //
+xxx	(=)		xrGame\ui\uiabstract.h 							---> SetTextureVisible(bool vis)	{m_bTextureVisible = vis;} 	// by PVS-Studio // 
+															---> Есть подозрениея, что из-за этого, пропадает оружие у НПС. //
+			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	(~)		xrGame\ai\crow\ai_crow.cpp 						---> [Bugfix] Crows fix 										// by Sin! //
+	(~)		xrGame\WeaponMagazinedWGrenade.cpp 				---> [Bugfix] Fix disappearing grenade 							// by Sin! //
+			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	(~)		xrGame\WeaponBinoculars.cpp 					---> m_fRTZoomFactor = g_fov; ---> чтобы, у бинокля был меньший зум изначально.
+	(=)		xrGame\AI\Crow\ai_crow.cpp 						---> Вороны больше не вылетают из одной точки на земле 							// by Charsi //
+	(=)		xrGame\CustomMonster.cpp 						---> Фикс зависания шкалы освещенности/заметности при переходе врага в оффлайн 	// by KRodin //
+			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	(=)		gamedata\scripts\xr_effects.script 				---> Так вот из-за чего краснел снайпер на базе Свободы при подходе к забору! 	-- by KRodin --
+	(~)		gamedata\scripts\xr_motivator.script 			---> motivator_binder:reinit() ---> if self.object:alive() then
+	(~)		gamedata\scripts\gulag_military.script 			---> Мутанты на барьере будут нападать не дожидаясь полного кол-ва. А то толпятся всё время у перехода на радар -- by KRodin --
+	(~)		gamedata\scripts\xr_meet.script 				---> Чтобы не стояли и не пялились часами. -- Не знаю, кто автор. --
+			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	(=)		gamedata\config\scripts\yan\yan_scientist.ltx 	---> Чтобы Сахаров не повторял одну и туже фразу после загрузки сейва. 			;; by KRodin ;;
+	(+)		gamedata\config\text\rus\ui_st_other.xml 		---> Создание актора ---> st_actor_netspawn
+	(/)		gamedata\config\ui\maingame.xml 				---> ui_hud_icon_PDA 		---> Надоедливая мигающая иконка ПДА.
+	(/)		gamedata\config\ui\maingame_16.xml 				---> ui_hud_icon_PDA 		---> Надоедливая мигающая иконка ПДА.
+			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	(=)		xrGame\ai\trader\trader_animation.cpp 			---> Звуки торговца теперь идут от торговца, а не проигрываются в голове у ГГ 	// by abramcumner //
+	(=)		xrGame\ai\trader\trader_animation.cpp 			---> Теперь задаю позицию при проигрывании 3Д-звука торговцем  					// by abramcumner //
+	(=)		xrGame\Ai\Trader\ai_trader.cpp 					---> Теперь торговец не крутит головой вслед за ГГ  							// by abramcumner //
+	(=)		xrGame\ui\UIButton.cpp 							---> fixed OnMouseAction 														// by kolmogor //
+			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	(+)		xrGame\inventory_item.h 						---> virtual void SetWeight(float w){ m_weight = w; } ---> Нужна для EAT_PORTIONS_INFLUENCE
+	(+)		xrGame\eatable_item.cpp 						---> EAT_PORTIONS_INFLUENCE ---> Уменьшаем вес и цену предмета, после использования. 	// by Real Wolf //
+	(+)		xrGame\Actor.cpp 								---> RepackAmmo() 			---> Перепаковщик патронов 									// by Charsi //
+	(-)		xrGame\GamePersistent.cpp 						---> Убирано троеточие в строках, типа: "Клиент:Синхронизация..." ---> sprintf_s (buff, "%s...", CStringTable().translate(str).c_str());
+	(+)		xrGame\eatable_item.h 							---> int GetStartPortionsNum() const { return m_iStartPortionsNum; };
+			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	======= build 6842 =======
 	*/
 #endif
 

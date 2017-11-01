@@ -32,7 +32,10 @@ using namespace InventoryUtilities;
 #include "UIDragDropListEx.h"
 #include "UIOutfitSlot.h"
 #include "UI3tButton.h"
-#include "../../../../build_config_defines.h"
+#include "../../../../build_config_defines.h" 	// for: 
+												// INV_NEW_SLOTS_SYSTEM, 
+												// INV_OUTFIT_FULL_ICON_HIDE, 
+												// HIDE_WEAPON_IN_INV
 
 #define				INVENTORY_ITEM_XML		"inventory_item.xml"
 #define				INVENTORY_XML			"inventory_new.xml"
@@ -283,25 +286,7 @@ EListType CUIInventoryWnd::GetType(CUIDragDropListEx* l)
 	for (u32 i = 0; i < SLOTS_TOTAL; ++i )
 		if (m_slots_array[i] == l)
 			return iwSlot;
-// #pragma todo("alpet: после теста удалить")
-/* 
-	if(l==m_pUIAutomaticList)	return iwSlot;
-	if(l==m_pUIPistolList)		return iwSlot;
-	if(l==m_pUIOutfitList)		return iwSlot;
-
-#ifdef INV_NEW_SLOTS_SYSTEM
-	if(l==m_pUIKnifeList)				return iwSlot;
-	if(l==m_pUIBinocularList)			return iwSlot;
-	if(l==m_pUIDetectorList)			return iwSlot;
-	if(l==m_pUITorchList)				return iwSlot;
-	if(l==m_pUIPDAList)					return iwSlot;
-	if(l==m_pUIHelmetList)				return iwSlot;
-	if(l==m_pUISlotQuickAccessList_0)	return iwSlot;
-	if(l==m_pUISlotQuickAccessList_1)	return iwSlot;
-	if(l==m_pUISlotQuickAccessList_2)	return iwSlot;
-	if(l==m_pUISlotQuickAccessList_3)	return iwSlot;
-#endif
-	*/
+	
 	NODEFAULT;
 #ifdef DEBUG
 	return iwSlot;
@@ -438,7 +423,6 @@ void CUIInventoryWnd::Show()
 	Update								();
 	PlaySnd								(eInvSndOpen);
 
-	// Прячем предмет в руках, когда открываем инвентарь. // by Shkiper2012 //
 #ifdef HIDE_WEAPON_IN_INV
 	if( IsGameTypeSingle() )
 	{
@@ -458,13 +442,13 @@ void CUIInventoryWnd::Hide()
 	SendInfoToActor						("ui_inventory_hide");
 	ClearAllLists						();
 
-	// Покажем/достанем предмет в руках, после закрытия инвентаря. // by Shkiper2012 //
 #ifdef HIDE_WEAPON_IN_INV
 	if( IsGameTypeSingle() )
 	{
 		CActor* pAct = smart_cast<CActor*>(Level().CurrentEntity());
 		if( pAct ){
-			pAct->SetWeaponHideState(INV_STATE_BLOCK_ALL, false);		
+			pAct->SetWeaponHideState(INV_STATE_BLOCK_ALL, false);
+			pAct->RepackAmmo(); 	
 		}
 	}	
 #endif

@@ -242,7 +242,8 @@ void CUICarBodyWnd::Hide()
 	{
 		CActor* pAct = smart_cast<CActor*>(Level().CurrentEntity());
 		if( pAct ){
-			pAct->SetWeaponHideState(INV_STATE_BLOCK_ALL, false);		
+			pAct->SetWeaponHideState(INV_STATE_BLOCK_ALL, false);
+			pAct->RepackAmmo();
 		}
 	}	
 #endif

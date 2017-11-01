@@ -120,10 +120,12 @@ public:
 
 			BOOL				IsInvalid			() const;
 
-			BOOL				IsQuestItem			()	const	{return m_flags.test(FIsQuestItem);}			
+			BOOL				IsQuestItem			()	const	{return m_flags.test(FIsQuestItem);}
+
 	virtual	u32					Cost				() const	{ return m_cost; }
 	virtual	void				SetCost				(u32 cost) 	{ m_cost = cost; }
 	virtual float				Weight				() 			{ return m_weight;}		
+	virtual	void				SetWeight			(float w)   { m_weight = w; }
 
 public:
 	CInventory*					m_pCurrentInventory;

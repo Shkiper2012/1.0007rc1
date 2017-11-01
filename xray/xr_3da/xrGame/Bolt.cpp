@@ -7,7 +7,7 @@
 
 CBolt::CBolt(void) 
 {
-	m_weight					= .1f;
+	m_weight					= 0.1f;
 	SetSlot (BOLT_SLOT);
 	m_flags.set					(Fruck, FALSE);
 	m_thrower_id				=u16(-1);
@@ -88,7 +88,7 @@ void CBolt::Destroy()
 void CBolt::activate_physic_shell	()
 {
 	inherited::activate_physic_shell	();
-	m_pPhysicsShell->SetAirResistance	(.0001f);
+	m_pPhysicsShell->SetAirResistance	(0.0001f);
 }
 
 void CBolt::SetInitiator			(u16 id)
