@@ -239,7 +239,7 @@ xxx	(=)		xrGame\ui\uiabstract.h 							---> SetTextureVisible(bool vis)	{m_bText
 			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	(=)		xrGame\ai\trader\trader_animation.cpp 			---> Звуки торговца теперь идут от торговца, а не проигрываются в голове у ГГ 	// by abramcumner //
 	(=)		xrGame\ai\trader\trader_animation.cpp 			---> Теперь задаю позицию при проигрывании 3Д-звука торговцем  					// by abramcumner //
-	(=)		xrGame\Ai\Trader\ai_trader.cpp 					---> Теперь торговец не крутит головой вслед за ГГ  							// by abramcumner //
+xxx	(=)		xrGame\Ai\Trader\ai_trader.cpp 					---> Теперь торговец не крутит головой вслед за ГГ  							// by abramcumner //
 	(=)		xrGame\ui\UIButton.cpp 							---> fixed OnMouseAction 														// by kolmogor //
 			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	(+)		xrGame\inventory_item.h 						---> virtual void SetWeight(float w){ m_weight = w; } ---> Нужна для EAT_PORTIONS_INFLUENCE
@@ -250,6 +250,31 @@ xxx	(=)		xrGame\ui\uiabstract.h 							---> SetTextureVisible(bool vis)	{m_bText
 			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	======= build 6842 =======
 	*/
+	
+	/*		07_11_2017
+	(+)		// Методы для предметов на классе CEatableItem //
+			int GetPortions();					---> local portions 	  = obj:get_portions()
+			int GetStartPortions(); 			---> local start_portions = obj:get_start_portions()
+			--
+			xr_3da\xrGame\script_game_object_script3.cpp
+			xr_3da\xrGame\script_game_object.h
+			xr_3da\xrGame\script_game_object.cpp
+			--
+			Для несъедобных предметов будет всегда = 0.
+			У съедобных ---> если порции = -1, будет возвращать = 1.
+			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+xxx	(=)		Отключил правку 					---> "Торговец не крутит головой вслед за ГГ" 						---> т.к. он стал как слепой, смотрит в одну точку.
+	(+)		xrGame\ui\UITradeWnd.h 				---> Заливка предметов, которые в слоте или на поясе, синим цветом. ---> ColorizeItem() // как у OGSR-engine //
+	(+)		xrGame\ui\UITradeWnd.cpp 			---> + Добавлена проверка на флаг "Не-торгуемости".  				---> ColorizeItem()
+	(+)		xrGame\ui\UICarBodyWnd.h 			---> Заливка предметов, которые в слоте или на поясе, синим цветом. ---> ColorizeItem()
+	(+)		xrGame\ui\UICarBodyWnd.cpp 			---> Заливка предметов, которые в слоте или на поясе, синим цветом. ---> ColorizeItem()
+			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	(-)		Вырезал все ссылки на "BATTLEYE"
+	(-)		Удалены все ссылки на "xrd3d9-null"
+			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	======= build 6850 =======			
+	*/
+	
 #endif
 
 #ifndef Legend & Shkiper_Marker's
@@ -258,7 +283,7 @@ xxx	(=)		xrGame\ui\uiabstract.h 							---> SetTextureVisible(bool vis)	{m_bText
 	// TODO_shkiper_marker // 		-  (#)  - (нужно/желательно) сделать!
 	// WIP_shkiper_marker //		-  (@)  - делаю сейчас!
 	// ADD_shkiper_marker // 		-  (+)  - добавлено
-	// DELME_shkiper_marker //  	-  (-)  - уже удалено! или (можно/нужно) удалить!
+	// DELME_shkiper_marker //  	-  (-)  - можно/нужно удалить! либо уже удалено!
 	// CHANGE_shkiper_marker //  	-  (~)  - изменено
 	// BUG_FIX_shkiper_marker //  	-  (=)  - пофикшено
 	// FIXME_shkiper_marker //  	-  (!)  - !!!Нужно исправить!!!

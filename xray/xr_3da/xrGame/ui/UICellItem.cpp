@@ -146,7 +146,7 @@ void CUICellItem::UpdateConditionProgressBar()
                 std::swap(itm_grid_size.x, itm_grid_size.y);
             Ivector2 cell_size = m_pParentList->CellSize();
 
-			float cellSizeX = static_cast<float>(cell_size.x);	// ADD_shkiper_marker // fixed C4244 //
+			float cellSizeX = static_cast<float>(cell_size.x);
 			float cellSizeY = static_cast<float>(cell_size.y);
 			
 			m_pConditionState->SetWidth(cellSizeX);

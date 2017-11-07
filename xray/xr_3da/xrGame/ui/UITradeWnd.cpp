@@ -26,11 +26,9 @@
 #include "UICellItem.h"
 #include "UICellItemFactory.h"
 
-
-#define				TRADE_XML			"trade.xml"
-#define				TRADE_CHARACTER_XML	"trade_character.xml"
-#define				TRADE_ITEM_XML		"trade_item.xml"
-
+#define TRADE_XML			"trade.xml"
+#define TRADE_CHARACTER_XML	"trade_character.xml"
+#define TRADE_ITEM_XML		"trade_item.xml"
 
 struct CUITradeInternal{
 	CUIStatic			UIStaticTop;
@@ -296,9 +294,21 @@ void CUITradeWnd::StopTrade()
 
 #include "../trade_parameters.h"
 bool CUITradeWnd::CanMoveToOther(PIItem pItem)
-{
+{	
+	/*
+		Здесь решается вопрос: 
+			Можно ли перемещать предмет в другие окна для торговли?
+		Если проще: 
+			Можно ли торговать предметом?
+		
+		true	- можно	 торговать.
+		false	- нельзя торговать + заливаем красным цветом.
+	*/
+	
+	Flags16  itemFlags		= pItem->m_flags; // Проверка на флаг "Не-торгуемости". //
+	if( itemFlags.test( CInventoryItem::FIAlwaysUntradable )){  return false;  } 
 
-	float r1				= CalcItemsWeight(&m_uidata->UIOurTradeList);	// our
+	float r1				= CalcItemsWeight(&m_uidata->UIOurTradeList);		// our
 	float r2				= CalcItemsWeight(&m_uidata->UIOthersTradeList);	// other
 
 	float itmWeight			= pItem->Weight();
@@ -309,7 +319,7 @@ bool CUITradeWnd::CanMoveToOther(PIItem pItem)
 			CTradeParameters::action_buy(0),
 			pItem->object().cNameSect()
 		))
-		return				(false);
+		return				false;
 
 	if(otherInvWeight-r2+r1+itmWeight > otherMaxWeight)
 		return				false;
@@ -496,7 +506,6 @@ void CUITradeWnd::UpdateLists(EListType mode)
 
 	UpdatePrices						();
 
-
 	if(mode==eBoth||mode==e1st){
 		ruck_list.clear					();
    		m_pInv->AddAvailableItems		(ruck_list, true);
@@ -520,10 +529,9 @@ void CUITradeWnd::FillList	(TIItemContainer& cont, CUIDragDropListEx& dragDropLi
 	for(; it != it_e; ++it) 
 	{
 		CUICellItem* itm			= create_cell_item	(*it);
-		if(do_colorize)				ColorizeItem		(itm, CanMoveToOther(*it));
+		if(do_colorize)				ColorizeItem		(itm, CanMoveToOther(*it) );
 		dragDropList.SetItem		(itm);
 	}
-
 }
 
 bool CUITradeWnd::OnItemStartDrag(CUICellItem* itm)
@@ -542,7 +550,6 @@ bool CUITradeWnd::OnItemRButtonClick(CUICellItem* itm)
 	SetCurrentItem				(itm);
 	return						false;
 }
-
 
 bool CUITradeWnd::OnItemDrop(CUICellItem* itm)
 {
@@ -581,7 +588,6 @@ bool CUITradeWnd::OnItemDbClick(CUICellItem* itm)
 
 	return true;
 }
-
 
 CUICellItem* CUITradeWnd::CurrentItem()
 {
@@ -629,6 +635,15 @@ void CUITradeWnd::BindDragDropListEnents(CUIDragDropListEx* lst)
 
 void CUITradeWnd::ColorizeItem(CUICellItem* itm, bool b)
 {
-	if(!b)
-		itm->SetColorAll(color_argb(255,255,100,100));
+	PIItem iitem = (PIItem)itm->m_pData;
+	if(!b){
+		itm->SetColorAll(color_argb(255,255,100,100));			// заливка предмета !Красным! цветом //
+	}else{
+		if(	iitem->m_eItemPlace == eItemPlaceSlot 
+		||	iitem->m_eItemPlace == eItemPlaceBelt 
+		){
+			itm->SetColorAll(color_argb(255,100,100,255));		// заливка предмета !Синим! цветом //
+		}
+	}
 }
+

@@ -968,3 +968,31 @@ LPCSTR CScriptGameObject::GetBoneName(u16 id) const
 		return K->LL_BoneName_dbg(id);
 	return 0;
 }
+
+#include "eatable_item.h"
+int CScriptGameObject::GetPortions()
+{
+	int res = 0;
+	CEatableItem* eat_obj = smart_cast<CEatableItem*>( &object() );
+	if( eat_obj ){
+		res = eat_obj->GetPortionsNum();	
+		if( res < 0 ){ 
+			res = 1;
+		}
+	}
+	return res;
+}
+
+int CScriptGameObject::GetStartPortions()
+{
+	int res = 0;
+	CEatableItem* eat_obj = smart_cast<CEatableItem*>( &object() );
+	if( eat_obj ){	
+		res = eat_obj->GetStartPortionsNum();
+		if( res < 0 ){
+			res = 1;
+		}
+	}
+	return res;
+}
+

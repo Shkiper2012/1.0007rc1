@@ -10,7 +10,6 @@
 #include "../script_game_object.h"
 #include "../Actor.h"
 
-
 #define INV_GRID_WIDTHF			50.0f
 #define INV_GRID_HEIGHTF		50.0f
 
@@ -38,6 +37,7 @@ bool CUIInventoryCellItem::EqualTo(CUICellItem* itm)
 {
 	CUIInventoryCellItem* ci = smart_cast<CUIInventoryCellItem*>(itm);
 	if(!itm)				return false;
+
 	// Real Wolf: Колбек на группировку и само регулирование группировкой предметов. 12.08.2014.
 	auto item1 = (CInventoryItem*)m_pData;
 	auto item2 = (CInventoryItem*)itm->m_pData;
@@ -471,7 +471,7 @@ Ivector2 CUIWeaponCellItem::GetGridSize(bool with_childs)
 		auto obj		= object();
 
 #pragma warning(push)
-#pragma warning(disable:4995)	// ADD_shkiper_marker // fixed C4995 //
+#pragma warning(disable:4995)
 		str_c addons[eMaxAddon]; std::memset(addons, NULL, sizeof(addons));
 #pragma warning(pop)
 

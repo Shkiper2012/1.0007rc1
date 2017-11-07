@@ -384,5 +384,9 @@ class_<CScriptGameObject> &script_register_game_object2(class_<CScriptGameObject
 		.def("get_cell_item",				&CScriptGameObject::GetCellItem)
 		.def("open_inventory_box",			&CScriptGameObject::OpenInventoryBox)
 		.def("get_bone_name",				&CScriptGameObject::GetBoneName)
+
+		// functions for CEatableItem class // by Shkiper2012 //
+		.def("get_portions",				&CScriptGameObject::GetPortions)
+		.def("get_start_portions",			&CScriptGameObject::GetStartPortions)
 	;return	(instance);
 }

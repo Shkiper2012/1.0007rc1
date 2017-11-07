@@ -8,7 +8,7 @@
 #include "uilines.h"
 #include "../string_table.h"
 #include "../ui_base.h"
-#include "../../GameFont.h" 	// ADD_shkiper_marker // 
+#include "../../GameFont.h"
 
 const char * const	clDefault	= "default";
 #define CREATE_LINES if (!m_pLines) {m_pLines = xr_new<CUILines>(); m_pLines->SetTextAlignment(CGameFont::alLeft);}

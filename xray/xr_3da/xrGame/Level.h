@@ -1,9 +1,6 @@
 // Level.h: interface for the CLevel class.
 //
 //////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_LEVEL_H__38F63863_DB0C_494B_AFAB_C495876EC671__INCLUDED_)
-#define AFX_LEVEL_H__38F63863_DB0C_494B_AFAB_C495876EC671__INCLUDED_
 #pragma once
 
 #include "../igame_level.h"
@@ -14,7 +11,6 @@
 #include "alife_space.h"
 #include "xrDebug.h"
 #include "xrServer.h"
-#include "battleye_system.h"
 
 class	CHUDManager;
 class	CParticlesObject;
@@ -56,7 +52,6 @@ public:
 			void			update						();
 			bool			is_object_denied			(CObject const * O);
 };
-
 
 class CLevel					: public IGame_Level, public IPureClient
 {
@@ -178,12 +173,6 @@ public:
 	xr_deque<CSE_Abstract*>		game_spawn_queue;
 	xrServer*					Server;
 	GlobalFeelTouch				m_feel_deny;
-
-
-#ifdef BATTLEYE
-	BattlEyeSystem				battleye_system;
-	virtual bool				TestLoadBEClient();
-#endif // BATTLEYE
 
 private:
 	// preload sounds registry
@@ -417,5 +406,3 @@ class  CPHWorld;
 extern CPHWorld*				ph_world;
 extern BOOL						g_bDebugEvents;
 
-
-#endif // !defined(AFX_LEVEL_H__38F63863_DB0C_494B_AFAB_C495876EC671__INCLUDED_)

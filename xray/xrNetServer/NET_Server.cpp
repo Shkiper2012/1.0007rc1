@@ -119,7 +119,6 @@ void gen_auth_code()
 		test.push_back			(xr_string("gamedata\\textures\\act"));
 		test.push_back			(xr_string("gamedata\\textures\\wpn"));
 
-		test.push_back			(xr_string("xrd3d9-null.dll"));
 		test.push_back			(xr_string("ode.dll"));
 		test.push_back			(xr_string("xrcdb.dll"));
 		test.push_back			(xr_string("xrcore.dll"));

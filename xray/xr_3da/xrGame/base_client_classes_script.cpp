@@ -212,8 +212,8 @@ void CRotationScript::script_register(lua_State *L)
 		];
 }
 
-#pragma warning(push) 			// <--- ADD_shkiper_marker // 30_09_2017 //
-#pragma warning(disable:4482)	// <--- //
+#pragma warning(push)
+#pragma warning(disable:4482)
 void CObjectScript::script_register		(lua_State *L)
 {
 	module(L)
@@ -345,7 +345,7 @@ void CObjectScript::script_register		(lua_State *L)
 //		,class_<CAI_Stalker,CCustomMonster>("CAI_Stalker")
 	];
 }
-#pragma warning(pop)			// <--- ADD_shkiper_marker // 30_09_2017 //
+#pragma warning(pop)
 
 
 // alpet ======================== SCRIPT_TEXTURE_CONTROL BEGIN =========== 
@@ -487,7 +487,7 @@ bool get_bone_visible_by_id(CKinematics *K, u16 bone_id)
 {
 	if (bone_id != BI_NONE){
 		//return K->LL_GetBoneVisible(bone_id);
-		return( (K->LL_GetBoneVisible(bone_id)) != 0 );		// ADD_shkiper_marker // fixed C4800 //
+		return( (K->LL_GetBoneVisible(bone_id)) != 0 );		// fixed C4800 //
 	}	
 	return false;
 }

@@ -86,12 +86,9 @@ bool CAI_Trader::bfAssignSound(CScriptEntityAction *tpEntityAction)
 //////////////////////////////////////////////////////////////////////////
 void CAI_Trader::BoneCallback(CBoneInstance *B)
 {
-	/* Теперь торговец не крутит головой вслед за ГГ // by abramcumner //
-
+	// Торговец крутит головой вслед за ГГ, если закомментить то не будет. // by abramcumner //
 	CAI_Trader*	this_class = static_cast<CAI_Trader*>(B->Callback_Param);
 	this_class->LookAtActor(B);
-	
-	*/
 }
 
 void CAI_Trader::LookAtActor(CBoneInstance *B)

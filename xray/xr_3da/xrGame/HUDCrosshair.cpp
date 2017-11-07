@@ -44,7 +44,7 @@ void CHUDCrosshair::Load		()
 	radius_speed_perc = pSettings->r_float (HUD_CURSOR_SECTION, "radius_lerp_speed");
 
 	//m_is_enabled = READ_IF_EXISTS(pSettings, r_bool, HUD_CURSOR_SECTION, "enabled", true);
-	m_is_enabled = ( (pSettings->r_bool(HUD_CURSOR_SECTION, "enabled")) != 0 );		// ADD_shkiper_marker // fixed C4800 //
+	m_is_enabled = ( (pSettings->r_bool(HUD_CURSOR_SECTION, "enabled")) != 0 );		// fixed C4800 //
 }
 
 //выставляет radius от min_radius до max_radius

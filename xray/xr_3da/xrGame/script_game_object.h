@@ -681,6 +681,9 @@ public:
 
 			LPCSTR GetBoneName(u16) const;
 
+			int GetPortions();
+			int GetStartPortions();
+
 			// alpet: visual functions for CWeapon descedants 
 			_DECLARE_FUNCTION10 (alife_object			,			CSE_ALifeDynamicObject*);
 			_DECLARE_FUNCTION10 (GetWeaponHUD_Visual	,			IRender_Visual*);

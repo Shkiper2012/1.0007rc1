@@ -5,7 +5,7 @@
 //	Author		: Alexander Petrov
 //	Description : Script Actor (params)
 ////////////////////////////////////////////////////////////////////////////
-//#include "StdAfx.h" 	// COMMENT_shkiper_marker // fixed C4627 //
+
 #include "pch_script.h"
 #include "base_client_classes.h"
 #include "script_game_object.h"

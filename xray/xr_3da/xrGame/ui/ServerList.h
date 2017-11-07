@@ -6,8 +6,6 @@
 #include "UIFrameWindow.h"
 #include "UIEditBox.h"
 #include "UI3tButton.h"
-#include "../battleye.h"
-
 
 class CUIXml;
 class CGameSpy_Browser;

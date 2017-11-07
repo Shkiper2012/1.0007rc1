@@ -322,8 +322,7 @@ bool	get_obj_alive(CScriptGameObject *O)
 	CGameObject *obj = &O->object();
 	CEntityAlive *ent = smart_cast<CEntityAlive*> (obj);
 	if (ent){
-		//return ent->g_Alive();
-		return( (ent->g_Alive()) != 0 );		// ADD_shkiper_marker // fixed C4800 //
+		return( (ent->g_Alive()) != 0 );
 	}
 	else
 		return false;

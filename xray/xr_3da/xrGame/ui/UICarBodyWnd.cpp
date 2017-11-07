@@ -265,6 +265,7 @@ void CUICarBodyWnd::UpdateLists()
 	for(it =  ruck_list.begin(); ruck_list.end() != it; ++it) 
 	{
 		CUICellItem* itm				= create_cell_item(*it);
+		ColorizeItem					(itm);
 		m_pUIOurBagList->SetItem		(itm);
 	}
 
@@ -328,7 +329,6 @@ void CUICarBodyWnd::Draw()
 	inherited::Draw	();
 }
 
-
 void CUICarBodyWnd::Update()
 {
 	if(	m_b_need_update||
@@ -344,7 +344,6 @@ void CUICarBodyWnd::Update()
 	}
 	inherited::Update();
 }
-
 
 void CUICarBodyWnd::Show() 
 { 
@@ -426,9 +425,7 @@ void CUICarBodyWnd::TakeAll()
 	}
 }
 
-
 #include "../xr_level_controller.h"
-
 bool CUICarBodyWnd::OnKeyboard(int dik, EUIMessages keyboard_action)
 {
 	if( inherited::OnKeyboard(dik,keyboard_action) )return true;
@@ -443,7 +440,6 @@ bool CUICarBodyWnd::OnKeyboard(int dik, EUIMessages keyboard_action)
 
 #include "../Medkit.h"
 #include "../Antirad.h"
-
 void CUICarBodyWnd::ActivatePropertiesBox()
 {
 	if(m_pInventoryBox)	return;
@@ -510,7 +506,6 @@ void CUICarBodyWnd::EatItem()
 	CGameObject::u_EventSend	(P);
 
 }
-
 
 bool CUICarBodyWnd::OnItemDrop(CUICellItem* itm)
 {
@@ -656,3 +651,14 @@ void CUICarBodyWnd::BindDragDropListEnents(CUIDragDropListEx* lst)
 	lst->m_f_item_selected			= CUIDragDropListEx::DRAG_DROP_EVENT(this,&CUICarBodyWnd::OnItemSelected);
 	lst->m_f_item_rbutton_click		= CUIDragDropListEx::DRAG_DROP_EVENT(this,&CUICarBodyWnd::OnItemRButtonClick);
 }
+
+void CUICarBodyWnd::ColorizeItem(CUICellItem* itm)
+{
+	PIItem iitem = (PIItem)itm->m_pData;
+	if( iitem->m_eItemPlace == eItemPlaceSlot 
+	||	iitem->m_eItemPlace == eItemPlaceBelt 
+	){
+		itm->SetColorAll(color_argb(255,100,100,255));		// заливка предмета !Синим! цветом //
+	}
+}
+

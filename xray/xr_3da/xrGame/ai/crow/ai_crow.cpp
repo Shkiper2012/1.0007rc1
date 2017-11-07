@@ -95,7 +95,7 @@ void CAI_Crow::init		()
 	fIdleSoundDelta		= 10.f;
 	fIdleSoundTime		= fIdleSoundDelta;
 	bPlayDeathIdle		= false;
-	// ADD_shkiper_marker // [Bugfix] Crows fix // by Sin! // 
+	// [Bugfix] Crows fix // by Sin! // 
 	o_workload_frame 	= 0;
 	o_workload_rframe 	= 0;
 }
@@ -141,7 +141,7 @@ BOOL CAI_Crow::net_Spawn		(CSE_Abstract* DC)
 	m_Anims.m_fly.Load			(M,"norm_fly_fwd");
 	m_Anims.m_idle.Load			(M,"norm_idle");
 
-	// ---> // ADD_shkiper_marker // [Bugfix] Crows fix // by Sin! // 
+	// ---> // [Bugfix] Crows fix // by Sin! // 
 	o_workload_frame  = 0;
 	o_workload_rframe = 0;
 

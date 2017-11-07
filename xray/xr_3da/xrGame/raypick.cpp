@@ -3,7 +3,7 @@
 #include "level.h"
 
 #pragma warning(push)
-#pragma warning(disable:4482)	// ADD_shkiper_marker // 
+#pragma warning(disable:4482)
 CRayPick::CRayPick() 
 {
 	start_position.set(0,0,0); 
