@@ -250,6 +250,8 @@ class_<CScriptGameObject> &script_register_game_object2(class_<CScriptGameObject
 		.def("wounded",						(bool (CScriptGameObject::*)() const)(&CScriptGameObject::wounded))
 		.def("wounded",						(void (CScriptGameObject::*)(bool))(&CScriptGameObject::wounded))
 
+		.def("iterate_belt",				&CScriptGameObject::IterateBelt)
+		.def("iterate_inventory_box",		&CScriptGameObject::IterateInventoryBox)
 		.def("iterate_inventory",			&CScriptGameObject::IterateInventory)
 		.def("mark_item_dropped",			&CScriptGameObject::MarkItemDropped)
 		.def("marked_dropped",				&CScriptGameObject::MarkedDropped)

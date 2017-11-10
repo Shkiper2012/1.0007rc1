@@ -229,8 +229,9 @@ void CUITradeWnd::Update()
 	}else if(m_pOthersInv->ModifyFrame()==Device.dwFrame){
 		et = e2nd;
 	}
-	if(et!=eNone)
-		UpdateLists					(et);
+	if(et!=eNone){
+		UpdateLists					(e2nd); // обновим только лист торговца. //
+	}
 
 	inherited::Update				();
 	UpdateCameraDirection			(smart_cast<CGameObject*>(m_pOthersInvOwner));
@@ -434,6 +435,7 @@ void CUITradeWnd::PerformTrade()
 		m_uidata->UIDealMsg->m_endTime	= Device.fTimeGlobal+2.0f;// sec
 	}
 	SetCurrentItem			(NULL);
+	UpdatePrices();
 }
 
 void CUITradeWnd::DisableAll()

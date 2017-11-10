@@ -11,7 +11,7 @@ class CInventory;
 
 #include "UIOutfitInfo.h"
 #include "UIItemInfo.h"
-#include "../../../../build_config_defines.h" // for: INV_NEW_SLOTS_SYSTEM, INV_OUTFIT_FULL_ICON_HIDE, HIDE_WEAPON_IN_INV
+#include "../../../../build_config_defines.h" // for: INV_NEW_SLOTS_SYSTEM, INV_OUTFIT_FULL_ICON_HIDE
 
 #if defined(INV_NEW_SLOTS_SYSTEM)
 	#include "UISleepWnd.h"
@@ -94,6 +94,9 @@ protected:
 	CUIDragDropListEx*			m_pUIBeltList;
 	CUIDragDropListEx*			m_pUIPistolList;
 	CUIDragDropListEx*			m_pUIAutomaticList;
+	CUIDragDropListEx*			m_pUIBinocList;
+	CUIDragDropListEx*			m_pUITorchList;
+	CUIDragDropListEx*			m_pUIKnifeList;
 
 #if defined(INV_NEW_SLOTS_SYSTEM)	
 	CUISleepWnd					UISleepWnd;
@@ -112,7 +115,7 @@ protected:
 	CUIDragDropListEx*			m_slots_array [SLOTS_TOTAL];  // alpet: для индексированного доступа
 
 #if defined(INV_OUTFIT_FULL_ICON_HIDE)
-	CUIDragDropListEx*		m_pUIOutfitList;
+	CUIDragDropListEx*			m_pUIOutfitList;
 #else
 	CUIOutfitDragDropList*		m_pUIOutfitList;
 #endif

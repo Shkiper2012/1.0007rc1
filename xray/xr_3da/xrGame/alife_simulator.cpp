@@ -15,6 +15,7 @@
 #include "mainmenu.h"
 #include "object_factory.h"
 #include "../../../build_config_defines.h" // for: LUAICP_COMPAT
+
 LPCSTR alife_section = "alife";
 
 extern void destroy_lua_wpn_params	();

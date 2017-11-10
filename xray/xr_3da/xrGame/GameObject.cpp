@@ -272,9 +272,6 @@ BOOL CGameObject::net_Spawn(CSE_Abstract*	DC)
 		cName_set(E->name_replace());
 
 	setID(E->ID);
-	//	if (GameID() != GAME_SINGLE)
-	//		Msg ("CGameObject::net_Spawn -- object %s[%x] setID [%d]", *(E->s_name), this, E->ID);
-	//	R_ASSERT(Level().Objects.net_Find(E->ID) == NULL);
 
 	// XForm
 	XFORM().setXYZ(E->o_Angle);

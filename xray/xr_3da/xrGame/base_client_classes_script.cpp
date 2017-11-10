@@ -212,8 +212,6 @@ void CRotationScript::script_register(lua_State *L)
 		];
 }
 
-#pragma warning(push)
-#pragma warning(disable:4482)
 void CObjectScript::script_register		(lua_State *L)
 {
 	module(L)
@@ -293,22 +291,22 @@ void CObjectScript::script_register		(lua_State *L)
 			]
 			.enum_("inventory_item")
 			[
-				value("FdropManual"				,				int(CInventoryItem::EIIFlags::FdropManual)),
-				value("FCanTake"				,				int(CInventoryItem::EIIFlags::FCanTake)),
-				value("FCanTrade"				,				int(CInventoryItem::EIIFlags::FCanTrade)),
-				value("Fbelt"					,				int(CInventoryItem::EIIFlags::Fbelt)),
-				value("Fruck"					,				int(CInventoryItem::EIIFlags::Fruck)),
-				value("FRuckDefault"			,				int(CInventoryItem::EIIFlags::FRuckDefault)),
-				value("FUsingCondition"			,				int(CInventoryItem::EIIFlags::FUsingCondition)),
-				value("FAllowSprint"			,				int(CInventoryItem::EIIFlags::FAllowSprint)),
-				value("Fuseful_for_NPC"			,				int(CInventoryItem::EIIFlags::Fuseful_for_NPC)),
-				value("FInInterpolation"		,				int(CInventoryItem::EIIFlags::FInInterpolation)),
-				value("FInInterpolate"			,				int(CInventoryItem::EIIFlags::FInInterpolate)),
-				value("FIsQuestItem"			,				int(CInventoryItem::EIIFlags::FIsQuestItem)),
-				value("FIAlwaysTradable"		,				int(CInventoryItem::EIIFlags::FIAlwaysTradable)),
-				value("FIAlwaysUntradable"		,				int(CInventoryItem::EIIFlags::FIAlwaysUntradable)),
-				value("FIUngroupable"			,				int(CInventoryItem::EIIFlags::FIUngroupable)),
-				value("FIManualHighlighting"	,				int(CInventoryItem::EIIFlags::FIManualHighlighting))
+				value("FdropManual"				,				int(CInventoryItem::FdropManual)),
+				value("FCanTake"				,				int(CInventoryItem::FCanTake)),
+				value("FCanTrade"				,				int(CInventoryItem::FCanTrade)),
+				value("Fbelt"					,				int(CInventoryItem::Fbelt)),
+				value("Fruck"					,				int(CInventoryItem::Fruck)),
+				value("FRuckDefault"			,				int(CInventoryItem::FRuckDefault)),
+				value("FUsingCondition"			,				int(CInventoryItem::FUsingCondition)),
+				value("FAllowSprint"			,				int(CInventoryItem::FAllowSprint)),
+				value("Fuseful_for_NPC"			,				int(CInventoryItem::Fuseful_for_NPC)),
+				value("FInInterpolation"		,				int(CInventoryItem::FInInterpolation)),
+				value("FInInterpolate"			,				int(CInventoryItem::FInInterpolate)),
+				value("FIsQuestItem"			,				int(CInventoryItem::FIsQuestItem)),
+				value("FIAlwaysTradable"		,				int(CInventoryItem::FIAlwaysTradable)),
+				value("FIAlwaysUntradable"		,				int(CInventoryItem::FIAlwaysUntradable)),
+				value("FIUngroupable"			,				int(CInventoryItem::FIUngroupable)),
+				value("FIManualHighlighting"	,				int(CInventoryItem::FIManualHighlighting))
 			]
 			.enum_("se_object_flags")
 			[
@@ -345,8 +343,6 @@ void CObjectScript::script_register		(lua_State *L)
 //		,class_<CAI_Stalker,CCustomMonster>("CAI_Stalker")
 	];
 }
-#pragma warning(pop)
-
 
 // alpet ======================== SCRIPT_TEXTURE_CONTROL BEGIN =========== 
 

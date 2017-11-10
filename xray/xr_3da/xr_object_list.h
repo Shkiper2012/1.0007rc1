@@ -43,6 +43,7 @@ public:
 	CObject*					FindObjectByName	( shared_str	name	);
 	CObject*					FindObjectByName	( LPCSTR		name	);
 	CObject*					FindObjectByCLS_ID	( CLASS_ID		cls		);
+	IC xr_map<u32,CObject*>		GetMap()			{return map_NETID;		};
 
 	void						Load				( );
 	void						Unload				( );

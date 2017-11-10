@@ -3,21 +3,21 @@
 	/*		30_09_2017
 			-----------------------------------------------------------------------------------------------------------------------
 	gamedata:
-	(~)		system.ltx 				---> slot
-	(+)		items.ltx 				---> [detektor_...] ---> belt = true
-	(+)		actor.ltx 				---> camera_height_factor = 0.95
-	(+) 	task_manager.script 	---> проверка на 'defend_object'
+	(~)		system.ltx 						---> slot
+	(+)		items.ltx 						---> [detektor_...] ---> belt = true
+	(+)		actor.ltx 						---> camera_height_factor = 0.95
+	(+) 	task_manager.script 			---> проверка на 'defend_object'
 			-----------------------------------------------------------------------------------------------------------------------
-	(/)		ui_st_other.xml 		---> ui_quick_slot_use_str_0
-	(/)		ui_keybinding.xml	 	---> kb_slot_quick_0
-	(=)		inventory_new.xml 		= condition_prog_ess_bar ---> condition_progRess_bar (1/3)
-	(=)		inventory_new_16.xml 	= condition_prog_ess_bar ---> condition_progRess_bar (2/3)
+	(/)		ui_st_other.xml 				---> ui_quick_slot_use_str_0
+	(/)		ui_keybinding.xml	 			---> kb_slot_quick_0
+	(=)		inventory_new.xml 				---> condition_prog_ess_bar ---> condition_progRess_bar (1/3)
+	(=)		inventory_new_16.xml 			---> condition_prog_ess_bar ---> condition_progRess_bar (2/3)
 			-----------------------------------------------------------------------------------------------------------------------
 	xray:
-	(=)		UICellItem.cpp 			= condition_prog_ess_bar ---> condition_progRess_bar (3/3)
+	(=)		UICellItem.cpp 					---> condition_progRess_bar (3/3) <--- condition_prog_ess_bar 
 	(+)		3rd party\Xiph\libvorbis\lib\info.c ---> #pragma warning(disable:4238) 
-	(+)		base_client_classes_script.cpp 		---> #pragma warning(disable:4482)
-	(+)		UIMainIngameWnd.cpp 				---> #pragma warning(disable:4482)
+	(+)		base_client_classes_script.cpp 	---> #pragma warning(disable:4482)
+	(+)		UIMainIngameWnd.cpp 			---> #pragma warning(disable:4482)
 			-----------------------------------------------------------------------------------------------------------------------
 	(=)		script_game_object_script.cpp 	---> 'ePostSave' ---> eBeforeSave'
 	(+)		FStaticRender.cpp 				---> KD_DETAIL_RADIUS ---> #include "../../../build_config_defines.h"
@@ -28,16 +28,16 @@
 	(=)		HangingLamp.cpp 				---> if(!PPhysicsShell()) 			// Очень странный вылет 	// by SkyLoader //	
 	(+)		UIInventoryWnd.cpp 				---> #define HIDE_WEAPON_IN_INV 	// Спрячем/показываем предмет в руках, когда откр./закр. инвентарь. // by Shkiper2012 //
 			-----------------------------------------------------------------------------------------------------------------------
-	(=)		Inventory.cpp 			---> Если на ГГ надет броник с включенным ПНВ, то надо его выключить. // by Kondr48 //
-	(=) 	WeaponMagazined.cpp 	---> m_set_next_ammoType_on_reload 	// by Sin! // 
-	(=) 	WeaponMagazined.cpp 	---> #define NO_AUTO_RELOAD_WPN 	// Блокируем авто-перезарядку и сброс зума, когда закончились патроны. // by Shkiper2012 //
-	(=) 	x_ray.cpp 				--->  Фикс полосы загрузки 			// by SkyLoader //	
+	(=)		Inventory.cpp 					---> Если на ГГ надет броник с включенным ПНВ, то надо его выключить. // by Kondr48 //
+	(=) 	WeaponMagazined.cpp 			---> m_set_next_ammoType_on_reload 	// by Sin! // 
+	(=) 	WeaponMagazined.cpp 			---> #define NO_AUTO_RELOAD_WPN 	// Блокируем авто-перезарядку и сброс зума, когда закончились патроны. // by Shkiper2012 //
+	(=) 	x_ray.cpp 						--->  Фикс полосы загрузки 			// by SkyLoader //	
 			-----------------------------------------------------------------------------------------------------------------------
-	(=)		UIDiaryWnd2.cpp 		---> Исправление отображения зеленым цветом прочитанных записей в разделе КПК Дневник. // by lvg_brest //
-	(=)		UIDiaryWnd.h 			---> ...
-	(=)		UICarBodyWnd.cpp 		---> Исправление отображения параметра "отношение" при обыске тел монстров // by lvg_brest //
-	(=)		UICharacterInfo.cpp		---> ... + Исправление работы статика биографии в разделе КПК Ранги.cpp
-	(=)		UICharacterInfo.h		---> ...
+	(=)		UIDiaryWnd2.cpp 				---> Исправление отображения зеленым цветом прочитанных записей в разделе КПК Дневник. // by lvg_brest //
+	(=)		UIDiaryWnd.h 					---> ...
+	(=)		UICarBodyWnd.cpp 				---> Исправление отображения параметра "отношение" при обыске тел монстров // by lvg_brest //
+	(=)		UICharacterInfo.cpp				---> ... + Исправление работы статика биографии в разделе КПК Ранги.cpp
+	(=)		UICharacterInfo.h				---> ...
 			-----------------------------------------------------------------------------------------------------------------------
 	(=)		UIGameTutorialSimpleItem.cpp 	---> Исправление залипания курсора мыши в главном меню после просмотра титров.cpp // by lvg_brest //
 	(=)		Level_network.cpp 				---> Исправление сохранения клиентских объектов. // by Shoker //
@@ -167,28 +167,28 @@ xxx	(=)		xrGame\ui\uiabstract.h 					---> SetTextureVisible(bool vis)	{m_bTextur
 	*/
 	
 	/*		17_10_2017
-	(=)		xrCore\_cylinder.h 					---> _valid(c.m_radius); // by OpenXRay //
-	(/)		xr_3da\xrGame\shared_data.h 		---> Log("DestroySingleton::RefCounter:",_refcount);
-	(/)		xr_3da\xrGame\Level.cpp 			---> Msg("* ProcessGameEvents, spawn event postponed. Events rest = %d", game_events->queue.size());	
+	(=)		xrCore\_cylinder.h 								---> _valid(c.m_radius); // by OpenXRay //
+	(/)		xr_3da\xrGame\shared_data.h 					---> Log("DestroySingleton::RefCounter:",_refcount);
+	(/)		xr_3da\xrGame\Level.cpp 						---> Msg("* ProcessGameEvents, spawn event postponed. Events rest = %d", game_events->queue.size());	
 			-------------------------------------------------------------------------------------------------------------------------------
-	(/)		xr_3da\xrGame\Inventory.cpp			---> Чтобы не было строки в выпадающем списке с действиями "Перенести в слот", когда предмет итак уже в слоте.
-	(=)		xrGame\derived_client_classes.cpp 	---> ("eat_start_portions_num", &CEatableItem::m_iStartPortionsNum) // by Карлан //
-	(=)		xrRender\WallmarksEngine.cpp 		---> Правка на 100% появление бладмарков // ssaCLIP // by SkyLoader //
-	(=)		xr_3da\xrSheduler.cpp 				---> "../../build_config_defines.h" // by KRodin: добавил забытый инклуд //
+	(/)		xr_3da\xrGame\Inventory.cpp						---> Чтобы не было строки в выпадающем списке с действиями "Перенести в слот", когда предмет итак уже в слоте.
+	(=)		xrGame\derived_client_classes.cpp 				---> ("eat_start_portions_num", &CEatableItem::m_iStartPortionsNum) // by Карлан //
+	(=)		xrRender\WallmarksEngine.cpp 					---> Правка на 100% появление бладмарков // ssaCLIP // by SkyLoader //
+	(=)		xr_3da\xrSheduler.cpp 							---> "../../build_config_defines.h" // by KRodin: добавил забытый инклуд //
 			-------------------------------------------------------------------------------------------------------------------------------
-	(-)		xrGame\ui\UIMainIngameWnd.h 		---> ui_disk_io ---> убрал с худа мигающую иконку дискеты.
-	(-)		xrGame\ui\UIMainIngameWnd.cpp 		---> ui_disk_io ---> убрал с худа мигающую иконку дискеты.
-	(-)		xrGame\ui\UIInventoryWnd.cpp 		---> ../build_config_defines.h
- 	(+)		xrGame\ui\UIInventoryWnd.h 			---> ../build_config_defines.h
-	(+)		xrGame\inventory_item.h 			---> ../build_config_defines.h
+	(-)		xrGame\ui\UIMainIngameWnd.h 					---> ui_disk_io ---> убрал с худа мигающую иконку дискеты.
+	(-)		xrGame\ui\UIMainIngameWnd.cpp 					---> ui_disk_io ---> убрал с худа мигающую иконку дискеты.
+	(-)		xrGame\ui\UIInventoryWnd.cpp 					---> ../build_config_defines.h
+ 	(+)		xrGame\ui\UIInventoryWnd.h 						---> ../build_config_defines.h
+	(+)		xrGame\inventory_item.h 						---> ../build_config_defines.h
 	(+)		xrGame\xrServer_process_event_ownership.cpp 	---> #ifdef DEBUG "sv !ownership ... " #endif
 			-------------------------------------------------------------------------------------------------------------------------------
-	(+)		gamedata\config\m_netpk.ltx				---> NET-packet -- by Artos --
-	(+)		gamedata\scripts\m_netpk.script 		---> NET-packet -- by Artos --
-	(+)		gamedata\scripts\m_netpk_readme.txt		---> NET-packet -- by Artos --
-	(+)		gamedata\scripts\xr_box.script 			---> Правка проваливания предметов через текстуры при разбивании ящиков. -- Автор Bak. --
+	(+)		gamedata\config\m_netpk.ltx						---> NET-packet -- by Artos --
+	(+)		gamedata\scripts\m_netpk.script 				---> NET-packet -- by Artos --
+	(+)		gamedata\scripts\m_netpk_readme.txt				---> NET-packet -- by Artos --
+	(+)		gamedata\scripts\xr_box.script 					---> Правка проваливания предметов через текстуры при разбивании ящиков. -- Автор Bak. --
 			-------------------------------------------------------------------------------------------------------------------------------
-	(~)		gamedata\config\weapons\w_binoc.ltx 	---> force_grow_speed	= 15 ;; скорость набора силы броска (метры в секунду)
+	(~)		gamedata\config\weapons\w_bolt.ltx 				---> force_grow_speed	= 15 ;; скорость набора силы броска (метры в секунду)
 	(~)		gamedata\config\ui\inventory_new.xml
 	(~)		gamedata\config\ui\inventory_new_16.xml
 	(+)		gamedata\scripts\ui_main_menu.script
@@ -198,11 +198,11 @@ xxx	(=)		xrGame\ui\uiabstract.h 					---> SetTextureVisible(bool vis)	{m_bTextur
 	(+)		gamedata\textures\ui\ui_cheat_naxac.dds			---> Спаун-меню -- by naxac --
 	(+)		gamedata\textures\ui\ui_inv_belt_w_slots.dds 	---> Текстура для инвентаря.
 			-------------------------------------------------------------------------------------------------------------------------------
-	(+)		xrGame\ui\UICarBodyWnd.cpp 			---> HIDE_WEAPON_IN_INV
-	(+)		xrGame\ui\UIPdaWnd.cpp				---> HIDE_WEAPON_IN_INV
-	(+)		xrGame\ui\UIWpnParams.cpp 			---> wpn_knife ---> Чтобы не отображались полоски точности, скорострельности для ножа.
- 	(/)		xrGame\alife_simulator_base.cpp 	---> Msg("#SE_DBG: CALifeSimulatorBase '%s' ->m_objects = 0x%p ",
-	(+)		xrCore\LocatorAPI.cpp 				---> #pragma warning(pop)
+	(+)		xrGame\ui\UICarBodyWnd.cpp 						---> HIDE_WEAPON_IN_INV
+	(+)		xrGame\ui\UIPdaWnd.cpp							---> HIDE_WEAPON_IN_INV
+	(+)		xrGame\ui\UIWpnParams.cpp 						---> wpn_knife ---> Чтобы не отображались полоски точности, скорострельности для ножа.
+ 	(/)		xrGame\alife_simulator_base.cpp 				---> Msg("#SE_DBG: CALifeSimulatorBase '%s' ->m_objects = 0x%p ",
+	(+)		xrCore\LocatorAPI.cpp 							---> #pragma warning(pop)
 	(~)		xrGame\ai\monsters\basemonster\base_monster_startup.cpp ---> color_gray, color_add // by PVS-Studio //
 			-------------------------------------------------------------------------------------------------------------------------------
 	======= build 6834 =======			
@@ -246,13 +246,13 @@ xxx	(=)		xrGame\Ai\Trader\ai_trader.cpp 					---> Теперь торговец не крутит голо
 	(+)		xrGame\eatable_item.cpp 						---> EAT_PORTIONS_INFLUENCE ---> Уменьшаем вес и цену предмета, после использования. 	// by Real Wolf //
 	(+)		xrGame\Actor.cpp 								---> RepackAmmo() 			---> Перепаковщик патронов 									// by Charsi //
 	(-)		xrGame\GamePersistent.cpp 						---> Убирано троеточие в строках, типа: "Клиент:Синхронизация..." ---> sprintf_s (buff, "%s...", CStringTable().translate(str).c_str());
-	(+)		xrGame\eatable_item.h 							---> int GetStartPortionsNum() const { return m_iStartPortionsNum; };
+	(+)		xrGame\eatable_item.h 							---> int GetStartPortionsNum() const { return m_iStartPortionsNum; }; 					// by Shkiper2012 //
 			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	======= build 6842 =======
 	*/
 	
 	/*		07_11_2017
-	(+)		// Методы для предметов на классе CEatableItem //
+	(+)		// Методы для предметов на классе CEatableItem // by Shkiper2012 //
 			int GetPortions();					---> local portions 	  = obj:get_portions()
 			int GetStartPortions(); 			---> local start_portions = obj:get_start_portions()
 			--
@@ -264,7 +264,7 @@ xxx	(=)		xrGame\Ai\Trader\ai_trader.cpp 					---> Теперь торговец не крутит голо
 			У съедобных ---> если порции = -1, будет возвращать = 1.
 			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 xxx	(=)		Отключил правку 					---> "Торговец не крутит головой вслед за ГГ" 						---> т.к. он стал как слепой, смотрит в одну точку.
-	(+)		xrGame\ui\UITradeWnd.h 				---> Заливка предметов, которые в слоте или на поясе, синим цветом. ---> ColorizeItem() // как у OGSR-engine //
+	(+)		xrGame\ui\UITradeWnd.h 				---> Заливка предметов, которые в слоте или на поясе, синим цветом. ---> ColorizeItem()
 	(+)		xrGame\ui\UITradeWnd.cpp 			---> + Добавлена проверка на флаг "Не-торгуемости".  				---> ColorizeItem()
 	(+)		xrGame\ui\UICarBodyWnd.h 			---> Заливка предметов, которые в слоте или на поясе, синим цветом. ---> ColorizeItem()
 	(+)		xrGame\ui\UICarBodyWnd.cpp 			---> Заливка предметов, которые в слоте или на поясе, синим цветом. ---> ColorizeItem()
@@ -273,6 +273,65 @@ xxx	(=)		Отключил правку 					---> "Торговец не крутит головой вслед за ГГ" 				
 	(-)		Удалены все ссылки на "xrd3d9-null"
 			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	======= build 6850 =======			
+	*/
+	
+	/*		10_11_2017
+	(~)		xrGame\ai\Monsters\Controller\controller_psy_aura.cpp ---> небольшие правки ---> m_fake_max_add_dist, m_fake_min_add_dist.
+	(=)		xrGame\ui\UICarBodyWnd.cpp 						---> fix scrolling
+	(+)		xrGame\script_engine.cpp 						---> lua_gc (lua(),LUA_GCCOLLECT,0); 	---> CScriptEngine::collect_all_garbage()
+			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+xxx	(+)		xrGame\ui\UICellItem.cpp 						---> xr_delete 							---> если, включить эту правку, то будет !вылет! при использовании инвентаря. <---
+	(+)		xrGame\ui\UIInventoryWnd.h 						---> бинокль, фонарь, нож.
+	(+)		xrGame\ui\UIInventoryWnd.cpp 					---> бинокль, фонарь, нож + небольшие правки: if( !pActor ) return;
+	(+)		xrGame\ui\uiinventorywnd2.cpp 					---> бинокль, фонарь, нож + UIPropertiesBox.IsShown
+			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	(~)		xrGame\ui\UIInventoryWnd3.cpp 					---> небольшие правки 					---> !m_pInv->InSlot(CurrentIItem())
+	(~)		xrGame\ui\UIMainIngameWnd.cpp 					---> небольшие правки 					---> ALife::_OBJECT_ID _id
+	(~)		xrGame\ui\UIScrollBar.cpp						---> небольшие правки 					---> +1
+	(~)		xrGame\ui\UITradeWnd.cpp 						---> небольшие правки 					---> обновляем только торговый лист тогровца.
+			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	(+)		xrGame\alife_simulator_script.cpp 				---> iterate_objects() 					// by Charsi // 
+	(-)		xrGame\base_client_classes_script.cpp 			---> удалил ---> ::EIIFlags:: 			// fixed C4482 //
+	(~)		xrGame\console_commands.cpp 					---> CCC_DemoRecord 					---> не включаем, если локация не загружена, 
+	(~)														---> CCC_LoadLastSave 					---> проверка существует ли сейв, 
+			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	(~)		xrGame\alife_update_manager.cpp 				---> 'change_level_autosave' 			---> название сейва при переходе на другую локацию.
+	(+)		xrGame\CustomOutfit.cpp 						---> m_eItemPlace == eItemPlaceSlot
+	(=)		xrGame\CustomZone.cpp 							---> Исправление не отключения света после выключения аномалии. // by lvg_brest //
+	(~)		xrGame\InventoryBox.h 							---> public: xr_vector<u16> m_items; 	---> для IterateInventoryBox()
+			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	|>>>| 	Вырезаем авто-сейв. 							|>>>|
+	(-)		xrGame\Actor_Sleep.cpp							---> #include "autosave_manager.h" 
+	(-)		xrGame\Level.h									---> #include "autosave_manager.h" 		---> CAutosaveManager  *m_autosave_manager;
+	(-)		xrGame\Level.cpp								---> #include "autosave_manager.h" 		---> CAutosaveManager  *m_autosave_manager;
+	(-)		xrGame\ActorCondition.cpp 						---> #include "autosave_manager.h"
+	(-)		xrGame\console_commands.cpp 					---> #include "autosave_manager.h"  +  if (!Level().autosave_manager().ready_for_autosave()){ ...
+	(-)		xrGame\Level_input.cpp 							---> #include "autosave_manager.h"
+	(-)		xrGame\enemy_manager.h 							---> #include "autosave_manager.h" 		---> set_ready_to_save()
+	(-)		xrGame\enemy_manager.cpp 						---> #include "autosave_manager.h" 		---> set_ready_to_save()
+	(-)		xrGame\CustomMonster.h 							---> set_ready_to_save()
+	(-)		xrGame\CustomMonster.cpp 						---> set_ready_to_save()
+	(-)		xrGame\Entity.h									---> set_ready_to_save()
+	(-)		xrGame\Entity.cpp								---> set_ready_to_save()
+	|<<<| 	Вырезаем авто-сейв. 							|<<<|
+			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	(+)		xrGame\level_script.cpp							---> iterate_online_objects(), 			// by Charsi //
+															---> GetTargetObj(), GetTargetDist(), 	// by Golden Sphere Mod //
+	(+)		xrGame\script_game_object.h						---> IterateBelt() 						// by Kondr48 //
+															---> IterateInventoryBox() 				// кто-то перенес из ЧН //
+															---> void SetActorDirection( float dir, float pitch, float roll );
+	(~)		xrGame\script_game_object2.cpp					---> void SetActorDirection( float dir, float pitch = 0.f, float roll = 0.f)
+	(+)		xrGame\script_game_object_inventory_owner.cpp 	---> IterateBelt(), IterateInventoryBox()
+	(+)		xrGame\script_game_object_script3.cpp 			---> IterateBelt(), IterateInventoryBox()
+			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	(+)		xrGame\script_particles.cpp 					---> if (!m_particles) Msg("CScriptParticles::CScriptParticles : critical error ...
+	(/)		xrGame\trade2.cpp 								---> небольшие правки 					---> //float deficit_factor = 1.f;
+	(+)		xrGame\WeaponRG6.cpp							---> небольшие правки 					---> if(GetState() == eIdle && iAmmoElapsed ... + return t;
+	(~)		xrGame\xrServer_Objects_script.cpp 				---> setup_direction 					---> sobj:setup_direction( x, y, z )
+	(+)		xr_object_list.h 								---> IC xr_map<u32,CObject*> GetMap() 	---> для iterate_online_objects()
+	(~)		xrGame\ui\UIDragDropListEx.cpp 					---> немного ускорим скролл 			---> for( u8 i = 0; i < 3; ++i ) m_vScrollBar->TryScrollInc();
+			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	======= build 6853 =======			
 	*/
 	
 #endif

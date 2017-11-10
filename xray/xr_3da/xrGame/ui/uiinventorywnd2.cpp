@@ -33,6 +33,7 @@ PIItem CUIInventoryWnd::CurrentIItem()
 
 void CUIInventoryWnd::SetCurrentItem(CUICellItem* itm)
 {
+	if(UIPropertiesBox.IsShown()) return;
 	if(m_pCurrentCellItem == itm) return;
 	m_pCurrentCellItem				= itm;
 	UIItemInfo.InitItem			(CurrentIItem());
@@ -82,6 +83,30 @@ void CUIInventoryWnd::InitInventory()
 	{
 		CUICellItem* itm				= create_cell_item(_itm);
 		m_pUIAutomaticList->SetItem		(itm);
+	}
+	
+	//binoc
+	_itm								= m_pInv->m_slots[APPARATUS_SLOT].m_pIItem;
+	if(_itm)
+	{
+		CUICellItem* itm				= create_cell_item(_itm);
+		m_pUIBinocList->SetItem		(itm);
+	}
+
+	//torch
+	_itm								= m_pInv->m_slots[TORCH_SLOT].m_pIItem;
+	if(_itm)
+	{
+		CUICellItem* itm				= create_cell_item(_itm);
+		m_pUITorchList->SetItem		(itm);
+	}
+
+	//knife
+	_itm								= m_pInv->m_slots[KNIFE_SLOT].m_pIItem;
+	if(_itm)
+	{
+		CUICellItem* itm				= create_cell_item(_itm);
+		m_pUIKnifeList->SetItem		(itm);
 	}
 	
 #ifdef INV_NEW_SLOTS_SYSTEM
@@ -635,6 +660,9 @@ void CUIInventoryWnd::ClearAllLists()
 	m_pUIOutfitList->ClearAll				(true);
 	m_pUIPistolList->ClearAll				(true);
 	m_pUIAutomaticList->ClearAll			(true);
+	m_pUIBinocList->ClearAll				(true);
+	m_pUIKnifeList->ClearAll				(true);
+	m_pUITorchList->ClearAll				(true);
 
 #ifdef INV_NEW_SLOTS_SYSTEM
 if (IsGameTypeSingle()) {

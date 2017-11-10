@@ -32,6 +32,11 @@ CUICellItem::~CUICellItem()
 		delete_data	(m_childs);
 
 	delete_data		(m_custom_draw);
+	
+	/*	// INFO_shkiper_marker: Вылетает! //
+	xr_delete		(m_text);
+	xr_delete		(m_pConditionState);
+	*/
 }
 
 
@@ -163,7 +168,6 @@ void CUICellItem::UpdateConditionProgressBar()
     m_pConditionState->Show(false);
 }
 
-
 bool CUICellItem::EqualTo(CUICellItem* itm)
 {
 	return (m_grid_size.x==itm->GetGridSize(true).x) && (m_grid_size.y==itm->GetGridSize(true).y);
@@ -202,15 +206,15 @@ void CUICellItem::UpdateItemText()
 {
 	string32			str;
 
-		if ( ChildsCount() )
-		{
-			sprintf_s				(str,"x%d",ChildsCount()+1);
-			m_text->SetText(str);
-			m_text->Show( true );
-		}else{
-			sprintf_s				(str,"");
-			m_text->Show( false );
-		}
+	if ( ChildsCount() )
+	{
+		sprintf_s				(str,"x%d",ChildsCount()+1);
+		m_text->SetText(str);
+		m_text->Show( true );
+	}else{
+		sprintf_s				(str,"");
+		m_text->Show( false );
+	}
 }
 
 void CUICellItem::Update()

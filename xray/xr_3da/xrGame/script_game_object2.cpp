@@ -329,11 +329,11 @@ void CScriptGameObject::SetActorPosition			(Fvector pos)
 
 }
 
-void CScriptGameObject::SetActorDirection		(float dir)
+void CScriptGameObject::SetActorDirection		(float dir, float pitch = 0.0f, float roll = 0.0f)
 {
 	CActor* actor = smart_cast<CActor*>(&object());
 	if(actor){
-		actor->cam_Active()->Set(dir,0,0);
+		actor->cam_Active()->Set( dir, pitch, roll );
 //		actor->XFORM().setXYZ(0,dir,0);
 	}else
 		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"ScriptGameObject : attempt to call SetActorDirection method for non-actor object");

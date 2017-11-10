@@ -8,7 +8,6 @@
 #include "xrmessages.h"
 #include "game_cl_base.h"
 #include "xrServer.h"
-#include "autosave_manager.h"
 #include "ai_space.h"
 #include "actorcondition.h"
 #include "ui\UIVideoPlayerWnd.h"

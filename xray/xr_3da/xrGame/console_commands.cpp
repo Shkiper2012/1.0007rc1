@@ -26,7 +26,6 @@
 #include "PhysicsGamePars.h"
 #include "phworld.h"
 #include "string_table.h"
-#include "autosave_manager.h"
 #include "ai_space.h"
 #include "ai/monsters/BaseMonster/base_monster.h"
 #include "date_time.h"
@@ -336,6 +335,11 @@ public:
 	CCC_DemoRecord(LPCSTR N) : IConsole_Command(N) {};
 	virtual void Execute(LPCSTR args) {
 		#ifndef	DEBUG
+		if (!g_pGameLevel) // level not loaded
+		{
+			Msg("Demo Record is disabled when level is not loaded.");
+			return;
+		}
 		if (GameID() != GAME_SINGLE) 
 		{
 			Msg("For this game type Demo Record is disabled.");
@@ -407,12 +411,6 @@ public:
 	CCC_ALifeSave(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
 	virtual void Execute(LPCSTR args) {
 		
-#if 0
-		if (!Level().autosave_manager().ready_for_autosave()) {
-			Msg		("! Cannot save the game right now!");
-			return;
-		}
-#endif
 		if(!IsGameTypeSingle()){
 			Msg("for single-mode only");
 			return;
@@ -546,6 +544,14 @@ public:
 
 		if (!*g_last_saved_game) {
 			Msg					("! cannot load last saved game since it hasn't been specified");
+			return;
+		}
+
+		string_path					file_name;
+		bool						file_exists = !!FS.exist(file_name, "$game_saves$", g_last_saved_game, ".sav");
+		if (!file_exists)
+		{
+			Msg					("! cannot find saved game '%s'", g_last_saved_game);
 			return;
 		}
 

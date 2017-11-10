@@ -231,7 +231,7 @@ u32	CTrade::GetItemPrice(PIItem pItem, bool b_buying)
 #if 0
 	float					deficit_factor = partner.inv_owner->deficit_factor(pItem->object().cNameSect());
 #else
-	float					deficit_factor = 1.f;
+	//float					deficit_factor = 1.f;
 #endif
 
 	// total price calculation
@@ -239,8 +239,8 @@ u32	CTrade::GetItemPrice(PIItem pItem, bool b_buying)
 		iFloor	(
 			base_cost*
 			condition_factor*
-			action_factor*
-			deficit_factor
+			action_factor/**
+			deficit_factor */
 		);
 
 	return					(result);

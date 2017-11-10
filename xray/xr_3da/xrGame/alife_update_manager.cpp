@@ -202,14 +202,14 @@ bool CALifeUpdateManager::change_level	(NET_Packet &net_packet)
 		holder->o_Angle				= graph().actor()->o_Angle;
 	}
 
-	string256						autoave_name;
-	strconcat						(sizeof(autoave_name),autoave_name,Core.UserName,"_","autosave");
+	string256						auto_save_name;
+	strconcat						(sizeof(auto_save_name),auto_save_name,"","change_level_autosave");
 	LPCSTR							temp0 = strstr(**m_server_command_line,"/");
 	VERIFY							(temp0);
 	string256						temp;
-	*m_server_command_line			= strconcat(sizeof(temp),temp,autoave_name,temp0);
+	*m_server_command_line			= strconcat(sizeof(temp),temp,auto_save_name,temp0);
 	
-	save							(autoave_name);
+	save							(auto_save_name);
 
 	graph().actor()->m_tGraphID		= safe_graph_vertex_id;
 	graph().actor()->m_tNodeID		= safe_level_vertex_id;

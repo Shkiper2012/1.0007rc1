@@ -5,8 +5,8 @@
 class CInventoryBox :public CGameObject
 {
 	typedef CGameObject									inherited;
-	xr_vector<u16>										m_items;
 public:
+	xr_vector<u16>										m_items;
 				bool	m_in_use;
 						CInventoryBox					();
 	virtual		void	OnEvent							(NET_Packet& P, u16 type);

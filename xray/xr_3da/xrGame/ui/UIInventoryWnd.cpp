@@ -21,7 +21,6 @@
 #include "UIInventoryUtilities.h"
 using namespace InventoryUtilities;
 
-
 #include "../InfoPortion.h"
 #include "../level.h"
 #include "../game_base_space.h"
@@ -36,11 +35,8 @@ using namespace InventoryUtilities;
 												// INV_NEW_SLOTS_SYSTEM, 
 												// INV_OUTFIT_FULL_ICON_HIDE, 
 												// HIDE_WEAPON_IN_INV
-
-#define				INVENTORY_ITEM_XML		"inventory_item.xml"
-#define				INVENTORY_XML			"inventory_new.xml"
-
-
+#define INVENTORY_ITEM_XML 	"inventory_item.xml"
+#define INVENTORY_XML 		"inventory_new.xml"
 
 CUIInventoryWnd*	g_pInvWnd = NULL;
 
@@ -229,7 +225,7 @@ void CUIInventoryWnd::Init()
 		m_slots_array[SLOT_QUICK_ACCESS_2]		= m_pUISlotQuickAccessList_2;
 		m_slots_array[SLOT_QUICK_ACCESS_3]		= m_pUISlotQuickAccessList_3;
 	}
-#else
+#else // INV_NEW_SLOTS_SYSTEM //
 	m_pUIPistolList = xr_new<CUIDragDropListEx>(); AttachChild(m_pUIPistolList); m_pUIPistolList->SetAutoDelete(true);
 	xml_init.InitDragDropListEx(uiXml, "dragdrop_pistol", 0, m_pUIPistolList);
 	BindDragDropListEnents(m_pUIPistolList);
@@ -237,7 +233,23 @@ void CUIInventoryWnd::Init()
 	m_pUIAutomaticList = xr_new<CUIDragDropListEx>(); AttachChild(m_pUIAutomaticList); m_pUIAutomaticList->SetAutoDelete(true);
 	xml_init.InitDragDropListEx(uiXml, "dragdrop_automatic", 0, m_pUIAutomaticList);
 	BindDragDropListEnents(m_pUIAutomaticList);
-#endif	
+
+	m_pUIBinocList = xr_new<CUIDragDropListEx>(); AttachChild(m_pUIBinocList); m_pUIBinocList->SetAutoDelete(true);
+	xml_init.InitDragDropListEx(uiXml, "dragdrop_binoc", 0, m_pUIBinocList);
+	BindDragDropListEnents(m_pUIBinocList);
+	m_slots_array[APPARATUS_SLOT]		= m_pUIBinocList;
+
+	m_pUITorchList = xr_new<CUIDragDropListEx>(); AttachChild(m_pUITorchList); m_pUITorchList->SetAutoDelete(true);
+	xml_init.InitDragDropListEx(uiXml, "dragdrop_torch", 0, m_pUITorchList);
+	BindDragDropListEnents(m_pUITorchList);
+	m_slots_array[TORCH_SLOT]		= m_pUITorchList;
+
+	m_pUIKnifeList = xr_new<CUIDragDropListEx>(); AttachChild(m_pUIKnifeList); m_pUIBinocList->SetAutoDelete(true);
+	xml_init.InitDragDropListEx(uiXml, "dragdrop_knife", 0, m_pUIKnifeList);
+	BindDragDropListEnents(m_pUIKnifeList);
+	m_slots_array[KNIFE_SLOT]		= m_pUIKnifeList;
+
+#endif // INV_NEW_SLOTS_SYSTEM //
 	m_slots_array[PISTOL_SLOT]				= m_pUIPistolList;
 	m_slots_array[RIFLE_SLOT]				= m_pUIAutomaticList;
 	m_slots_array[OUTFIT_SLOT]				= m_pUIOutfitList;
@@ -394,11 +406,11 @@ void CUIInventoryWnd::Show()
 	InitInventory			();
 	inherited::Show			();
 
+	CActor *pActor	= smart_cast<CActor*>(Level().CurrentEntity());
+	if( !pActor )	return;
+	
 	if (!IsGameTypeSingle())
 	{
-		CActor *pActor = smart_cast<CActor*>(Level().CurrentEntity());
-		if(!pActor) return;
-
 		pActor->SetWeaponHideState(INV_STATE_INV_WND, true);
 
 		//rank icon		
@@ -424,13 +436,7 @@ void CUIInventoryWnd::Show()
 	PlaySnd								(eInvSndOpen);
 
 #ifdef HIDE_WEAPON_IN_INV
-	if( IsGameTypeSingle() )
-	{
-		CActor* pAct = smart_cast<CActor*>(Level().CurrentEntity());
-		if( pAct ){
-			pAct->SetWeaponHideState(INV_STATE_BLOCK_ALL, true);		
-		}
-	}
+	pActor->SetWeaponHideState(INV_STATE_BLOCK_ALL, true);		
 #endif
 }
 
@@ -442,20 +448,15 @@ void CUIInventoryWnd::Hide()
 	SendInfoToActor						("ui_inventory_hide");
 	ClearAllLists						();
 
+	CActor* pActor	= smart_cast<CActor*>(Level().CurrentEntity());
+	if( !pActor )	return;
+
 #ifdef HIDE_WEAPON_IN_INV
-	if( IsGameTypeSingle() )
-	{
-		CActor* pAct = smart_cast<CActor*>(Level().CurrentEntity());
-		if( pAct ){
-			pAct->SetWeaponHideState(INV_STATE_BLOCK_ALL, false);
-			pAct->RepackAmmo(); 	
-		}
-	}	
+	pActor->SetWeaponHideState(INV_STATE_BLOCK_ALL, false);
 #endif
 	
 	//достать вещь в активный слот
-	CActor *pActor = smart_cast<CActor*>(Level().CurrentEntity());
-	if(pActor && m_iCurrentActiveSlot != NO_ACTIVE_SLOT && 
+	if( m_iCurrentActiveSlot != NO_ACTIVE_SLOT && 
 		pActor->inventory().m_slots[m_iCurrentActiveSlot].m_pIItem)
 	{
 		pActor->inventory().Activate(m_iCurrentActiveSlot);
@@ -469,6 +470,7 @@ void CUIInventoryWnd::Hide()
 
 		pActor->SetWeaponHideState(INV_STATE_INV_WND, false);
 	}
+	pActor->RepackAmmo();
 }
 
 void CUIInventoryWnd::AttachAddon(PIItem item_to_upgrade)

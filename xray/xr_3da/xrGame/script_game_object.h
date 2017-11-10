@@ -208,7 +208,7 @@ public:
 			void				ResetActionQueue	();
 	// Actor only
 			void				SetActorPosition	(Fvector pos);
-			void				SetActorDirection	(float dir);
+			void				SetActorDirection	(float dir, float pitch, float roll);
 	// CCustomMonster
 			bool				CheckObjectVisibility(const CScriptGameObject *tpLuaGameObject);
 			bool				CheckTypeVisibility	(const char *section_name);
@@ -282,6 +282,8 @@ public:
 			bool				IsTradeEnabled		();
 
 			void				IterateInventory	(luabind::functor<void> functor, luabind::object object);
+			void				IterateBelt			(luabind::functor<void> functor, luabind::object object);
+			void				IterateInventoryBox	(luabind::functor<void> functor);
 			void				MarkItemDropped		(CScriptGameObject *item);
 			bool				MarkedDropped		(CScriptGameObject *item);
 			void				UnloadMagazine		();

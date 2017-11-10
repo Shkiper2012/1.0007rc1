@@ -24,7 +24,7 @@
 #include "HUDManager.h"
 #include "script_engine.h"
 #include "game_cl_single.h"
-
+#include "game_sv_single.h"
 #include "map_manager.h"
 #include "map_location.h"
 #include "phworld.h"
@@ -79,6 +79,16 @@ CScriptGameObject *get_object_by_name(LPCSTR caObjectName)
 		return		(0);
 }
 #endif
+
+void iterate_online_objects(luabind::functor<bool> functor)
+{
+	xr_map<u32,CObject*> map = Level().Objects.GetMap();
+	xr_map<u32,CObject*>::iterator	it = map.begin();
+	for( ; it!= map.end() ; ++it) {
+		CGameObject		*pGameObject	= smart_cast<CGameObject*>((*it).second);
+		if (pGameObject && functor(pGameObject->lua_game_object())) return;
+	}
+}
 
 CScriptGameObject *get_object_by_id(u32 id)
 {
@@ -684,7 +694,18 @@ void reinit_shown_ui()
 	}
 }
 
+CScriptGameObject* GetTargetObj()
+{
+		collide::rq_result& RQ = HUD().GetCurrentRayQuery();
+		CGameObject* pObjectWeLookingAt			= smart_cast<CGameObject*>(RQ.O);
+		return pObjectWeLookingAt ? pObjectWeLookingAt->lua_game_object() : 0;
+}
 
+float GetTargetDist()
+{
+	collide::rq_result& RQ = HUD().GetCurrentRayQuery();
+	return RQ.range;
+}
 
 #pragma optimize("s",on)
 void CLevel::script_register(lua_State *L)
@@ -789,6 +810,10 @@ void CLevel::script_register(lua_State *L)
 		
 		def("game_id",							&GameID),
 
+		// by Golden Sphere Mod
+		def("get_target_obj",					&GetTargetObj),
+		def("get_target_dist",					&GetTargetDist),
+		
 		// KD
 		def("ray_pick",							&ray_pick),
 
@@ -800,7 +825,10 @@ void CLevel::script_register(lua_State *L)
 		def("on_frame",							&level_on_frame),
 		def("receive_game_events",				&receive_game_events),
 		def("process_game_events",				&process_game_events),   
-		def("process_game_spawns",				&process_game_spawns) 
+		def("process_game_spawns",				&process_game_spawns), 
+		
+		// by Charsi
+		def("iterate_online_objects",			&iterate_online_objects)
 	],
 	
 	module(L,"actor_stats")

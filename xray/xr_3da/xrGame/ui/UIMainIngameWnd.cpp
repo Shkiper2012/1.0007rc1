@@ -1193,14 +1193,21 @@ CUIStatic* init_addon(
 	return addon;
 }
 
+static ALife::_OBJECT_ID stored_id = 65535;
 void CUIMainIngameWnd::UpdatePickUpItem	()
 {
 	if (!m_pPickUpItem || !Level().CurrentViewEntity() || Level().CurrentViewEntity()->CLS_ID != CLSID_OBJECT_ACTOR) 
 	{
+		UIPickUpItemIcon.Show(false);
+		UIPickUpItemIcon.DetachAll();
 		return;
 	};
 
-	if (UIPickUpItemIcon.IsShown() ) return; // Real Wolf: Какой смысл постоянно обновлять? 10.08.2014.
+	ALife::_OBJECT_ID _id = m_pPickUpItem->object().ID();
+	if( _id == stored_id ) return;
+	stored_id = _id;
+
+	//if (UIPickUpItemIcon.IsShown() ) return; // Real Wolf: Какой смысл постоянно обновлять? 10.08.2014.
 
 	shared_str sect_name	= m_pPickUpItem->object().cNameSect();
 

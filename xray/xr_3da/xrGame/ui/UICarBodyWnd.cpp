@@ -30,8 +30,8 @@
 	#include "../smart_cast.h"
 #endif
 
-#define				CAR_BODY_XML		"carbody_new.xml"
-#define				CARBODY_ITEM_XML	"carbody_item.xml"
+#define CAR_BODY_XML		"carbody_new.xml"
+#define CARBODY_ITEM_XML	"carbody_item.xml"
 
 void move_item (u16 from_id, u16 to_id, u16 what_id);
 
@@ -237,23 +237,22 @@ void CUICarBodyWnd::Hide()
 	if(m_pInventoryBox)
 		m_pInventoryBox->m_in_use				= false;
 
+	CActor* pActor = smart_cast<CActor*>(Level().CurrentEntity());
+	if( !pActor )	return;
 #ifdef HIDE_WEAPON_IN_INV
-	if( IsGameTypeSingle() )
-	{
-		CActor* pAct = smart_cast<CActor*>(Level().CurrentEntity());
-		if( pAct ){
-			pAct->SetWeaponHideState(INV_STATE_BLOCK_ALL, false);
-			pAct->RepackAmmo();
-		}
-	}	
+		pActor->SetWeaponHideState(INV_STATE_BLOCK_ALL, false);
 #endif
+		pActor->RepackAmmo();
 }
 
 void CUICarBodyWnd::UpdateLists()
 {
 	TIItemContainer								ruck_list;
+	
+	int i_our_pos = m_pUIOurBagList->ScrollPos(); //fix scrolling
 	m_pUIOurBagList->ClearAll					(true);
-	int i_pos = m_pUIOthersBagList->ScrollPos();	
+	
+	int i_others_pos = m_pUIOthersBagList->ScrollPos();	
 	m_pUIOthersBagList->ClearAll				(true);
 
 	ruck_list.clear								();
@@ -286,7 +285,8 @@ void CUICarBodyWnd::UpdateLists()
 	}
 
 	
-	m_pUIOthersBagList->SetScrollPos(i_pos);
+	m_pUIOurBagList->SetScrollPos(i_our_pos);		//fix scrolling
+	m_pUIOthersBagList->SetScrollPos(i_others_pos);
 
 	InventoryUtilities::UpdateWeight				(*m_pUIOurBagWnd);
 	m_b_need_update									= false;
@@ -353,13 +353,9 @@ void CUICarBodyWnd::Show()
 	InventoryUtilities::UpdateWeight		(*m_pUIOurBagWnd);
 
 #ifdef HIDE_WEAPON_IN_INV
-	if( IsGameTypeSingle() )
-	{
-		CActor* pAct = smart_cast<CActor*>(Level().CurrentEntity());
-		if( pAct ){
-			pAct->SetWeaponHideState(INV_STATE_BLOCK_ALL, true);		
-		}
-	}
+	CActor* pActor = smart_cast<CActor*>(Level().CurrentEntity());
+	if( !pActor )	return;
+	pActor->SetWeaponHideState(INV_STATE_BLOCK_ALL, true);		
 #endif
 }
 

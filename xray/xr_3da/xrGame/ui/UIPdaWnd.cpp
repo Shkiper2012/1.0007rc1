@@ -174,12 +174,9 @@ void CUIPdaWnd::Show()
 
 	inherited::Show();
 #ifdef HIDE_WEAPON_IN_INV
-	if( IsGameTypeSingle() )
-	{
-		CActor* pAct = smart_cast<CActor*>(Level().CurrentEntity());
-		if( pAct ){
-			pAct->SetWeaponHideState(INV_STATE_BLOCK_ALL, true);		
-		}
+	CActor* pActor = smart_cast<CActor*>(Level().CurrentEntity());
+	if( pActor ){
+		pActor->SetWeaponHideState(INV_STATE_BLOCK_ALL, true);		
 	}
 #endif
 }
@@ -192,13 +189,10 @@ void CUIPdaWnd::Hide()
 	HUD().GetUI()->UIMainIngameWnd->SetFlashIconState_(CUIMainIngameWnd::efiPdaTask, false);
 
 #ifdef HIDE_WEAPON_IN_INV
-	if( IsGameTypeSingle() )
-	{
-		CActor* pAct = smart_cast<CActor*>(Level().CurrentEntity());
-		if( pAct ){
-			pAct->SetWeaponHideState(INV_STATE_BLOCK_ALL, false);		
-		}
-	}	
+	CActor* pActor = smart_cast<CActor*>(Level().CurrentEntity());
+	if( pActor ){
+		pActor->SetWeaponHideState(INV_STATE_BLOCK_ALL, false);		
+	}
 #endif
 }
 

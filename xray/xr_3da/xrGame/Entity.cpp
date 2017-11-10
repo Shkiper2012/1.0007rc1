@@ -73,7 +73,6 @@ void CEntity::OnEvent		(NET_Packet& P, u16 type)
 void CEntity::Die(CObject* who)
 {
 	if (!AlreadyDie()) set_death_time();
-	set_ready_to_save	();
 	SetfHealth			(-1.f);
 
 	if(IsGameTypeSingle())
@@ -241,8 +240,6 @@ void CEntity::net_Destroy	()
 	}
 
 	inherited::net_Destroy	();
-
-	set_ready_to_save		();
 }
 
 void CEntity::KillEntity(u16 whoID)
@@ -308,10 +305,6 @@ void CEntity::set_death_time	()
 
 bool CEntity::IsFocused			()const	{ return (smart_cast<const CEntity*>(g_pGameLevel->CurrentEntity())==this);		}
 bool CEntity::IsMyCamera		()const	{ return (smart_cast<const CEntity*>(g_pGameLevel->CurrentViewEntity())==this);	}
-
-void CEntity::set_ready_to_save	()
-{
-}
 
 DLL_Pure *CEntity::_construct	()
 {

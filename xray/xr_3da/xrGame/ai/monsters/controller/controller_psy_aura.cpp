@@ -76,8 +76,8 @@ void CControllerAura::update_schedule()
 
 	float dist_to_actor		= Actor()->Position().distance_to(m_object->Position());
 
-	if ((dist_to_actor > aura_radius + FAKE_MIN_ADD_DIST) && (dist_to_actor < aura_radius + FAKE_MAX_ADD_DIST)) 
-	{
+//	if ((dist_to_actor > aura_radius + FAKE_MIN_ADD_DIST) && (dist_to_actor < aura_radius + FAKE_MAX_ADD_DIST)) 
+	if ((dist_to_actor > aura_radius + m_fake_min_add_dist) && (dist_to_actor < aura_radius + m_fake_max_add_dist))	{
 		
 		// first time? 
 		if (m_time_fake_aura == 0) {
@@ -188,9 +188,10 @@ void CControllerAura::load(LPCSTR section)
 
 	m_time_fake_aura_duration	= READ_IF_EXISTS(pSettings,r_u32,section,"PsyAura_Fake_Duration", 3000);
 	m_time_fake_aura_delay		= READ_IF_EXISTS(pSettings,r_u32,section,"PsyAura_Fake_Delay", 8000);
-	m_fake_max_add_dist			= READ_IF_EXISTS(pSettings,r_float,section,"PsyAura_Fake_MaxAddDist", 90.f);
-	m_fake_min_add_dist			= READ_IF_EXISTS(pSettings,r_float,section,"PsyAura_Fake_MinAddDist", 20.f);
-
+//	m_fake_max_add_dist			= READ_IF_EXISTS(pSettings,r_float,section,"PsyAura_Fake_MaxAddDist", 90.f);
+//	m_fake_min_add_dist			= READ_IF_EXISTS(pSettings,r_float,section,"PsyAura_Fake_MinAddDist", 20.f);
+	m_fake_max_add_dist			= READ_IF_EXISTS(pSettings,r_float,section,"PsyAura_Fake_MaxAddDist", FAKE_MAX_ADD_DIST);
+	m_fake_min_add_dist			= READ_IF_EXISTS(pSettings,r_float,section,"PsyAura_Fake_MinAddDist", FAKE_MIN_ADD_DIST);
 	m_time_started				= 0;
 	m_hit_state					= eNone;
 

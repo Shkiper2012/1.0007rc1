@@ -29,6 +29,15 @@ LPCSTR											_INVALID_SPAWN_STORY_ID	= "INVALID_SPAWN_STORY_ID";
 STORY_PAIRS										story_ids;
 SPAWN_STORY_PAIRS								spawn_story_ids;
 
+void __iterate_objects(const CALifeSimulator *self, luabind::functor<bool> functor)
+{
+	VERIFY(self);
+	for (CALifeObjectRegistry::OBJECT_REGISTRY::const_iterator it = self->objects().objects().begin(); it != self->objects().objects().end(); it++) {
+		CSE_ALifeDynamicObject	*obj = it->second;
+		if (functor(obj)) return;
+	}
+}
+
 CALifeSimulator *alife				()
 {
 	return			(const_cast<CALifeSimulator*>(ai().get_alife()));
@@ -335,7 +344,7 @@ bool dont_has_info								(const CALifeSimulator *self, const ALife::_OBJECT_ID 
 //	THROW								(self);
 //}
 // KD
-void teleport_object		(CALifeSimulator *alife, ALife::_OBJECT_ID id, GameGraph::_GRAPH_ID game_vertex_id, u32 level_vertex_id, const Fvector &position)
+void __teleport_object		(CALifeSimulator *alife, ALife::_OBJECT_ID id, GameGraph::_GRAPH_ID game_vertex_id, u32 level_vertex_id, const Fvector &position)
 {
 	alife->teleport_object	(id, game_vertex_id, level_vertex_id, position);
 }
@@ -366,6 +375,7 @@ void CALifeSimulator::script_register			(lua_State *L)
 	module(L)
 	[
 		class_<CALifeSimulator>("alife_simulator")
+			.def("iterate_objects",			&__iterate_objects) // by Charsi //
 			.def("valid_object_id",			&valid_object_id)
 			.def("level_id",				&get_level_id)
 			.def("level_name",				&get_level_name)
@@ -395,7 +405,7 @@ void CALifeSimulator::script_register			(lua_State *L)
 			.def("dont_has_info",			&dont_has_info)
 			.def("switch_distance",			&CALifeSimulator::switch_distance)
 			.def("switch_distance",			&CALifeSimulator::set_switch_distance)
-			.def("teleport_object",			&teleport_object)
+			.def("teleport_object",			&__teleport_object)
 			.def("assign_story_id",			&assign_story_id)
 			// .def_readonly("save_name",		&CALifeSimulator::m_save_name)
 			.property("save_name",			&get_save_name)

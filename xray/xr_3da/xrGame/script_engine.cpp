@@ -384,6 +384,7 @@ void CScriptEngine::collect_all_garbage	()
 {
 	lua_gc					(lua(),LUA_GCCOLLECT,0);
 	lua_gc					(lua(),LUA_GCCOLLECT,0);
+	lua_gc					(lua(),LUA_GCCOLLECT,0);
 }
 
 ENGINE_API BOOL g_appLoaded;

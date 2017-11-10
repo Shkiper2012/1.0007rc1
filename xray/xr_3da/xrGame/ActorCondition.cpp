@@ -6,7 +6,6 @@
 #include "level.h"
 #include "sleepeffector.h"
 #include "game_base_space.h"
-#include "autosave_manager.h"
 #include "xrserver.h"
 #include "ai_space.h"
 #include "script_callback_ex.h"
@@ -17,8 +16,8 @@
 #include "object_broker.h"
 #include "weapon.h"
 
-#define MAX_SATIETY					1.0f
-#define START_SATIETY				0.5f
+#define MAX_SATIETY		1.0f
+#define START_SATIETY	0.5f
 
 BOOL	GodMode	()	
 { 

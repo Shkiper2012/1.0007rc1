@@ -52,18 +52,22 @@ void CUIDragDropListEx::SetAutoGrow(bool b)
 {
 	m_flags.set(flAutoGrow,b);
 }
+
 bool CUIDragDropListEx::IsAutoGrow()								
 {
 	return !!m_flags.test(flAutoGrow);
 }
+
 void CUIDragDropListEx::SetGrouping(bool b)						
 {
 	m_flags.set(flGroupSimilar,b);
 }
+
 bool CUIDragDropListEx::IsGrouping()
 {
 	return !!m_flags.test(flGroupSimilar);
 }
+
 void CUIDragDropListEx::SetCustomPlacement(bool b)
 {
 	m_flags.set(flCustomPlacement,b);
@@ -259,7 +263,6 @@ void CUIDragDropListEx::Compact()
 	}
 }
 
-
 #include "../HUDManager.h"
 void CUIDragDropListEx::Draw()
 {
@@ -326,12 +329,12 @@ bool CUIDragDropListEx::OnMouse(float x, float y, EUIMessages mouse_action)
 	{
 		switch(mouse_action){
 		case WINDOW_MOUSE_WHEEL_DOWN:
-				m_vScrollBar->TryScrollInc();
+				for( u8 i = 0; i < 3; ++i ) m_vScrollBar->TryScrollInc();
 				return true;
 				break;
 
 		case WINDOW_MOUSE_WHEEL_UP:
-				m_vScrollBar->TryScrollDec();
+				for( u8 i = 0; i < 3; ++i ) m_vScrollBar->TryScrollDec();
 				return true;
 				break;
 		}
@@ -633,7 +636,6 @@ void CUICellContainer::GetTexUVLT(Fvector2& uv, u32 col, u32 row)
 //.		uv.set(0.5f,0.0f);
 }
 
-
 void CUICellContainer::SetCellsCapacity(const Ivector2& c)
 {
 	m_cellsCapacity				= c;
@@ -753,7 +755,6 @@ Ivector2 CUICellContainer::PickCell(const Fvector2& abs_pos)
 	if(!ValidCell(res))						res.set(-1, -1);
 	return res;
 }
-
 
 void CUICellContainer::Draw()
 {

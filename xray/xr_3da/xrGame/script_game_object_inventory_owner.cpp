@@ -222,6 +222,43 @@ void CScriptGameObject::IterateInventory	(luabind::functor<void> functor, luabin
 		functor				(object,(*I)->object().lua_game_object());
 }
 
+#include "InventoryBox.h"
+void CScriptGameObject::IterateInventoryBox	(luabind::functor<void> functor)
+{
+	CInventoryBox			*inventory_box = smart_cast<CInventoryBox*>(&this->object());
+	if (!inventory_box) {
+		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"CScriptGameObject::IterateInventoryBox non-CInventoryBox object !!!");
+		return;
+	}
+
+	xr_vector<u16>::const_iterator	I = inventory_box->m_items.begin();
+	xr_vector<u16>::const_iterator	E = inventory_box->m_items.end();
+	for ( ; I != E; ++I)
+	{
+		CGameObject* GO		= smart_cast<CGameObject*>(Level().Objects.net_Find(*I));
+		if(GO)
+			functor				(GO->lua_game_object());
+	}
+}
+
+void CScriptGameObject::IterateBelt(luabind::functor<void> functor, luabind::object object)
+{
+	CInventoryOwner			*inventory_owner = smart_cast<CInventoryOwner*>(&this->object());
+	if (!inventory_owner) {
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CScriptGameObject::IterateBelt non-CInventoryOwner object !!!");
+		return;
+	}
+	if (smart_cast<CActor*>(&this->object()) != Actor())
+	{
+		ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "CScriptGameObject::IterateBelt non-CActor object !!!");
+		return;
+	}
+	TIItemContainer::iterator	I = inventory_owner->inventory().m_belt.begin();
+	TIItemContainer::iterator	E = inventory_owner->inventory().m_belt.end();
+	for (; I != E; ++I)
+		functor((*I)->object().lua_game_object());
+}
+
 void CScriptGameObject::MarkItemDropped		(CScriptGameObject *item)
 {
 	CInventoryOwner			*inventory_owner = smart_cast<CInventoryOwner*>(&object());

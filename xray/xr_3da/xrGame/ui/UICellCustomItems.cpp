@@ -37,7 +37,7 @@ bool CUIInventoryCellItem::EqualTo(CUICellItem* itm)
 {
 	CUIInventoryCellItem* ci = smart_cast<CUIInventoryCellItem*>(itm);
 	if(!itm)				return false;
-
+	
 	// Real Wolf: Колбек на группировку и само регулирование группировкой предметов. 12.08.2014.
 	auto item1 = (CInventoryItem*)m_pData;
 	auto item2 = (CInventoryItem*)itm->m_pData;
@@ -46,7 +46,7 @@ bool CUIInventoryCellItem::EqualTo(CUICellItem* itm)
 
 	auto fl1 = item1->m_flags;
 	auto fl2 = item2->m_flags;
-
+	
 	item1->m_flags.set(CInventoryItem::FIUngroupable, false);
 	item2->m_flags.set(CInventoryItem::FIUngroupable, false);
 

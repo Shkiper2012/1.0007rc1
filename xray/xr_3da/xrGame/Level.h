@@ -22,7 +22,6 @@ class	CSpaceRestrictionManager;
 class	CSeniorityHierarchyHolder;
 class	CClientSpawnManager;
 class	CGameObject;
-class	CAutosaveManager;
 class	CPHCommander;
 class	CLevelDebug;
 class	CLevelSoundManager;
@@ -72,8 +71,7 @@ protected:
 	CSeniorityHierarchyHolder	*m_seniority_hierarchy_holder;
 	// client spawn_manager
 	CClientSpawnManager			*m_client_spawn_manager;
-	// autosave manager
-	CAutosaveManager			*m_autosave_manager;
+
 #ifdef DEBUG
 	// debug renderer
 	CDebugRenderer				*m_debug_renderer;
@@ -268,7 +266,7 @@ public:
 	IC CSpaceRestrictionManager		&space_restriction_manager	();
 	IC CSeniorityHierarchyHolder	&seniority_holder			();
 	IC CClientSpawnManager			&client_spawn_manager		();
-	IC CAutosaveManager				&autosave_manager			();
+
 #ifdef DEBUG
 	IC CDebugRenderer				&debug_renderer				();
 #endif
@@ -370,12 +368,6 @@ IC CClientSpawnManager &CLevel::client_spawn_manager()
 {
 	VERIFY				(m_client_spawn_manager);
 	return				(*m_client_spawn_manager);
-}
-
-IC CAutosaveManager &CLevel::autosave_manager()
-{
-	VERIFY				(m_autosave_manager);
-	return				(*m_autosave_manager);
 }
 
 #ifdef DEBUG

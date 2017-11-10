@@ -88,7 +88,7 @@ void CUIInventoryWnd::ActivatePropertiesBox()
 			}
 	};
 #else
-	if(!pOutfit && CurrentIItem()->GetSlot()!=NO_ACTIVE_SLOT && !m_pInv->m_slots[CurrentIItem()->GetSlot()].m_bPersistent && m_pInv->CanPutInSlot(CurrentIItem()))
+	if(!pOutfit && !m_pInv->InSlot(CurrentIItem()) && CurrentIItem()->GetSlot()!=NO_ACTIVE_SLOT && !m_pInv->m_slots[CurrentIItem()->GetSlot()].m_bPersistent && m_pInv->CanPutInSlot(CurrentIItem()))
 	{
 		UIPropertiesBox.AddItem("st_move_to_slot",  NULL, INVENTORY_TO_SLOT_ACTION);
 		b_show			= true;
@@ -244,7 +244,7 @@ void CUIInventoryWnd::ActivatePropertiesBox()
 			UIPropertiesBox.AddItem("st_attach_gl_to_rifle",  (void*)tgt, INVENTORY_ATTACH_ADDON);
 			b_show			= true;
 		 }
-	#else
+	#else // INV_NEW_SLOTS_SYSTEM //
 	for(u8 i = 0; i < OUTFIT_SLOT; ++i) 
 	{
 		 if(m_pInv->m_slots[i].m_pIItem && m_pInv->m_slots[i].m_pIItem->CanAttach(pGrenadeLauncher))
@@ -255,7 +255,7 @@ void CUIInventoryWnd::ActivatePropertiesBox()
 			b_show			= true;
 		 }
 	};		
-	#endif
+	#endif // INV_NEW_SLOTS_SYSTEM //
 	}
 	LPCSTR _action = NULL;
 

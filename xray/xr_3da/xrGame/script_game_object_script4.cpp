@@ -322,7 +322,8 @@ bool	get_obj_alive(CScriptGameObject *O)
 	CGameObject *obj = &O->object();
 	CEntityAlive *ent = smart_cast<CEntityAlive*> (obj);
 	if (ent){
-		return( (ent->g_Alive()) != 0 );
+		bool alive = ( (ent->g_Alive()) != 0 );
+		return alive;
 	}
 	else
 		return false;

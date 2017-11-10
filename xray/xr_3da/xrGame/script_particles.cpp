@@ -74,6 +74,7 @@ void CScriptParticlesCustom::StopPath()
 CScriptParticles::CScriptParticles(LPCSTR caParticlesName)
 {
 	m_particles					= xr_new<CScriptParticlesCustom>(this, caParticlesName);
+	if (!m_particles) Msg("CScriptParticles::CScriptParticles : critical error : m_particles not created! caParticlesName = [%s] ", caParticlesName );
 	m_transform.identity();
 }
 

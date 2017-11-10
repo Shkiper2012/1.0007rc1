@@ -245,7 +245,7 @@ void CCustomZone::Load(LPCSTR section)
 		sscanf(pSettings->r_string(section,"light_color"), "%f,%f,%f", &m_LightColor.r, &m_LightColor.g, &m_LightColor.b);
 		m_fLightRange			= pSettings->r_float(section,"light_range");
 		m_fLightTime			= pSettings->r_float(section,"light_time");
-		m_fLightTimeLeft		= 0;
+		m_fLightTimeLeft		= 0.0f;
 
 		m_fLightHeight		= pSettings->r_float(section,"light_height");
 	}
@@ -437,6 +437,7 @@ bool CCustomZone::BlowoutState()
 	}
 	return false;
 }
+
 bool CCustomZone::AccumulateState()
 {
 	if(m_iStateTime>=m_StateTime[eZoneStateAccumulate])
@@ -666,13 +667,13 @@ BOOL CCustomZone::feel_touch_contact(CObject* O)
 	return			(object->feel_touch_on_contact(this));
 }
 
-
 float CCustomZone::RelativePower(float dist)
 {
 	float radius = effective_radius();
 	float power = radius < dist ? 0 : (1.f - m_fAttenuation*(dist/radius)*(dist/radius));
 	return power < 0 ? 0 : power;
 }
+
 float CCustomZone::effective_radius()
 {
 	return Radius()*m_fEffectiveRadius;
@@ -684,6 +685,7 @@ float CCustomZone::distance_to_center(CObject* O)
 	XFORM().transform_tiny(P,CFORM()->getSphere().P);
 	return P.distance_to(O->Position());
 }
+
 float CCustomZone::Power(float dist) 
 {
 	return  m_fMaxPower * RelativePower(dist);
@@ -731,7 +733,6 @@ void CCustomZone::StopIdleParticles()
 	StopIdleLight();
 }
 
-
 void  CCustomZone::StartIdleLight	()
 {
 	if(m_pIdleLight)
@@ -743,11 +744,13 @@ void  CCustomZone::StartIdleLight	()
 		m_pIdleLight->set_active(true);
 	}
 }
+
 void  CCustomZone::StopIdleLight	()
 {
 	if(m_pIdleLight)
 		m_pIdleLight->set_active(false);
 }
+
 void CCustomZone::UpdateIdleLight	()
 {
 	if(!m_pIdleLight || !m_pIdleLight->get_active())
@@ -769,7 +772,6 @@ void CCustomZone::UpdateIdleLight	()
 	pos.y			+= m_fIdleLightHeight;
 	m_pIdleLight->set_position(pos);
 }
-
 
 void CCustomZone::PlayBlowoutParticles()
 {
@@ -863,7 +865,6 @@ void CCustomZone::PlayEntranceParticles(CGameObject* pObject)
 	}
 }
 
-
 void CCustomZone::PlayBulletParticles(Fvector& pos)
 {
 	m_entrance_sound.play_at_pos(0, pos);
@@ -940,7 +941,7 @@ void CCustomZone::StopObjectIdleParticles(CGameObject* pObject)
 	PP->StopParticles	(particle_str, BI_NONE, true);
 }
 
-void	CCustomZone::Hit					(SHit* pHDS)
+void CCustomZone::Hit(SHit* pHDS)
 {
 	Fmatrix M;
 	M.identity();
@@ -965,7 +966,7 @@ void CCustomZone::StartBlowoutLight		()
 
 }
 
-void  CCustomZone::StopBlowoutLight		()
+void CCustomZone::StopBlowoutLight		()
 {
 	m_fLightTimeLeft = 0.f;
 	m_pLight->set_active(false);
@@ -976,6 +977,14 @@ void CCustomZone::UpdateBlowoutLight	()
 	if(m_fLightTimeLeft>0)
 	{
 		m_fLightTimeLeft -= Device.fTimeDelta;
+		
+		// Исправление не отключения света после выключения аномалии. // by lvg_brest //
+		if (m_fDistanceToCurEntity>29.f)
+			if (m_fLightTime<=1.f)
+				m_fLightTimeLeft = m_fLightTimeLeft/1.45f;
+			else
+				m_fLightTimeLeft = m_fLightTimeLeft/1.15f;
+
 		clamp(m_fLightTimeLeft,0.0f,m_fLightTime);
 
 		float scale		= m_fLightTimeLeft/m_fLightTime;
@@ -1042,7 +1051,7 @@ void CCustomZone::UpdateBlowout()
 	}
 }
 
-void  CCustomZone::OnMove()
+void CCustomZone::OnMove()
 {
 	if(m_dwLastTimeMoved == 0)
 	{
@@ -1075,7 +1084,7 @@ void  CCustomZone::OnMove()
      }
 }
 
-void	CCustomZone::OnEvent (NET_Packet& P, u16 type)
+void CCustomZone::OnEvent (NET_Packet& P, u16 type)
 {	
 	switch (type)
 	{
@@ -1110,6 +1119,7 @@ void	CCustomZone::OnEvent (NET_Packet& P, u16 type)
 	}
 	inherited::OnEvent(P, type);
 };
+
 void CCustomZone::OnOwnershipTake(u16 id)
 {
 	CGameObject* GO  = smart_cast<CGameObject*>(Level().Objects.net_Find(id));  VERIFY(GO);
@@ -1202,7 +1212,6 @@ void CCustomZone::ZoneDisable()
 	SwitchZoneState(eZoneStateDisabled);
 };
 
-
 void CCustomZone::SpawnArtefact()
 {
 	//вычислить согласно распределению вероятностей
@@ -1222,7 +1231,6 @@ void CCustomZone::SpawnArtefact()
 	Center(pos);
 	Level().spawn_item(*m_ArtefactSpawn[i].section, pos, (g_dedicated_server)?u32(-1):ai_location().level_vertex_id(), ID());
 }
-
 
 void CCustomZone::BornArtefact()
 {
