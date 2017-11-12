@@ -333,6 +333,38 @@ xxx	(+)		xrGame\ui\UICellItem.cpp 						---> xr_delete 							---> если, включит
 			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	======= build 6853 =======			
 	*/
+
+	/*		12_11_2017
+			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	(+)		Функция перемотки времени из CoP 				---> level.change_game_time( u32 days, u32 hours, u32 mins ) 				// by Kondr48 //
+			level_script.cpp
+			alife_time_manager.h
+			alife_time_manager_inline.h 
+			Environment.h
+			Environment.cpp
+			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	(~) 	xrGame\game_sv_single.cpp 						---> st_restart_simulator ---> game_sv_Single::restart_simulator
+	(/)		xrGame\xrServer.cpp 							---> Player not found. New player created.
+	(/)		xrNetServer\NET_Server.cpp 						---> MaxPlayers = 32
+	(+)		xrGame\console_commands.cpp 					---> Ставим паузу во время быстрого сохранения. ---> Device.Pause( TRUE, ...
+			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+xxx	(=)		xrGame\ActorAnimation.cpp 						---> Измененная анимация безоружного ГГ "_torso_0_aim_0"->"_torso_5_aim_0" 	// by Cut X-Ray // 
+xxx															---> Вылет из-за отсутствия этой анимации: 'cl_torso_5_aim_0'
+	(=)		xrGame\WeaponMagazinedWGrenade.cpp 				---> m_fZoomFactor = g_fov; 												// Karlan: сбрасываем зум. //
+	(=)		xrRender\xrRender_console.cpp					---> Исправлен "купол" над актором, вызывающий баг с тенями. 				// by Stalker_Monolit //
+			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	(=)		xrGame\derived_client_classes.cpp 				---> scrope_zoom_factor ---> scope_zoom_factor
+	(-)		xrGame\alife_anomalous_zone.cpp 				---> ;;
+	(+)		xrGame\PhraseScript.cpp 						---> R_ASSERT3(functor_exists, "Cannot find precondition: ...
+	(+)		Environment_misc.cpp 							---> Проверка на "CEnvAmbient::load: sound_section '%s' not found"
+			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	(+)		xrGame\key_binding_registrator_script.cpp 		---> добавлены бинды клавиш key_bindings и DIK_keys из _g.script
+	(+)		xrGame\UICustomItem.cpp							---> float kx =	(UI()->is_16_9_mode())?(UI()->get_current_kx()):1.0f;
+	(+)		xrGame\ui_base.h								---> get_current_kx()
+	(+)		xrGame\ui_base.cpp								---> get_current_kx()
+			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	======= build 6854 (вылет из-за отсутствия анимации безоружного ГГ: 'cl_torso_5_aim_0' ) =======			
+	*/
 	
 #endif
 

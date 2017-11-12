@@ -329,7 +329,7 @@ IPureServer::EConnect IPureServer::Connect(LPCSTR options)
 		dwMaxPlayers = atol(tmpStr);
 	}
 	if (dwMaxPlayers > 32 || dwMaxPlayers<1) dwMaxPlayers = 32;
-	Msg("MaxPlayers = %d", dwMaxPlayers);
+//	Msg("MaxPlayers = %d", dwMaxPlayers);
 
 	//-------------------------------------------------------------------
 	BOOL bPortWasSet = FALSE;

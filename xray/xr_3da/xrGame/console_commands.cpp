@@ -420,6 +420,10 @@ public:
 			Msg("cannot make saved game because actor is dead :(");
 			return;
 		}
+		
+		if(!Device.Paused() ){
+			Device.Pause( TRUE, TRUE, FALSE, "game_quicksave_start" );
+		}
 
 		string_path				S,S1;
 		S[0]					= 0;
@@ -431,7 +435,7 @@ public:
 		timer.Start				();
 #endif
 		if (!xr_strlen(S)){
-			strconcat			(sizeof(S),S,Core.UserName,"_","quicksave");
+			strconcat			(sizeof(S),S,"quick_save","_game");
 			NET_Packet			net_packet;
 			net_packet.w_begin	(M_SAVE_GAME);
 			net_packet.w_stringZ(S);
@@ -440,6 +444,9 @@ public:
 		}else{
 			if(!valid_file_name(S)){
 				Msg("invalid file name");
+				if( Device.Paused() ){
+					Device.Pause( FALSE, TRUE, FALSE, "game_quicksave_return_invalid_file_name" );
+				}
 				return;
 			}
 
@@ -469,6 +476,9 @@ public:
 #ifdef DEBUG
 		Msg						("Screenshot overhead : %f milliseconds",timer.GetElapsed_sec()*1000.f);
 #endif
+		if( Device.Paused() ){
+			Device.Pause( FALSE, TRUE, FALSE, "game_quicksave_finish" );
+		}
 	}
 };
 

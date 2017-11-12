@@ -110,6 +110,11 @@ float CEnvironment::TimeWeight(float val, float min_t, float max_t)
 	return			weight;
 }
 
+void CEnvironment::ChangeGameTime(float game_time)
+{
+    fGameTime = NormalizeTime(fGameTime + game_time);
+}; 
+
 void CEnvironment::SetGameTime(float game_time, float time_factor)
 { 
 	if (bWFX)

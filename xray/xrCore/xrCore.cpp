@@ -164,7 +164,7 @@ void xrCore::_destroy		()
 #endif
 
 		Memory._destroy		();
-		if (!strstr(GetCommandLine(), "-editor"))	// ADD_shkiper_marker //
+		if (!strstr(GetCommandLine(), "-editor"))
 			CoUninitialize();
 	}
 }

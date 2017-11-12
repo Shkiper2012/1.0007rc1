@@ -63,7 +63,26 @@ void key_binding_registrator::script_register(lua_State *L)
 				value("kINVENTORY",					int(kINVENTORY)),
 				value("kBUY",						int(kBUY)),
 				value("kSKIN",						int(kSKIN)),
-				value("kTEAM",						int(kTEAM))
+				value("kTEAM",						int(kTEAM)),
+				value("kSPRINT_TOGGLE",				int(kSPRINT_TOGGLE)), 	// added from _g.script //
+				value("kENGINE",					int(kENGINE)),
+				value("kARTEFACT",					int(kARTEFACT)),
+				value("kWPN_FIREMODE_PREV",			int(kWPN_FIREMODE_PREV)),
+				value("kWPN_FIREMODE_NEXT",			int(kWPN_FIREMODE_NEXT)),
+				value("kPAUSE",						int(kPAUSE)),
+				value("kCHAT_TEAM",					int(kCHAT_TEAM)),
+				value("kACTIVE_JOBS",				int(kACTIVE_JOBS)),
+				value("kMAP",						int(kMAP)),
+				value("kCONTACTS",					int(kCONTACTS)),
+				value("kVOTE_BEGIN",				int(kVOTE_BEGIN)),
+				value("kVOTE",						int(kVOTE)),
+				value("kVOTEYES",					int(kVOTEYES)),
+				value("kVOTENO",					int(kVOTENO)),
+				value("kSPEECH_MENU_0",				int(kSPEECH_MENU_0)),
+				value("kSPEECH_MENU_1",				int(kSPEECH_MENU_1)),
+				value("kUSE_BANDAGE",				int(kUSE_BANDAGE)),
+				value("kQUICK_SAVE",				int(kQUICK_SAVE)),
+				value("kQUICK_LOAD",				int(kQUICK_LOAD))
 			],
 		class_<key_binding_registrator >("DIK_keys")
 			.enum_("dik_keys")
@@ -192,9 +211,13 @@ void key_binding_registrator::script_register(lua_State *L)
 				value("DIK_APPS",						int(DIK_APPS		)),
 				value("MOUSE_1",						int(MOUSE_1			)),
 				value("MOUSE_3",						int(MOUSE_3			)),
+				value("MOUSE_4",						int(MOUSE_4			)),
+				value("MOUSE_5",						int(MOUSE_5			)),
+				value("MOUSE_6",						int(MOUSE_6			)),
+				value("MOUSE_7",						int(MOUSE_7			)),
+				value("MOUSE_8",						int(MOUSE_8			)),
 				value("DIK_RETURN",						int(DIK_RETURN		)),
-				value("DIK_NUMPADENTER",				int(DIK_NUMPADENTER	))
-				
+				value("DIK_NUMPADENTER",				int(DIK_NUMPADENTER	))				
 			]
 	];
 }

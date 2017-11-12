@@ -51,6 +51,7 @@ void CEnvAmbient::load(const shared_str& sect)
 {
 	section				= sect;
 	string_path			tmp;
+	
 	// sounds
 	if (pSettings->line_exist(sect,"sounds")){
 		Fvector2 t		= pSettings->r_fvector2	(sect,"sound_period");
@@ -63,6 +64,9 @@ void CEnvAmbient::load(const shared_str& sect)
 			for (u32 k=0; k<cnt; ++k)
 				sounds[k].create(_GetItem(snds,k,tmp),st_Effect,sg_SourceType);
 		}
+	}else{
+		Msg("~~CEnvAmbient::load: sound_section '%s' not found", section.c_str() );
+		R_ASSERT2( pSettings->line_exist( sect, "sounds" ), "CEnvAmbient::load: sound_section not found!" );
 	}
 	// effects
 	if (pSettings->line_exist(sect,"effects")){

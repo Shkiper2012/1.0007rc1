@@ -582,6 +582,7 @@ void ConsoleBindCmds::bind(int dik, LPCSTR N)
 	_conCmd& c	= m_bindConsoleCmds[dik];
 	c.cmd		= N;
 }
+
 void ConsoleBindCmds::unbind(int dik)
 {
 	xr_map<int,_conCmd>::iterator it = m_bindConsoleCmds.find(dik);

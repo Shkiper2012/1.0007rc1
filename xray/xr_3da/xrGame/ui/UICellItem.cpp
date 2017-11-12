@@ -33,7 +33,7 @@ CUICellItem::~CUICellItem()
 
 	delete_data		(m_custom_draw);
 	
-	/*	// INFO_shkiper_marker: Вылетает! //
+	/*	// Shkiper2012: Вылетает! //
 	xr_delete		(m_text);
 	xr_delete		(m_pConditionState);
 	*/

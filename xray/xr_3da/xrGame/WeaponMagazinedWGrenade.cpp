@@ -217,6 +217,7 @@ bool CWeaponMagazinedWGrenade::SwitchMode()
 void  CWeaponMagazinedWGrenade::PerformSwitchGL()
 {
 	m_bGrenadeMode		= !m_bGrenadeMode;
+	m_fZoomFactor       = g_fov;            // Karlan: сбрасываем зум
 
 	iMagazineSize		= m_bGrenadeMode?1:iMagazineSize2;
 

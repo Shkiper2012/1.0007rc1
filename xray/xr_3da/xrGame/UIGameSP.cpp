@@ -29,7 +29,7 @@ CUIGameSP::CUIGameSP()
 	PdaMenu			= xr_new<CUIPdaWnd>			();
 	TalkMenu		= xr_new<CUITalkWnd>		();
 	UICarBodyMenu	= xr_new<CUICarBodyWnd>		();
-	UIChangeLevelWnd= xr_new<CChangeLevelWnd>		();
+	UIChangeLevelWnd= xr_new<CChangeLevelWnd>	();
 }
 
 CUIGameSP::~CUIGameSP() 

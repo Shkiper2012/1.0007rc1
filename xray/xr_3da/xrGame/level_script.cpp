@@ -32,6 +32,8 @@
 #include "ui/UIScriptWnd.h"
 #include "../xr_collide_defs.h"
 #include "NET_Queue.h"
+#include "alife_time_manager.h"
+#include "alife_simulator.h"
 
 using namespace luabind;
 
@@ -185,6 +187,17 @@ u32 get_time_minutes()
 	return			mins;
 }
 
+void change_game_time(u32 days, u32 hours, u32 mins)
+{
+    game_sv_Single* tpGame = smart_cast<game_sv_Single *>(Level().Server->game);
+    if (tpGame && ai().get_alife()) {
+        u32 value = days * 86400 + hours * 3600 + mins * 60;
+        float fValue = static_cast<float>(value);
+        value *= 1000;  // msec
+        g_pGamePersistent->Environment().ChangeGameTime(fValue);
+        tpGame->alife().time_manager().change_game_time(value);
+    }
+}
 float cover_in_direction(u32 level_vertex_id, const Fvector &direction)
 {
 	float			y,p;
@@ -755,6 +768,7 @@ void CLevel::script_register(lua_State *L)
 		def("get_time_days",					get_time_days),
 		def("get_time_hours",					get_time_hours),
 		def("get_time_minutes",					get_time_minutes),
+		def("change_game_time",                 change_game_time), 
 
 		def("cover_in_direction",				cover_in_direction),
 		def("vertex_in_direction",				vertex_in_direction),
