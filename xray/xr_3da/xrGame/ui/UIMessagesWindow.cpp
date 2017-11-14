@@ -18,7 +18,6 @@
 #include "UIColorAnimatorWrapper.h"
 #include "../InfoPortion.h"
 #include "../string_table.h"
-#include "../game_cl_artefacthunt.h"
 
 CUIMessagesWindow::CUIMessagesWindow(){
 	m_pChatLog = NULL;
@@ -31,10 +30,6 @@ CUIMessagesWindow::~CUIMessagesWindow(){
 	
 }
 
-void CUIMessagesWindow::AddLogMessage(KillMessageStruct& msg){
-	m_pGameLog->AddLogMessage(msg);
-}
-
 void CUIMessagesWindow::AddLogMessage(const shared_str& msg){
 	m_pGameLog->AddLogMessage(*msg);
 }
@@ -42,9 +37,6 @@ void CUIMessagesWindow::AddLogMessage(const shared_str& msg){
 void CUIMessagesWindow::Init(float x, float y, float width, float height){
 
 	CUIXml		 xml;
-	u32			color;
-	CGameFont*	pFont;
-
 	xml.Init(CONFIG_PATH, UI_PATH, "messages_window.xml");
 
 	m_pGameLog = xr_new<CUIGameLog>();m_pGameLog->SetAutoDelete(true);
@@ -54,25 +46,6 @@ void CUIMessagesWindow::Init(float x, float y, float width, float height){
 	{
 		CUIXmlInit::InitScrollView(xml, "sp_log_list", 0, m_pGameLog);
 	}
-	else
-	{
-		m_pChatLog			= xr_new<CUIGameLog>(); m_pChatLog->SetAutoDelete(true);
-		m_pChatLog->Show	(true);
-		AttachChild			(m_pChatLog);
-		m_pChatWnd			= xr_new<CUIChatWnd>(m_pChatLog); m_pChatWnd->SetAutoDelete(true);
-		AttachChild			(m_pChatWnd);
-
-		CUIXmlInit::InitScrollView(xml, "mp_log_list", 0, m_pGameLog);
-		CUIXmlInit::InitFont(xml, "mp_log_list:font", 0, color, pFont);
-		m_pGameLog->SetTextAtrib(pFont, color);
-
-		CUIXmlInit::InitScrollView(xml, "chat_log_list", 0, m_pChatLog);
-		CUIXmlInit::InitFont(xml, "chat_log_list:font", 0, color, pFont);
-		m_pChatLog->SetTextAtrib(pFont, color);
-		
-		m_pChatWnd->Init	(xml);
-	}	
-
 }
 
 void CUIMessagesWindow::AddIconedPdaMessage(LPCSTR textureName, Frect originalRect, LPCSTR message, int iDelay){

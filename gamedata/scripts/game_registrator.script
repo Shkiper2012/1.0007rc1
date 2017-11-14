@@ -1,0 +1,17 @@
+
+function get_game_clsid( game_type_option, is_server )
+
+	if is_server == true then
+		if game_type_option == "single" then 
+			return "SV_SINGL" 
+		end
+	end	
+
+	if is_server == false then
+		if game_type_option == "single" then 
+			return "CL_SINGL" 
+		end
+	end
+
+	return ""
+end

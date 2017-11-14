@@ -44,10 +44,6 @@ void CUIMoneyIndicator::SetMoneyChange(LPCSTR money){
 	m_pAnimChange->Reset();
 }
 
-void CUIMoneyIndicator::AddBonusMoney(KillMessageStruct& msg){
-	m_pBonusMoney->AddLogMessage(msg);
-}
-
 void CUIMoneyIndicator::Update(){
 	if (m_money_change.GetVisible())
         if (!m_pAnimChange->Done())

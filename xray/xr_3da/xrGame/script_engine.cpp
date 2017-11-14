@@ -277,6 +277,7 @@ void CScriptEngine::process_file_if_exists	(LPCSTR file_name, bool warn_if_not_e
 #ifdef MASTER_GOLD
 		MsgV					("5LOAD_SCRIPT", "* loading script %s",S1);
 #endif // MASTER_GOLD
+		Msg("* Loading script:  %s  ", S1 ); 		// Shkiper2012: for debug. //
 		m_reload_modules	= false;
 		load_file_into_namespace(S,*file_name ? file_name : "_G");
 	}

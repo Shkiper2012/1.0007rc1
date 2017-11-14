@@ -332,16 +332,6 @@ void CUIMainIngameWnd::Draw()
 
 	FS.dwOpenCounter = 0;
 
-	if(!IsGameTypeSingle())
-	{
-		float		luminocity = smart_cast<CGameObject*>(Level().CurrentEntity())->ROS()->get_luminocity();
-		float		power = log(luminocity > .001f ? luminocity : .001f)*(1.f/*luminocity_factor*/);
-		luminocity	= exp(power);
-
-		static float cur_lum = luminocity;
-		cur_lum = luminocity*0.01f + cur_lum*0.99f;
-		UIMotionIcon.SetLuminosity((s16)iFloor(cur_lum*100.0f));
-	}
 	if(!m_pActor) return;
 
 	UIMotionIcon.SetNoise		((s16)(0xffff&iFloor(m_pActor->m_snd_noise*100.0f)));
@@ -447,15 +437,6 @@ void CUIMainIngameWnd::Update()
 			else
 			if (!external_icon_ctrl)
 				TurnOffWarningIcon (ewiInvincible);
-		}
-		// ewiArtefact
-		if( (GameID() == GAME_ARTEFACTHUNT) && !(Device.dwFrame%30) ){
-			bool b_Artefact = (NULL != m_pActor->inventory().ItemFromSlot(ARTEFACT_SLOT));
-			if(b_Artefact)
-				SetWarningIconColor	(ewiArtefact,0xffffffff);			
-			else
-			if (!external_icon_ctrl)
-				TurnOffWarningIcon (ewiArtefact);
 		}
 
 		// Armor indicator stuff

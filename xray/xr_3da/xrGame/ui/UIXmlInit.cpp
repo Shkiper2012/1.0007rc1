@@ -29,12 +29,10 @@
 
 #include "UITextureMaster.h"
 #include "UIDragDropListEx.h"
-#include "UItabButtonMP.h"
 
 extern int keyname_to_dik(LPCSTR);
 
 #define ARIAL_FONT_NAME			"arial"
-
 #define MEDIUM_FONT_NAME		"medium"
 #define SMALL_FONT_NAME			"small"
 
@@ -49,15 +47,9 @@ extern int keyname_to_dik(LPCSTR);
 
 #define DI_FONT_NAME			"di"
 
-
-////
-
 //////////////////////////////////////////////////////////////////////////
-
 const char * const		COLOR_DEFINITIONS					= "color_defs.xml";
 CUIXmlInit::ColorDefs		*CUIXmlInit::m_pColorDefs			= NULL;
-
-
 //////////////////////////////////////////////////////////////////////////
 
 CUIXmlInit::CUIXmlInit()
@@ -352,25 +344,6 @@ bool CUIXmlInit::Init3tButton(CUIXml& xml_doc, const char* path, int index, CUI3
 	return true;
 }
 
-bool CUIXmlInit::InitTabButtonMP(CUIXml& xml_doc, const char* path,	int index, CUITabButtonMP *pWnd)
-{
-	Init3tButton(xml_doc, path,	index, pWnd);
-
-	string256							buff;
-	strconcat							(sizeof(buff),buff, path, ":idention");
-	
-	if (xml_doc.NavigateToNode			(buff, index))
-	{
-		pWnd->m_text_ident_pushed.x		= xml_doc.ReadAttribFlt(buff, index, "push_x", 0);
-		pWnd->m_text_ident_pushed.y		= xml_doc.ReadAttribFlt(buff, index, "push_y", 0);
-
-		pWnd->m_text_ident_cursor_over.x = xml_doc.ReadAttribFlt(buff, index, "over_x", 0);
-		pWnd->m_text_ident_cursor_over.y = xml_doc.ReadAttribFlt(buff, index, "over_y", 0);
-	}
-	return true;
-}
-
-
 bool CUIXmlInit::InitSound(CUIXml& xml_doc, const char* path, int index, CUI3tButton* pWnd){
 	string256 sound_h;
 	string256 sound_t;
@@ -411,7 +384,6 @@ bool CUIXmlInit::InitButton(CUIXml& xml_doc, LPCSTR path,
 		pWnd->SetAccelerator(acc, 1);
 	}
 
-	
 	float shadowOffsetX		= xml_doc.ReadAttribFlt(path, index, "shadow_offset_x", 0);
 	float shadowOffsetY		= xml_doc.ReadAttribFlt(path, index, "shadow_offset_y", 0);
 
@@ -439,13 +411,9 @@ bool CUIXmlInit::InitDragDropListEx(CUIXml& xml_doc, const char* path, int index
 	float height	= xml_doc.ReadAttribFlt(path, index, "height");
 
 	InitAlignment	(xml_doc, path, index, x, y, pWnd);
-
-
-
 	pWnd->Init		(x,y, width,height);
 
-	Ivector2 w_cell_sz, w_cells;
-
+	Ivector2	w_cell_sz, w_cells;
 	w_cell_sz.x				= xml_doc.ReadAttribInt(path, index, "cell_width");
 	w_cell_sz.y				= xml_doc.ReadAttribInt(path, index, "cell_height");
 	w_cells.y				= xml_doc.ReadAttribInt(path, index, "rows_num");
@@ -472,7 +440,6 @@ bool CUIXmlInit::InitDragDropListEx(CUIXml& xml_doc, const char* path, int index
 
 	return true;
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -854,8 +821,6 @@ bool CUIXmlInit::InitCustomEdit(CUIXml& xml_doc, const char* path, int index, CU
 		if (xml_doc.ReadAttribInt(path,index,"float",0))
 			pWnd->SetFloatNumbers(true);
 	}
-	if (xml_doc.ReadAttribInt(path, index, "password",0))
-		pWnd->SetPasswordMode();
 
 	float text_x = xml_doc.ReadAttribFlt(foo, index, "x", 0);
 	float text_y = xml_doc.ReadAttribFlt(foo, index, "y", 0);

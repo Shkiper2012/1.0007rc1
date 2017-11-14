@@ -75,58 +75,12 @@ void game_PlayerState::resetFlag(u16 f)
 	flags__ &= ~(f);
 }
 
-void	game_PlayerState::net_Export(NET_Packet& P, BOOL Full)
+void	game_PlayerState::net_Export(NET_Packet&, BOOL)
 {
-	P.w_u8			(Full ? 1 : 0);
-	if (Full)
-		P.w_stringZ		(	name	);
-
-	P.w_u8			(	team			);
-	P.w_s16			(	m_iRivalKills	);
-	P.w_s16			(	m_iSelfKills	);
-	P.w_s16			(	m_iTeamKills	);
-	P.w_s16			(	m_iDeaths		);
-	P.w_s32			(	money_for_round	);
-	P.w_float_q8	(	experience_D, -1.0f, 2.0f);
-	P.w_u8			(	rank		);
-	P.w_u8			(	af_count	);
-	P.w_u16			(	flags__	);
-	P.w_u16			(	ping	);
-
-	P.w_u16			(	GameID	);
-	P.w_s8			(	skin	);
-	P.w_u8			(	m_bCurrentVoteAgreed	);
-
-	P.w_u32			(Device.dwTimeGlobal - DeathTime);
 };
 
-void	game_PlayerState::net_Import(NET_Packet& P)
+void	game_PlayerState::net_Import(NET_Packet& )
 {
-	BOOL	bFullUpdate = !!P.r_u8();
-
-	if (bFullUpdate)
-		P.r_stringZ		(name);
-
-
-	P.r_u8			(	team			);
-	
-	P.r_s16			(	m_iRivalKills	);
-	P.r_s16			(	m_iSelfKills	);
-	P.r_s16			(	m_iTeamKills	);
-	P.r_s16			(	m_iDeaths		);
-
-	P.r_s32			(	money_for_round	);
-	P.r_float_q8	(	experience_D, -1.0f, 2.0f);
-	P.r_u8			(	rank		);
-	P.r_u8			(	af_count	);
-	P.r_u16			(	flags__	);
-	P.r_u16			(	ping	);
-
-	P.r_u16			(	GameID	);
-	P.r_s8			(	skin	);
-	P.r_u8			(	m_bCurrentVoteAgreed	);
-
-	DeathTime = P.r_u32();
 };
 
 void	game_PlayerState::SetGameID				(u16 NewID)

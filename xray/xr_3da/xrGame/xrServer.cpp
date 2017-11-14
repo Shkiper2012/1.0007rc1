@@ -68,11 +68,6 @@ xrServer::~xrServer()
 	m_aDelayedPackets.clear();
 }
 
-bool  xrServer::HasBattlEye()
-{
-	return false;
-}
-
 //--------------------------------------------------------------------
 
 CSE_Abstract*	xrServer::ID_to_entity		(u16 ID)
@@ -661,9 +656,6 @@ u32 xrServer::OnMessage	(NET_Packet& P, ClientID sender)			// Non-Zero means bro
 		{
 			AddDelayedPacket(P, sender);
 		}break;
-	case M_BATTLEYE:
-		{
-		}
 	}
 
 	VERIFY							(verify_entities());
@@ -964,6 +956,7 @@ void xrServer::GetServerInfo( CServerInfo* si )
 	si->AddItem( "Uptime", time, RGB(255,228,0) );
 
 	strcpy_s( tmp256, get_token_name(game_types, game->Type() ) );
+	/*
 	if ( game->Type() == GAME_DEATHMATCH || game->Type() == GAME_TEAMDEATHMATCH )
 	{
 		strcat_s( tmp256, " [" );
@@ -990,6 +983,7 @@ void xrServer::GetServerInfo( CServerInfo* si )
 		strcat_s( tmp256, itoa( g_sv_ah_iReinforcementTime, tmp, 10 ) );
 		strcat_s( tmp256, "]" );
 	}
+	// */
 	si->AddItem( "Game type", tmp256, RGB(128,255,255) );
 }
 

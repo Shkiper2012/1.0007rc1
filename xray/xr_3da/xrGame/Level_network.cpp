@@ -236,7 +236,6 @@ void CLevel::ClientSave	()
 }
 
 extern		float		phTimefactor;
-extern		BOOL		g_SV_Disable_Auth_Check;
 
 void CLevel::Send		(NET_Packet& P, u32 dwFlags, u32 dwTimeout)
 {
@@ -252,12 +251,6 @@ void CLevel::Send		(NET_Packet& P, u32 dwFlags, u32 dwTimeout)
 		Server->OnMessage	(P,Game().local_svdpnid	);
 	}else											
 		IPureClient::Send	(P,dwFlags,dwTimeout	);
-
-	if (g_pGameLevel && Level().game && GameID() != GAME_SINGLE && !g_SV_Disable_Auth_Check)		{
-		// anti-cheat
-		phTimefactor		= 1.f					;
-		psDeviceFlags.set	(rsConstantFPS,FALSE)	;	
-	}
 }
 
 void CLevel::net_Update	()
@@ -368,27 +361,6 @@ void			CLevel::OnConnectResult				(NET_Packet*	P)
 	if (!result)				
 	{
 		m_bConnectResult	= false			;	
-		switch (res1)
-		{
-		case 0:		//Standart error
-			{
-				if (!xr_strcmp(ResultStr, "Data verification failed. Cheater? [2]"))
-					MainMenu()->SetErrorDialog(CMainMenu::ErrDifferentVersion);
-			}break;
-		case 1:		//GameSpy CDKey
-			{
-				if (!xr_strcmp(ResultStr, "Invalid CD Key"))
-					MainMenu()->SetErrorDialog(CMainMenu::ErrCDKeyInvalid);//, ResultStr);
-				if (!xr_strcmp(ResultStr, "CD Key in use"))
-					MainMenu()->SetErrorDialog(CMainMenu::ErrCDKeyInUse);//, ResultStr);
-				if (!xr_strcmp(ResultStr, "Your CD Key is disabled. Contact customer service."))
-					MainMenu()->SetErrorDialog(CMainMenu::ErrCDKeyDisabled);//, ResultStr);
-			}break;		
-		case 2:		//login+password
-			{
-				MainMenu()->SetErrorDialog(CMainMenu::ErrInvalidPassword);
-			}break;		
-		}
 	};	
 	m_sConnectResult			= ResultStr;
 	
@@ -473,19 +445,6 @@ void			CLevel::ClearAllObjects				()
 #endif
 	};
 	ProcessGameEvents();
-};
-
-void				CLevel::OnInvalidHost			()
-{
-	IPureClient::OnInvalidHost();
-	if (MainMenu()->GetErrorDialogType() == CMainMenu::ErrNoError)
-		MainMenu()->SetErrorDialog(CMainMenu::ErrInvalidHost);
-};
-
-void				CLevel::OnInvalidPassword		()
-{
-	IPureClient::OnInvalidPassword();
-	MainMenu()->SetErrorDialog(CMainMenu::ErrInvalidPassword);
 };
 
 void				CLevel::OnSessionFull			()

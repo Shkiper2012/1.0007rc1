@@ -27,15 +27,10 @@ public:
 		MESSAGEBOX_QUIT_GAME 
 	} E_MESSAGEBOX_STYLE;
 
-			void Init				(LPCSTR box_template);
-			void Clear				();
-	virtual void SetText			(LPCSTR str);
-	virtual LPCSTR GetText			();
-	LPCSTR		 GetHost			();
-	LPCSTR		 GetPassword		();
-	LPCSTR		 GetUserPassword	();
-	void		 SetUserPasswordMode(bool);
-	void		 SetPasswordMode	(bool);
+			void	Init			(LPCSTR box_template);
+			void	Clear			();
+	virtual void	SetText			(LPCSTR str);
+	virtual LPCSTR	GetText			();
 
 	virtual bool OnMouse			(float x, float y, EUIMessages mouse_action);
 	virtual void SendMessage		(CUIWindow *pWnd, s16 msg, void *pData);
@@ -49,12 +44,6 @@ protected:
 
 	CUIStatic*	m_UIStaticPicture;
 	CUIStatic*	m_UIStaticText;
-	CUIStatic*	m_UIStaticHost;
-	CUIStatic*	m_UIStaticPass;
-	CUIStatic*	m_UIStaticUserPass;
-	CUIEditBox* m_UIEditHost;
-	CUIEditBox* m_UIEditPass;
-	CUIEditBox* m_UIEditUserPass;
 	 
 	E_MESSAGEBOX_STYLE m_eMessageBoxStyle;
 	DECLARE_SCRIPT_REGISTER_FUNCTION

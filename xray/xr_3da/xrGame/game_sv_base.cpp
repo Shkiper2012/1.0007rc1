@@ -687,8 +687,6 @@ void game_sv_GameState::OnEvent (NET_Packet &tNetPacket, u16 type, u32 time, Cli
 		}break;
 	case GAME_EVENT_PLAYER_AUTH:
 		{
-			IClient*	CL	=	m_server->ID_to_client		(sender);
-			m_server->OnBuildVersionRespond(CL, tNetPacket);
 		}break;
 	default:
 		{

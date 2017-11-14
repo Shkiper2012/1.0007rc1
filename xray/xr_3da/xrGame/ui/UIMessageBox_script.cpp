@@ -12,16 +12,12 @@ void CUIMessageBox::script_register(lua_State *L)
 		class_<CUIMessageBox,CUIStatic>("CUIMessageBox")
 		.def(					constructor<>())
 		.def("Init",		&CUIMessageBox::Init)
-		.def("SetText",		&CUIMessageBox::SetText)
-		.def("GetHost",		&CUIMessageBox::GetHost)
-		.def("GetPassword",	&CUIMessageBox::GetPassword),
+		.def("SetText",		&CUIMessageBox::SetText),
 
 		class_<CUIMessageBoxEx, CUIDialogWnd>("CUIMessageBoxEx")
 		.def(constructor<>())
 		.def("Init",		&CUIMessageBoxEx::Init)
 		.def("SetText",		&CUIMessageBoxEx::SetText)
-		.def("GetHost",		&CUIMessageBoxEx::GetHost)
-		.def("GetPassword",	&CUIMessageBoxEx::GetPassword)
 //		.enum_("style")
 //		[
 //			value("STYLE_OK",					int(CUIMessageBox::MESSAGEBOX_OK)),

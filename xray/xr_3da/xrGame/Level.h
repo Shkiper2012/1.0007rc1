@@ -115,8 +115,6 @@ public:
 	bool						In_NetCorrectionPrediction	() {return m_bIn_CrPr;};
 
 	virtual void				OnMessage				(void* data, u32 size);
-	virtual void				OnInvalidHost			();
-	virtual void				OnInvalidPassword		();
 	virtual void				OnSessionFull			();
 	virtual void				OnConnectRejected		();
 private:
@@ -154,7 +152,6 @@ private:
 	bool						m_bConnectResult;
 	xr_string					m_sConnectResult;
 public:	
-	void						OnGameSpyChallenge				(NET_Packet* P);
 	void						OnBuildVersionChallenge			();
 	void						OnConnectResult					(NET_Packet* P);
 public:

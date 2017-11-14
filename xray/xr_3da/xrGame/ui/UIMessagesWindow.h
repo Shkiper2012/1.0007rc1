@@ -9,7 +9,6 @@
 #pragma once
 
 #include "UIWindow.h"
-#include "KillMessageStruct.h"
 #include "../pda_space.h"
 #include "../InfoPortionDefs.h"
 
@@ -27,7 +26,6 @@ public:
 	void				AddIconedPdaMessage				(LPCSTR textureName, Frect originalRect, LPCSTR message, int iDelay);
 
 	void				AddLogMessage					(const shared_str& msg);
-	void				AddLogMessage					(KillMessageStruct& msg);
 	void				AddChatMessage					(shared_str msg, shared_str author);
 	void				SetChatOwner					(game_cl_GameState* owner);
 	CUIChatWnd*			GetChatWnd						() {return m_pChatWnd;}

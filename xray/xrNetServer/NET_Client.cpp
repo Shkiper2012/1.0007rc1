@@ -535,7 +535,6 @@ BOOL IPureClient::Connect	(LPCSTR options)
 					{
 					case DPNERR_INVALIDHOSTADDRESS:
 						{
-							OnInvalidHost();
 							return FALSE;
 						}break;
 					case DPNERR_SESSIONFULL:
@@ -571,7 +570,6 @@ BOOL IPureClient::Connect	(LPCSTR options)
 			IDirectPlay8Address*        pHostAddress = NULL;
 			if (net_Hosts.empty())		 
 			{
-				OnInvalidHost();
 				return FALSE;
 			};
 
@@ -612,7 +610,6 @@ BOOL IPureClient::Connect	(LPCSTR options)
 			{
 			case DPNERR_INVALIDPASSWORD:
 				{
-					OnInvalidPassword();
 				}break;
 			case DPNERR_SESSIONFULL:
 				{

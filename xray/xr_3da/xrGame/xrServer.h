@@ -135,21 +135,13 @@ public:
 	
 	xrClientData*			SelectBestClientToMigrateTo		(CSE_Abstract* E, BOOL bForceAnother=FALSE);
 	void					SendConnectResult		(IClient* CL, u8 res, u8 res1, char* ResultStr);
-
 	void					AttachNewClient			(IClient* CL);
-	virtual void			OnBuildVersionRespond				(IClient* CL, NET_Packet& P);
+
 protected:
 	bool					CheckAdminRights		(const shared_str& user, const shared_str& pass, string512 reason);
 	virtual IClient*		new_client				( SClientConnectData* cl_data );
 	
 	virtual bool			Check_ServerAccess( IClient* CL, string512& reason )	{ return true; }
-
-	virtual bool			NeedToCheckClient_GameSpy_CDKey		(IClient* CL)	{ return false; }
-	virtual void			Check_GameSpy_CDKey_Success			(IClient* CL);
-	
-	virtual bool			NeedToCheckClient_BuildVersion		(IClient* CL);
-	virtual void			Check_BuildVersion_Success			(IClient* CL);
-
 	void					SendConnectionData		(IClient* CL);
 	void					OnChatMessage			(NET_Packet* P, xrClientData* CL);
 
@@ -198,7 +190,6 @@ public:
 	virtual void			Assign_ServerType	( string512& res ) {};
 	virtual bool			HasPassword			()	{ return false; }
 	virtual bool			HasProtected		()	{ return false; }
-			bool			HasBattlEye			();
 
 	virtual void			GetServerInfo		( CServerInfo* si );
 public:

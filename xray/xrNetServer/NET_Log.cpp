@@ -3,8 +3,6 @@
 #include "../xr_3da/lua_tools.h"
 #include "../xr_3da/xrGame/script_engine.h"
 
-
-//---------------------------------------------------------
 string64 PacketName[] = {
 	"M_UPDATE",	// DUAL: Update state
 	"M_SPAWN",					// DUAL: Spawning, full state
@@ -33,12 +31,10 @@ string64 PacketName[] = {
 	"M_SAVE_PACKET",
 
 	"M_SWITCH_DISTANCE",
-	"M_GAMEMESSAGE",					// Game Message
+	"M_GAMEMESSAGE",				// Game Message
 	"M_EVENT_PACK",					// Pack of M_EVENT
 
 	//-----------------------------------------------------
-	"M_GAMESPY_CDKEY_VALIDATION_CHALLENGE",
-	"M_GAMESPY_CDKEY_VALIDATION_CHALLENGE_RESPOND",
 	"M_CLIENT_CONNECT_RESULT",
 	"M_CLIENT_REQUEST_CONNECTION_DATA",
 
@@ -64,7 +60,7 @@ string64 PacketName[] = {
 
 	"MSG_FORCEDWORD"
 };
-//---------------------------------------------------------
+
 INetLog::INetLog(LPCSTR sFileName, u32 dwStartTime)
 #ifdef PROFILE_CRITICAL_SECTIONS
 	:m_cs(MUTEX_PROFILE_ID(NET_Log))

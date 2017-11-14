@@ -239,10 +239,6 @@ void CLevel::ClientReceive()
 			{
 				ClientSave			();
 			}break;
-		case M_GAMESPY_CDKEY_VALIDATION_CHALLENGE:
-			{
-				OnGameSpyChallenge(P);
-			}break;
 		case M_AUTH_CHALLENGE:
 			{
 				OnBuildVersionChallenge();
@@ -321,14 +317,10 @@ void CLevel::ClientReceive()
 				if (GameID() != GAME_SINGLE)
 					Game().m_WeaponUsageStatistic->OnUpdateRespond(P);
 			}break;
-		case M_BATTLEYE:
-			{
-			}break;
 		}
 
 		net_msg_Release();
-	}	
-
+	}
 //	if (!g_bDebugEvents) ProcessGameSpawns();
 }
 

@@ -77,14 +77,6 @@ void CUICustomEdit::SetPasswordMode(bool mode){
 
 void CUICustomEdit::OnFocusLost(){
 	CUIWindow::OnFocusLost();
-/*	//only for CDKey control
-	if(m_bInputFocus)
-	{
-		m_bInputFocus = false;
-		m_iKeyPressAndHold = 0;
-		GetMessageTarget()->SendMessage(this,EDIT_TEXT_COMMIT,NULL);
-	}
-*/
 }
 
 void CUICustomEdit::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)

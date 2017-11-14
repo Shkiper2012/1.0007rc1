@@ -1,6 +1,3 @@
-#ifndef _INCDEF_XRMESSAGES_H_
-#define _INCDEF_XRMESSAGES_H_
-
 #pragma once
 
 // CL	== client 2 server message
@@ -38,8 +35,6 @@ enum {
 	M_EVENT_PACK,					// Pack of M_EVENT
 
 	//-----------------------------------------------------
-	M_GAMESPY_CDKEY_VALIDATION_CHALLENGE,
-	M_GAMESPY_CDKEY_VALIDATION_CHALLENGE_RESPOND,
 	M_CLIENT_CONNECT_RESULT,
 	M_CLIENT_REQUEST_CONNECTION_DATA,
 
@@ -65,7 +60,6 @@ enum {
 	M_CHANGE_SELF_NAME,
 	M_REMOTE_CONTROL_AUTH,
 	M_REMOTE_CONTROL_CMD,
-	M_BATTLEYE,
 	M_MAP_SYNC,
 
 	MSG_FORCEDWORD				= u32(-1)
@@ -218,4 +212,3 @@ enum
 	M_SPAWN_OBJECT_FORCEDWORD	= u32(-1)
 };
 
-#endif /*_INCDEF_XRMESSAGES_H_*/

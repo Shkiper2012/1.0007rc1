@@ -1,11 +1,7 @@
 #include "stdafx.h"
 #include "xrServer.h"
 #include "game_sv_single.h"
-#include "game_sv_deathmatch.h"
-#include "game_sv_teamdeathmatch.h"
-#include "game_sv_artefacthunt.h"
 #include "xrMessages.h"
-#include "game_cl_artefacthunt.h"
 #include "game_cl_single.h"
 #include "MainMenu.h"
 
@@ -104,13 +100,6 @@ void xrServer::AttachNewClient			(IClient* CL)
 		SendTo_LL				(CL->ID,&msgConfig,sizeof(msgConfig), net_flags(TRUE, TRUE, TRUE, TRUE));
 		Server_Client_Check		(CL); 
 	}
-
-	// gen message
-	if (!NeedToCheckClient_GameSpy_CDKey(CL))
-	{
-	//-------------------------------------------------------------
-	Check_GameSpy_CDKey_Success(CL);
- }
 
 	//xrClientData * CL_D=(xrClientData*)(CL); 
 	//ip_address				ClAddress;

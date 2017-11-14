@@ -117,7 +117,7 @@ void xrCore::_initialize	(LPCSTR _ApplicationName, LogCallback cb, BOOL init_fs,
 		EFS._initialize		();
 #ifdef DEBUG
     #ifndef	_EDITOR
-		Msg					("CRT heap 0x%08x",_get_heap_handle());
+//		Msg					("CRT heap 0x%08x",_get_heap_handle()); 	// COMMENT_shkiper_marker // Remove deprecated logging. // by OpenXRay/xray-16 //
 		Msg					("Process heap 0x%08x",GetProcessHeap());
     #endif
 #endif // DEBUG
