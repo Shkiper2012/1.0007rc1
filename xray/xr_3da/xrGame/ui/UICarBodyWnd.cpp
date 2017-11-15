@@ -25,10 +25,6 @@
 #include "../script_callback_ex.h"
 #include "../script_game_object.h"
 #include "../BottleItem.h"
-#include "../../../../build_config_defines.h" // for: HIDE_WEAPON_IN_INV
-#if defined(HIDE_WEAPON_IN_INV)
-	#include "../smart_cast.h"
-#endif
 
 #define CAR_BODY_XML		"carbody_new.xml"
 #define CARBODY_ITEM_XML	"carbody_item.xml"
@@ -239,10 +235,8 @@ void CUICarBodyWnd::Hide()
 
 	CActor* pActor = smart_cast<CActor*>(Level().CurrentEntity());
 	if( !pActor )	return;
-#ifdef HIDE_WEAPON_IN_INV
-		pActor->SetWeaponHideState(INV_STATE_BLOCK_ALL, false);
-#endif
-		pActor->RepackAmmo();
+	pActor->SetWeaponHideState(INV_STATE_BLOCK_ALL, false);
+	pActor->RepackAmmo();
 }
 
 void CUICarBodyWnd::UpdateLists()
@@ -352,11 +346,9 @@ void CUICarBodyWnd::Show()
 	SetCurrentItem							(NULL);
 	InventoryUtilities::UpdateWeight		(*m_pUIOurBagWnd);
 
-#ifdef HIDE_WEAPON_IN_INV
 	CActor* pActor = smart_cast<CActor*>(Level().CurrentEntity());
-	if( !pActor )	return;
-	pActor->SetWeaponHideState(INV_STATE_BLOCK_ALL, true);		
-#endif
+	if( pActor )
+		pActor->SetWeaponHideState(INV_STATE_BLOCK_ALL, true);		
 }
 
 void CUICarBodyWnd::DisableAll()

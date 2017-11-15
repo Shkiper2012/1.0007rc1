@@ -5,7 +5,6 @@
 
 using namespace luabind;
 
-
 template <typename T>
 struct CWrapperBase : public T, public luabind::wrap_base {
 	typedef T inherited;

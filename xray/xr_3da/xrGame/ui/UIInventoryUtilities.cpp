@@ -447,14 +447,11 @@ LPCSTR InventoryUtilities::GetGoodwillAsText(CHARACTER_GOODWILL goodwill)
 	return cit->second.c_str();
 }
 
-
 //////////////////////////////////////////////////////////////////////////
 // специальная функция для передачи info_portions при нажатии кнопок UI 
 // (для tutorial)
 void InventoryUtilities::SendInfoToActor(LPCSTR info_id)
-{
-	if (GameID() != GAME_SINGLE) return;
-	
+{	
 	CActor* actor = smart_cast<CActor*>(Level().CurrentEntity());
 	if(actor)
 	{

@@ -13,6 +13,7 @@
 #include "phworld.h"
 #include "phactivationshape.h"
 #include "phvalide.h"
+
 CPhysicsShellHolder::CPhysicsShellHolder()
 {
 	init();
@@ -60,15 +61,13 @@ BOOL CPhysicsShellHolder::net_Spawn				(CSE_Abstract*	DC)
 	return ret;
 }
 
-void	CPhysicsShellHolder::PHHit(float P,Fvector &dir, CObject *who,s16 element,Fvector p_in_object_space, float impulse, ALife::EHitType hit_type /* ALife::eHitTypeWound*/)
+void CPhysicsShellHolder::PHHit(float P,Fvector &dir, CObject *who,s16 element,Fvector p_in_object_space, float impulse, ALife::EHitType hit_type /* ALife::eHitTypeWound*/)
 {
 	if(impulse>0)
 		if(m_pPhysicsShell) m_pPhysicsShell->applyHit(p_in_object_space,dir,impulse,element,hit_type);
 }
 
-//void	CPhysicsShellHolder::Hit(float P, Fvector &dir, CObject* who, s16 element,
-//						 Fvector p_in_object_space, float impulse, ALife::EHitType hit_type)
-void	CPhysicsShellHolder::Hit					(SHit* pHDS)
+void CPhysicsShellHolder::Hit (SHit* pHDS)
 {
 	PHHit(pHDS->damage(),pHDS->dir,pHDS->who,pHDS->boneID,pHDS->p_in_bone_space,pHDS->impulse,pHDS->hit_type);
 #ifdef OBJECTS_RADIOACTIVE
@@ -93,6 +92,7 @@ void CPhysicsShellHolder::init			()
 	m_pPhysicsShell				=	NULL		;
 	b_sheduled					=	false		;
 }
+
 void CPhysicsShellHolder::correct_spawn_pos()
 {
 	VERIFY								(PPhysicsShell());
@@ -106,15 +106,6 @@ void CPhysicsShellHolder::correct_spawn_pos()
 	activation_shape.set_rotation		(XFORM());
 	PPhysicsShell()->DisableCollision	();
 	activation_shape.Activate			(size,1,1.f,M_PI/8.f);
-////	VERIFY								(valid_pos(activation_shape.Position(),phBoundaries));
-//	if (!valid_pos(activation_shape.Position(),phBoundaries)) {
-//		CPHActivationShape				activation_shape;
-//		activation_shape.Create			(c,size,this);
-//		activation_shape.set_rotation	(XFORM());
-//		activation_shape.Activate		(size,1,1.f,M_PI/8.f);
-////		VERIFY							(valid_pos(activation_shape.Position(),phBoundaries));
-//	}
-
 	PPhysicsShell()->EnableCollision	();
 
 	Fvector								ap = activation_shape.Position();
@@ -161,14 +152,10 @@ void CPhysicsShellHolder::activate_physic_shell()
 	}
 	smart_cast<CKinematics*>(Visual())->CalculateBones_Invalidate	();
 	smart_cast<CKinematics*>(Visual())->CalculateBones();
-	if(!IsGameTypeSingle())
-	{
-		if(!smart_cast<CCustomRocket*>(this)&&!smart_cast<CGrenade*>(this)) PPhysicsShell()->SetIgnoreDynamic();
-	}
-//	XFORM().set					(l_p1);
+
 	correct_spawn_pos();
 
-m_pPhysicsShell->set_LinearVel(l_fw);
+	m_pPhysicsShell->set_LinearVel(l_fw);
 	m_pPhysicsShell->GetGlobalTransformDynamic(&XFORM());
 }
 
@@ -219,8 +206,6 @@ void CPhysicsShellHolder::PHSetLinearVell(Fvector& velocity)
 	m_pPhysicsShell->set_LinearVel(velocity);
 }
 
-
-
 f32 CPhysicsShellHolder::GetMass()
 {
 	return m_pPhysicsShell ? m_pPhysicsShell->getMass() : 0;
@@ -237,13 +222,12 @@ CPHSynchronize*	CPhysicsShellHolder::PHGetSyncItem	(u16 item)
 	if(m_pPhysicsShell) return m_pPhysicsShell->get_ElementSync(item);
 	else				return 0;
 }
-void	CPhysicsShellHolder::PHUnFreeze	()
+void CPhysicsShellHolder::PHUnFreeze	()
 {
 	if(m_pPhysicsShell) m_pPhysicsShell->UnFreeze();
 }
 
-
-void	CPhysicsShellHolder::PHFreeze()
+void CPhysicsShellHolder::PHFreeze()
 {
 	if(m_pPhysicsShell) m_pPhysicsShell->Freeze();
 }
@@ -270,7 +254,7 @@ float CPhysicsShellHolder::EffectiveGravity()
 	return ph_world->Gravity();
 }
 
-void		CPhysicsShellHolder::	save				(NET_Packet &output_packet)
+void CPhysicsShellHolder::	save (NET_Packet &output_packet)
 {
 	inherited::save(output_packet);
 	u8 enable_state=(u8)stNotDefitnite;
@@ -281,7 +265,7 @@ void		CPhysicsShellHolder::	save				(NET_Packet &output_packet)
 	output_packet.w_u8(enable_state);
 }
 
-void		CPhysicsShellHolder::	load				(IReader &input_packet)
+void CPhysicsShellHolder::	load (IReader &input_packet)
 {
 	inherited::load(input_packet);
 	st_enable_state=input_packet.r_u8();
@@ -290,14 +274,8 @@ void		CPhysicsShellHolder::	load				(IReader &input_packet)
 
 void CPhysicsShellHolder::PHSaveState(NET_Packet &P)
 {
-
-	//CPhysicsShell* pPhysicsShell=PPhysicsShell();
 	CKinematics* K	=smart_cast<CKinematics*>(Visual());
-	//Flags8 lflags;
-	//if(pPhysicsShell&&pPhysicsShell->isActive())			lflags.set(CSE_PHSkeleton::flActive,pPhysicsShell->isEnabled());
-
-//	P.w_u8 (lflags.get());
-	if(K)
+	if( K )
 	{
 		P.w_u64(K->LL_GetBonesVisible());
 		P.w_u16(K->LL_GetBoneRoot());
@@ -345,14 +323,11 @@ void CPhysicsShellHolder::PHSaveState(NET_Packet &P)
 		state.net_Save(P,min,max);
 	}
 }
-void
-CPhysicsShellHolder::PHLoadState(IReader &P)
+
+void CPhysicsShellHolder::PHLoadState(IReader &P)
 {
-	
-//	Flags8 lflags;
-	CKinematics* K=smart_cast<CKinematics*>(Visual());
-//	P.r_u8 (lflags.flags);
-	if(K)
+	CKinematics* K = smart_cast<CKinematics*>(Visual());
+	if( K )
 	{
 		K->LL_SetBonesVisible(P.r_u64());
 		K->LL_SetBoneRoot(P.r_u16());
@@ -378,16 +353,6 @@ CPhysicsShellHolder::PHLoadState(IReader &P)
 bool CPhysicsShellHolder::register_schedule	() const
 {
 	return					(b_sheduled);
-}
-
-void CPhysicsShellHolder::on_physics_disable()
-{
-	if (IsGameTypeSingle())
-		return;
-
-	NET_Packet			net_packet;
-	u_EventGen			(net_packet,GE_FREEZE_OBJECT,ID());
-	Level().Send		(net_packet,net_flags(TRUE,TRUE));
 }
 
 void CPhysicsShellHolder::UpdateXFORM(const Fmatrix &upd)
@@ -433,9 +398,6 @@ void CPhysicsShellHolder::UpdateXFORM(const Fmatrix &upd)
 
 		if (method & 8)		
 			PPhysicsShell()->GetGlobalTransformDynamic(&XFORM());
-		
-			
-
 	}
-		
 }
+

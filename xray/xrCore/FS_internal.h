@@ -1,5 +1,3 @@
-#ifndef FS_internalH
-#define FS_internalH
 #pragma once
 
 #include "lzhuf.h"
@@ -105,4 +103,3 @@ public:
 	virtual		~CVirtualFileReader();
 };
 
-#endif

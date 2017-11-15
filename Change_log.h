@@ -347,6 +347,7 @@ xxx	(+)		xrGame\ui\UICellItem.cpp 						---> xr_delete 							---> если, включит
 	(/)		xrGame\xrServer.cpp 							---> Player not found. New player created.
 	(/)		xrNetServer\NET_Server.cpp 						---> MaxPlayers = 32
 	(+)		xrGame\console_commands.cpp 					---> Ставим паузу во время быстрого сохранения. ---> Device.Pause( TRUE, ...
+	(+)														---> переименовал "UserName_quicksave" ---> "quick_save_game" для сохранения сейва.
 			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 xxx	(=)		xrGame\ActorAnimation.cpp 						---> Измененная анимация безоружного ГГ "_torso_0_aim_0"->"_torso_5_aim_0" 	// by Cut X-Ray // 
 xxx															---> Вылет из-за отсутствия этой анимации: 'cl_torso_5_aim_0'
@@ -358,7 +359,7 @@ xxx															---> Вылет из-за отсутствия этой анимации: 'cl_torso_5_aim_0'
 	(+)		xrGame\PhraseScript.cpp 						---> R_ASSERT3(functor_exists, "Cannot find precondition: ...
 	(+)		Environment_misc.cpp 							---> Проверка на "CEnvAmbient::load: sound_section '%s' not found"
 			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	(+)		xrGame\key_binding_registrator_script.cpp 		---> добавлены бинды клавиш key_bindings и DIK_keys из _g.script
+	(+)		xrGame\key_binding_registrator_script.cpp 		---> добавлены бинды клавиш 'key_bindings' и 'DIK_keys' из '_g.script'
 	(+)		xrGame\UICustomItem.cpp							---> float kx =	(UI()->is_16_9_mode())?(UI()->get_current_kx()):1.0f;
 	(+)		xrGame\ui_base.h								---> get_current_kx()
 	(+)		xrGame\ui_base.cpp								---> get_current_kx()
@@ -379,6 +380,13 @@ xxx															---> Вылет из-за отсутствия этой анимации: 'cl_torso_5_aim_0'
 	======= build 6856 =======
 	*/
 	
+	/*		16_11_2017
+	(~)		xrGame\Level_input.cpp 							---> переименовал "UserName_quicksave" ---> "quick_save_game" для загрузки сейва.
+	(~)		Удален дефайн "HIDE_WEAPON_IN_INV" 				---> Правка "убирание оружия" переделана без дэфайна.
+	(-)		Вырезана ёще одна часть мультиплеерного кода. 	---> статистика для оружия и прочее.
+	======= build 6858 =======
+	*/
+
 #endif
 
 #ifndef Legend & Shkiper_Marker's

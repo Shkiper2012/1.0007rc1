@@ -364,7 +364,3 @@ void			CSpectator::net_Relcase				(CObject *O)
 	if (!m_pActorToLookAt) cam_Set(eacFreeFly);
 };
 
-void CSpectator::GetSpectatorString		(string1024& )
-{
-};
-

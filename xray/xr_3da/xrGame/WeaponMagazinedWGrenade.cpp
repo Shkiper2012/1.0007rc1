@@ -122,19 +122,6 @@ BOOL CWeaponMagazinedWGrenade::net_Spawn(CSE_Abstract* DC)
 	m_bPending = false;
 
 	m_DefaultCartridge2.Load(*m_ammoTypes2[m_ammoType2], u8(m_ammoType2));
-
-	if (GameID() != GAME_SINGLE)
-	{
-		if (!m_bGrenadeMode && IsGrenadeLauncherAttached() && !getRocketCount())
-		{
-			m_magazine2.push_back(m_DefaultCartridge2);
-
-			shared_str grenade_name = m_DefaultCartridge2.m_ammoSect;
-			shared_str fake_grenade_name = pSettings->r_string(grenade_name, "fake_grenade_name");
-
-			CRocketLauncher::SpawnRocket(*fake_grenade_name, this);
-		}
-	};
 	
 	xr_vector<CCartridge>* pM = NULL;
 	bool b_if_grenade_mode	= (m_bGrenadeMode && iAmmoElapsed && !getRocketCount());
@@ -347,8 +334,7 @@ void CWeaponMagazinedWGrenade::SwitchState(u32 S)
 			}
 			E->g_fireParams		(this, p1,d);
 		}
-		if (IsGameTypeSingle())
-			p1.set						(get_LastFP2());
+		p1.set( get_LastFP2() );
 		
 		Fmatrix launch_matrix;
 		launch_matrix.identity();

@@ -23,7 +23,6 @@ extern bool	g_b_ClearGameCaptions;
 
 void CLevel::remove_objects	()
 {
-	if (!IsGameTypeSingle()) Msg("CLevel::remove_objects - Start");
 	BOOL						b_stored = psDeviceFlags.test(rsDisableObjectsAsCrows);
 
 	Game().reset_ui				();
@@ -86,10 +85,6 @@ void CLevel::remove_objects	()
 	}
 
 	g_pGamePersistent->destroy_particles		(false);
-
-//.	xr_delete									(m_seniority_hierarchy_holder);
-//.	m_seniority_hierarchy_holder				= xr_new<CSeniorityHierarchyHolder>();
-	if (!IsGameTypeSingle()) Msg("CLevel::remove_objects - End");
 }
 
 #ifdef DEBUG
@@ -121,56 +116,44 @@ void CLevel::net_Stop		()
 #endif // DEBUG
 }
 
-
 void CLevel::ClientSend()
 {
-	if (GameID() != GAME_SINGLE && OnClient()) 		// fixed by Shoker //
-	{
-		if ( !net_HasBandwidth() ) return;
-	};
-
 	NET_Packet				P;
 	u32						start	= 0;
-	//----------- for E3 -----------------------------
-//	if () 
+
+	if (CurrentControlEntity()) 
 	{
-//		if (!(Game().local_player) || Game().local_player->testFlag(GAME_PLAYER_FLAG_VERY_VERY_DEAD)) return;
-		if (CurrentControlEntity()) 
-		{
-			CObject* pObj = CurrentControlEntity();
-			if (!pObj->getDestroy() && pObj->net_Relevant())
-			{				
-				P.w_begin		(M_CL_UPDATE);
-				
+		CObject* pObj = CurrentControlEntity();
+		if (!pObj->getDestroy() && pObj->net_Relevant())
+		{				
+			P.w_begin		(M_CL_UPDATE);
+			P.w_u16			(u16(pObj->ID()));
+			P.w_u32			(0);	//reserved place for client's ping
+			pObj->net_Export(P);
 
-				P.w_u16			(u16(pObj->ID())	);
-				P.w_u32			(0);	//reserved place for client's ping
-
-				pObj->net_Export			(P);
-
-				if (P.B.count>9)				
+			if (P.B.count>9)				
+			{
+				if (OnServer())
 				{
-					if (OnServer())
+					if (net_IsSyncronised() && IsDemoSave()) 
 					{
-						if (net_IsSyncronised() && IsDemoSave()) 
-						{
-							DemoCS.Enter();
-							Demo_StoreData(P.B.data, P.B.count, DATA_CLIENT_PACKET);
-							DemoCS.Leave();
-						}						
-					}
-					else
-						Send	(P, net_flags(FALSE));
-				}				
-			}			
-		}		
-	};
+						DemoCS.Enter();
+						Demo_StoreData(P.B.data, P.B.count, DATA_CLIENT_PACKET);
+						DemoCS.Leave();
+					}						
+				}
+				else
+					Send	(P, net_flags(FALSE));
+			}				
+		}			
+	}		
+
 	if (OnClient()) 
 	{
 		Flush_Send_Buffer();
 		return;
 	}
-	//-------------------------------------------------
+
 	while (1)
 	{
 		P.w_begin						(M_UPDATE);
@@ -184,7 +167,6 @@ void CLevel::ClientSend()
 		}else
 			break;
 	}
-
 }
 
 u32	CLevel::Objects_net_Save	(NET_Packet* _Packet, u32 start, u32 max_object_size)

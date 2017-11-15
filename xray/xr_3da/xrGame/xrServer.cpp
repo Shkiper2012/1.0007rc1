@@ -779,8 +779,7 @@ void			xrServer::Server_Client_Check	( IClient* CL )
 
 bool		xrServer::OnCL_QueryHost		() 
 {
-	if (game->Type() == GAME_SINGLE) return false;
-	return (client_Count() != 0); 
+	return false;
 };
 
 CSE_Abstract*	xrServer::GetEntity			(u32 Num)
@@ -956,34 +955,7 @@ void xrServer::GetServerInfo( CServerInfo* si )
 	si->AddItem( "Uptime", time, RGB(255,228,0) );
 
 	strcpy_s( tmp256, get_token_name(game_types, game->Type() ) );
-	/*
-	if ( game->Type() == GAME_DEATHMATCH || game->Type() == GAME_TEAMDEATHMATCH )
-	{
-		strcat_s( tmp256, " [" );
-		strcat_s( tmp256, itoa( g_sv_dm_dwFragLimit, tmp, 10 ) );
-		strcat_s( tmp256, "] " );
-	}
-	else if ( game->Type() == GAME_ARTEFACTHUNT )
-	{
-		strcat_s( tmp256, " [" );
-		strcat_s( tmp256, itoa( g_sv_ah_dwArtefactsNum, tmp, 10 ) );
-		strcat_s( tmp256, "] " );
-		g_sv_ah_iReinforcementTime;
-	}
 	
-	//if ( g_sv_dm_dwTimeLimit > 0 )
-	{
-		strcat_s( tmp256, " time limit [" );
-		strcat_s( tmp256, itoa( g_sv_dm_dwTimeLimit, tmp, 10 ) );
-		strcat_s( tmp256, "] " );
-	}
-	if ( game->Type() == GAME_ARTEFACTHUNT )
-	{
-		strcat_s( tmp256, " RT [" );
-		strcat_s( tmp256, itoa( g_sv_ah_iReinforcementTime, tmp, 10 ) );
-		strcat_s( tmp256, "]" );
-	}
-	// */
 	si->AddItem( "Game type", tmp256, RGB(128,255,255) );
 }
 

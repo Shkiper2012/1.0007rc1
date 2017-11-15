@@ -161,13 +161,6 @@ public:
 	virtual void Execute(LPCSTR args) {
 		CCC_Token::Execute(args);
 		if (g_pGameLevel && Level().game){
-//#ifndef	DEBUG
-			if (GameID() != GAME_SINGLE){
-				Msg("For this game type difficulty level is disabled.");
-				return;
-			};
-//#endif
-
 			game_cl_Single* game		= smart_cast<game_cl_Single*>(Level().game); VERIFY(game);
 			game->OnDifficultyChanged	();
 		}
@@ -177,10 +170,6 @@ public:
 		strcpy_s(I,"game difficulty"); 
 	}
 };
-
-
-
-
 
 #ifdef DEBUG
 class CCC_ALifePath : public IConsole_Command {
@@ -233,7 +222,7 @@ class CCC_ALifeSwitchDistance : public IConsole_Command {
 public:
 	CCC_ALifeSwitchDistance(LPCSTR N) : IConsole_Command(N)  { };
 	virtual void Execute(LPCSTR args) {
-		if ((GameID() == GAME_SINGLE)  &&ai().get_alife()) {
+		if( ai().get_alife() ){
 			float id1 = 0.0f;
 			sscanf(args ,"%f",&id1);
 			if (id1 < 2.0f)
@@ -254,7 +243,7 @@ class CCC_ALifeProcessTime : public IConsole_Command {
 public:
 	CCC_ALifeProcessTime(LPCSTR N) : IConsole_Command(N)  { };
 	virtual void Execute(LPCSTR args) {
-		if ((GameID() == GAME_SINGLE)  &&ai().get_alife()) {
+		if( ai().get_alife() ){
 			game_sv_Single	*tpGame = smart_cast<game_sv_Single *>(Level().Server->game);
 			VERIFY			(tpGame);
 			int id1 = 0;
@@ -274,7 +263,7 @@ class CCC_ALifeObjectsPerUpdate : public IConsole_Command {
 public:
 	CCC_ALifeObjectsPerUpdate(LPCSTR N) : IConsole_Command(N)  { };
 	virtual void Execute(LPCSTR args) {
-		if ((GameID() == GAME_SINGLE)  &&ai().get_alife()) {
+		if( ai().get_alife() ){
 			game_sv_Single	*tpGame = smart_cast<game_sv_Single *>(Level().Server->game);
 			VERIFY			(tpGame);
 			int id1 = 0;
@@ -290,7 +279,7 @@ class CCC_ALifeSwitchFactor : public IConsole_Command {
 public:
 	CCC_ALifeSwitchFactor(LPCSTR N) : IConsole_Command(N)  { };
 	virtual void Execute(LPCSTR args) {
-		if ((GameID() == GAME_SINGLE)  &&ai().get_alife()) {
+		if( ai().get_alife() ){
 			game_sv_Single	*tpGame = smart_cast<game_sv_Single *>(Level().Server->game);
 			VERIFY			(tpGame);
 			float id1 = 0;
@@ -299,11 +288,10 @@ public:
 			tpGame->alife().set_switch_factor(id1);
 		}
 		else
-			Log		("!Not a single player game!");
+			Log("!Not a single player game!");
 	}
 };
 
-//#ifndef MASTER_GOLD
 class CCC_TimeFactor : public IConsole_Command {
 public:
 					CCC_TimeFactor	(LPCSTR N) : IConsole_Command(N) {}
@@ -314,13 +302,10 @@ public:
 		Device.time_factor	(time_factor);
 	}
 };
-//#endif // MASTER_GOLD
 
-//-----------------------------------------------------------------------
 class CCC_DemoRecord : public IConsole_Command
 {
 public:
-
 	CCC_DemoRecord(LPCSTR N) : IConsole_Command(N) {};
 	virtual void Execute(LPCSTR args) {
 		#ifndef	DEBUG
@@ -329,11 +314,6 @@ public:
 			Msg("Demo Record is disabled when level is not loaded.");
 			return;
 		}
-		if (GameID() != GAME_SINGLE) 
-		{
-			Msg("For this game type Demo Record is disabled.");
-			return;
-		};
 		#endif
 		Console->Hide	();
 		string_path		fn_; 
@@ -344,37 +324,28 @@ public:
 		g_pGameLevel->Cameras().AddCamEffector(xr_new<CDemoRecord> (fn));
 	}
 };
+
 class CCC_DemoPlay : public IConsole_Command
 {
 public:
-	CCC_DemoPlay(LPCSTR N) : 
-	  IConsole_Command(N) 
-	  { bEmptyArgsHandled = TRUE; };
-	  virtual void Execute(LPCSTR args) {
-		#ifndef	DEBUG
-		if (GameID() != GAME_SINGLE) 
-		{
-			Msg("For this game type Demo Play is disabled.");
-			return;
-		};
-		#endif
-		  if (0==g_pGameLevel)
-		  {
-			  Msg	("! There are no level(s) started");
-		  } else {
-			  Console->Hide			();
-			  string_path			fn;
-			  u32		loops	=	0;
-			  LPSTR		comma	=	strchr(const_cast<LPSTR>(args),',');
-			  if (comma)	{
-				  loops			=	atoi	(comma+1);
-				  *comma		=	0;	//. :)
-			  }
-			  strconcat			(sizeof(fn),fn, args, ".xrdemo");
-			  FS.update_path	(fn, "$game_saves$", fn);
-			  g_pGameLevel->Cameras().AddCamEffector(xr_new<CDemoPlay> (fn, 1.0f, loops));
-		  }
-	  }
+	CCC_DemoPlay(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
+	virtual void Execute(LPCSTR args) {
+		if( 0==g_pGameLevel ){
+			Msg	("! There are no level(s) started");
+		}else{
+			Console->Hide		();
+			string_path			fn;
+			u32		loops	=	0;
+			LPSTR 	comma	=	strchr(const_cast<LPSTR>(args),',');
+			if( comma ){
+				loops		=	atoi( comma+1 );
+				*comma		=	0;	//. :)
+			}
+			strconcat			(sizeof(fn),fn, args, ".xrdemo");
+			FS.update_path		(fn, "$game_saves$", fn);
+			g_pGameLevel->Cameras().AddCamEffector(xr_new<CDemoPlay> (fn, 1.0f, loops));
+		}
+	}
 };
 
 bool valid_file_name(LPCSTR file_name)
@@ -392,18 +363,12 @@ bool valid_file_name(LPCSTR file_name)
 	return		(true);
 }
 
-
 #include "UIGameCustom.h"
 #include "HUDManager.h"
 class CCC_ALifeSave : public IConsole_Command {
 public:
 	CCC_ALifeSave(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
 	virtual void Execute(LPCSTR args) {
-		
-		if(!IsGameTypeSingle()){
-			Msg("for single-mode only");
-			return;
-		}
 		if(!g_actor || !Actor()->g_Alive())
 		{
 			Msg("cannot make saved game because actor is dead :(");
@@ -416,8 +381,7 @@ public:
 
 		string_path				S,S1;
 		S[0]					= 0;
-//.		sscanf					(args ,"%s",S);
-		strcpy_s					(S,args);
+		strcpy_s				(S,args);
 		
 #ifdef DEBUG
 		CTimer					timer;
@@ -602,19 +566,15 @@ public:
 	  virtual void	Execute	(LPCSTR args)
 	  {
 #ifdef _DEBUG
-		  CCC_Float::Execute(args);
+		 CCC_Float::Execute(args);
 #else
-		  if (!g_pGameLevel || GameID() == GAME_SINGLE)
-			  CCC_Float::Execute(args);
-		  else
-		  {
-			  Msg ("! Command disabled for this type of game");
-		  }
+		if( !g_pGameLevel )
+			CCC_Float::Execute(args);
+		else
+			Msg	("! There are no level(s) started ");
 #endif
 	  }
 };
-
-
 
 class CCC_Net_CL_InputUpdateRate : public CCC_Integer {
 protected:
@@ -635,8 +595,6 @@ public:
 	  }
 };
 
-
-//#ifndef MASTER_GOLD
 class CCC_Script : public IConsole_Command {
 public:
 	CCC_Script(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
@@ -688,10 +646,8 @@ public:
 		}
 	}
 };
-//#endif // MASTER_GOLD
 
 #ifdef DEBUG
-
 class CCC_DrawGameGraphAll : public IConsole_Command {
 public:
 				 CCC_DrawGameGraphAll	(LPCSTR N) : IConsole_Command(N)
@@ -807,6 +763,7 @@ public:
 		strcpy_s(I,"dumps all infoportions that actor have"); 
 	}
 };
+
 #include "map_manager.h"
 class CCC_DumpMap : public IConsole_Command {
 public:
@@ -845,8 +802,6 @@ public:
 	}
 
 };
-
-
 
 class CCC_DebugFonts : public IConsole_Command {
 public:
@@ -902,6 +857,7 @@ public:
 		monster->set_show_debug_info (u8(value2));
 	}
 };
+
 class CCC_DbgPhTrackObj : public IConsole_Command {
 public:
 	CCC_DbgPhTrackObj(LPCSTR N) : IConsole_Command(N)  { };
@@ -945,13 +901,6 @@ public:
 	  virtual void	Execute	(LPCSTR args)
 	  {
 		  if(!ph_world)	return;
-#ifndef DEBUG
-		  if (g_pGameLevel && Level().game && GameID() != GAME_SINGLE)
-		  {
-			  Msg("Command is not available in Multiplayer");
-			  return;
-		  }
-#endif
 		  ph_world->SetGravity(float(atof(args)));
 	  }
 	  virtual void	Status	(TStatus& S)

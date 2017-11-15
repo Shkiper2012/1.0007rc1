@@ -22,12 +22,11 @@
 #include "game_base_space.h"
 //#include "phvalide.h"
 
-
-
 IC		bool	PhOutOfBoundaries			(const Fvector& v)
 {
 	return v.y < phBoundaries.y1;
 }
+
 #ifdef DEBUG
 #	include "debug_renderer.h"
 #endif
@@ -40,6 +39,7 @@ float IC sgn(float v)
 {
 	return v<0.f ? -1.f:1.f;
 }
+
 bool test_sides(const Fvector &center,const Fvector &side_dir,const Fvector &fv_dir,const Fvector &box,int tri_id)
 {
 	Triangle tri;
@@ -121,7 +121,7 @@ bool test_sides(const Fvector &center,const Fvector &side_dir,const Fvector &fv_
 	return true;
 	
 }
-////////////////////////////////////////////////////////////////////////////////
+
 ///////////////////////////////////class//CPHSimpleCharacter////////////////////
 CPHSimpleCharacter::CPHSimpleCharacter()
 {
@@ -179,7 +179,6 @@ CPHSimpleCharacter::CPHSimpleCharacter()
 	b_foot_mtl_check	=true	;
 }
 
-
 void CPHSimpleCharacter::TestPathCallback(bool& do_colide,bool bo1,dContact& c,SGameMtl * /*material_1*/,SGameMtl * /*material_2*/)
 {
 	do_colide=false;
@@ -218,8 +217,9 @@ void CPHSimpleCharacter::SetBox(const dVector3 &sizes)
 	dGeomSphereSetRadius(m_cap,test_radius);
 	dGeomSetPosition(m_cap,0.f,test_height,0.f);
 }
-void CPHSimpleCharacter::Create(dVector3 sizes){
 
+void CPHSimpleCharacter::Create(dVector3 sizes)
+{
 	if(b_exist) return;
 	
 	b_air_contact_state	=	false	;
@@ -333,6 +333,7 @@ void CPHSimpleCharacter::Create(dVector3 sizes){
 	CPHCollideValidator::SetCharacterClass(*this);
 	m_collision_damage_info.Construct();
 }
+
 void CPHSimpleCharacter::SwitchOFFInitContact()
 {
 	VERIFY(b_exist);
@@ -345,6 +346,7 @@ void CPHSimpleCharacter::SwitchOFFInitContact()
 	b_foot_mtl_check	=true	;
 	b_on_ground=b_valide_ground_contact=false;
 }	
+
 void CPHSimpleCharacter::SwitchInInitContact()
 {
 	VERIFY(b_exist);
@@ -353,6 +355,7 @@ void CPHSimpleCharacter::SwitchInInitContact()
 	dGeomUserDataSetPhObject(m_hat,(CPHObject*)this);
 
 }
+
 void CPHSimpleCharacter::Destroy(){
 	if(!b_exist) return;
 	b_exist=false;
@@ -429,8 +432,9 @@ void CPHSimpleCharacter::Destroy(){
 
 
 }
+
 const static u64 impulse_time_constant=30;
-void		CPHSimpleCharacter::ApplyImpulse(const Fvector& dir,dReal P)
+void CPHSimpleCharacter::ApplyImpulse(const Fvector& dir,dReal P)
 {
 	if(!b_exist||b_external_impulse) return;
 	//if(!dBodyIsEnabled(m_body)) dBodyEnable(m_body);
@@ -450,12 +454,12 @@ void		CPHSimpleCharacter::ApplyImpulse(const Fvector& dir,dReal P)
 	dBodySetForce(m_body,m_ext_imulse.x*P/fixed_step,m_ext_imulse.y*P/fixed_step,m_ext_imulse.z*P/fixed_step);
 }
 
-void		CPHSimpleCharacter::ApplyForce(const Fvector& force)
+void CPHSimpleCharacter::ApplyForce(const Fvector& force)
 {
 	ApplyForce(force.x,force.y,force.z);
 }
 
-void		CPHSimpleCharacter::ApplyForce(float x, float y, float z)
+void CPHSimpleCharacter::ApplyForce(float x, float y, float z)
 {
 	if(!b_exist) return;
 	Enable();
@@ -463,7 +467,7 @@ void		CPHSimpleCharacter::ApplyForce(float x, float y, float z)
 	//BodyCutForce(m_body,5.f,0.f);
 }
 
-void		CPHSimpleCharacter::ApplyForce(const Fvector& dir,float force)
+void CPHSimpleCharacter::ApplyForce(const Fvector& dir,float force)
 {
 	ApplyForce(dir.x*force,dir.y*force,dir.z*force);
 }
@@ -667,11 +671,7 @@ void CPHSimpleCharacter::PhTune(dReal step){
 
 	b_lose_ground=!(b_good_graund||m_elevator_state.ClimbingState())||b_lose_control;
 
-
-
 	ApplyAcceleration();
-	
-
 
 	dReal* chVel=const_cast<dReal*>(dBodyGetLinearVel(m_body));
 	//if(b_jump)
@@ -731,12 +731,6 @@ void CPHSimpleCharacter::PhTune(dReal step){
 				dBodyAddForce(m_body,chVel[0]/vmag/amag*proj*3000.f,0,chVel[2]/vmag/amag*proj*3000.f);
 			}
 	}
-	//else
-	//dBodyAddForce(m_body,-chVel[0]*10.f,-20.f*70.f*(!is_contact),-chVel[2]*10.f);
-
-		//if(b_depart&&!b_clamb_jump&&!b_jump&&!b_jumping&&is_control&&!b_external_impulse&&!m_elevator_state.Active()){
-		//		dBodyAddForce(m_body,0,-m.mass*ph_world->Gravity()/fixed_step,0);
-		//}
 
 	BodyCutForce(m_body,5.f,0.f);
 #ifdef DEBUG
@@ -746,8 +740,6 @@ void CPHSimpleCharacter::PhTune(dReal step){
 	}
 #endif
 }
-
-
 
 const float CHWON_ACCLEL_SHIFT=0.4f;
 const float CHWON_AABB_FACTOR =1.f;
@@ -765,6 +757,7 @@ void CPHSimpleCharacter::ValidateWalkOn()
 	}
 	else b_clamb_jump=ValidateWalkOnMesh()&&!m_elevator_state.NearDown();
 }
+
 bool CPHSimpleCharacter::ValidateWalkOnObject()
 {
 	//deside to stop clamb
@@ -803,6 +796,7 @@ bool CPHSimpleCharacter::ValidateWalkOnObject()
 			dVectorSet(m_clamb_depart_position,dBodyGetPosition(m_body));
 	return b_clamb_jump;
 }
+
 bool CPHSimpleCharacter::ValidateWalkOnMesh()
 {
 	Fvector AABB,AABB_forbid,center,center_forbid,accel_add,accel;
@@ -917,7 +911,9 @@ bool CPHSimpleCharacter::ValidateWalkOnMesh()
 	return 
 		false;
 }
-void CPHSimpleCharacter::SetAcceleration(Fvector accel){
+
+void CPHSimpleCharacter::SetAcceleration(Fvector accel)
+{
 	if(!b_exist) return;
 
 	if(!dBodyIsEnabled(	m_body))
@@ -925,11 +921,14 @@ void CPHSimpleCharacter::SetAcceleration(Fvector accel){
 			Enable();
 	m_acceleration=accel;
 }
+
 void CPHSimpleCharacter::SetCamDir(const Fvector& cam_dir)
 {
 	m_cam_dir.set(cam_dir);
 }
+
 static const float pull_force=25.f;
+
 void CPHSimpleCharacter::ApplyAcceleration() 
 {
 
@@ -998,8 +997,8 @@ void CPHSimpleCharacter::ApplyAcceleration()
 	dVectorMul(m_control_force,m_friction_factor);
 }
 
-
-void	CPHSimpleCharacter::IPosition(Fvector& pos) {
+void CPHSimpleCharacter::IPosition(Fvector& pos) 
+{
 
 	if(!b_exist){
 		pos.set(cast_fv(m_safe_position));
@@ -1012,7 +1011,8 @@ void	CPHSimpleCharacter::IPosition(Fvector& pos) {
 	return;
 }
 
-void CPHSimpleCharacter::SetPosition(Fvector pos){
+void CPHSimpleCharacter::SetPosition(Fvector pos)
+{
 	VERIFY_BOUNDARIES(pos,phBoundaries,PhysicsRefObject());
 	if(!b_exist) return;
 	m_death_position[0]=pos.x;
@@ -1038,9 +1038,8 @@ void CPHSimpleCharacter::SetPosition(Fvector pos){
 	CPHObject::spatial_move();
 }
 
-
-
-void CPHSimpleCharacter::GetPosition(Fvector& vpos){
+void CPHSimpleCharacter::GetPosition(Fvector& vpos)
+{
 	if(!b_exist){
 		vpos.set(m_safe_position[0],m_safe_position[1]-m_radius,m_safe_position[2]);
 	}
@@ -1052,12 +1051,14 @@ void CPHSimpleCharacter::GetPosition(Fvector& vpos){
 
 	VERIFY_BOUNDARIES(vpos,phBoundaries,PhysicsRefObject());
 }
-void	 CPHSimpleCharacter::	GetPreviousPosition					(Fvector& pos)
+
+void CPHSimpleCharacter::	GetPreviousPosition					(Fvector& pos)
 {
 	VERIFY(b_exist);
 	VERIFY(!ph_world->Processing());
 	m_body_interpolation.GetPosition(pos,0);
 }
+
 void CPHSimpleCharacter::GetVelocity(Fvector& vvel){
 	if(!b_exist){
 
@@ -1069,8 +1070,8 @@ void CPHSimpleCharacter::GetVelocity(Fvector& vvel){
 	return;
 }
 
-
-void CPHSimpleCharacter::SetVelocity(Fvector vel){
+void CPHSimpleCharacter::SetVelocity(Fvector vel)
+{
 	if(!b_exist) return;
 	float sq_mag=vel.square_magnitude();
 	if(sq_mag>default_l_limit*default_l_limit)
@@ -1084,8 +1085,8 @@ void CPHSimpleCharacter::SetVelocity(Fvector vel){
 	dBodySetLinearVel(m_body,vel.x,vel.y,vel.z);
 }
 
-
-void CPHSimpleCharacter::SetMas(dReal mass){
+void CPHSimpleCharacter::SetMas(dReal mass)
+{
 	m_mass=mass;
 	if(!b_exist) return;
 	dMass m;
@@ -1094,8 +1095,10 @@ void CPHSimpleCharacter::SetMas(dReal mass){
 	dMassAdjust(&m,mass);
 	dBodySetMass(m_body,&m);
 }
+
 #ifdef DEBUG
-void CPHSimpleCharacter::OnRender(){
+void CPHSimpleCharacter::OnRender()
+{
 	if(!b_exist) return;
 	Fmatrix m;
 	m.identity();
@@ -1127,7 +1130,6 @@ void CPHSimpleCharacter::OnRender(){
 }
 #endif
 
-
 EEnvironment	 CPHSimpleCharacter::CheckInvironment(){
 	//if(b_on_ground||(is_control&&!b_lose_control))
 	if(b_lose_control)
@@ -1140,8 +1142,6 @@ EEnvironment	 CPHSimpleCharacter::CheckInvironment(){
 
 }
 
-
-
 void CPHSimpleCharacter::SetPhysicsRefObject					(CPhysicsShellHolder* ref_object)
 {
 	m_phys_ref_object=ref_object;
@@ -1153,8 +1153,6 @@ void CPHSimpleCharacter::SetPhysicsRefObject					(CPhysicsShellHolder* ref_objec
 		dGeomUserDataSetPhysicsRefObject(m_cap,m_phys_ref_object);
 	}
 }
-
-
 
 void CPHSimpleCharacter::CaptureObject(dBodyID body,const dReal* anchor)
 {
@@ -1274,6 +1272,7 @@ void CPHSimpleCharacter::AddObjectContactCallback(ObjectContactCallbackFun* call
 	dGeomUserDataAddObjectContactCallback(m_geom_shell,callback);
 	dGeomUserDataAddObjectContactCallback(m_wheel,callback);
 }
+
 void CPHSimpleCharacter::RemoveObjectContactCallback(ObjectContactCallbackFun* callback)
 {
 	VERIFY(m_object_contact_callback!=callback);
@@ -1299,6 +1298,7 @@ void CPHSimpleCharacter::Disable()
 		CPHCharacter::Disable();
 	}
 }
+
 void CPHSimpleCharacter::Enable()
 {
 	if(!b_exist)return;
@@ -1312,6 +1312,7 @@ void CPHSimpleCharacter::Enable()
 	dGeomGetUserData(m_cap)->pushing_b_neg			=false;
 	CPHCharacter::Enable();
 }
+
 void CPHSimpleCharacter::EnableObject(CPHObject* obj)
 {
 	dGeomGetUserData(m_wheel)->pushing_neg			=false;
@@ -1324,11 +1325,13 @@ void CPHSimpleCharacter::EnableObject(CPHObject* obj)
 	dGeomGetUserData(m_cap)->pushing_b_neg			=false;
 	CPHCharacter::EnableObject(obj);
 }
+
 void	CPHSimpleCharacter::SetWheelContactCallback				(ObjectContactCallbackFun* callback)
 {
 	VERIFY(b_exist);
 	dGeomUserDataSetObjectContactCallback(m_wheel,callback);
 }
+
 void CPHSimpleCharacter::SetStaticContactCallBack(ContactCallbackFun* callback)
 {
 	if(!b_exist) return;
@@ -1397,9 +1400,6 @@ u16 CPHSimpleCharacter::RetriveContactBone()
 	return contact_bone;
 }
 
-///////////////////////////////////////////////////////////////////
-
-/////////////////////////////////////////////////////////////////
 void CPHSimpleCharacter::InitContact(dContact* c,bool	&do_collide,u16 material_idx_1,u16 material_idx_2){
 
 	const dReal* normal=c->geom.normal;
@@ -1583,6 +1583,7 @@ void CPHSimpleCharacter::FootProcess(dContact* c,bool &do_collide ,bool bo)
 		}
 	}
 }
+
 void CPHSimpleCharacter::GroundNormal(Fvector &norm)
 {
 	if(m_elevator_state.ClimbingState())
@@ -1595,10 +1596,12 @@ void CPHSimpleCharacter::GroundNormal(Fvector &norm)
 		norm.set(*((Fvector*)m_ground_contact_normal));
 	}
 }
+
 u16 CPHSimpleCharacter::ContactBone()
 {
 	return RetriveContactBone();
 }
+
 void CPHSimpleCharacter::SetMaterial	(u16 material)
 {
 	if(!b_exist) return;
@@ -1607,12 +1610,14 @@ void CPHSimpleCharacter::SetMaterial	(u16 material)
 	dGeomGetUserData(m_cap)->material		=material;
 	dGeomGetUserData(m_hat)->material		=material;
 }
+
 void CPHSimpleCharacter::get_State(SPHNetState& state)
 {
 	CPHCharacter::get_State(state);
 	
 	state.previous_position.y-=m_radius;
 }
+
 void CPHSimpleCharacter::set_State(const SPHNetState& state)
 {
 	CPHCharacter::set_State (state);
@@ -1629,6 +1634,7 @@ float CPHSimpleCharacter::FootRadius()
 	else		return 0.f;
 
 }
+
 void CPHSimpleCharacter::DeathPosition(Fvector& deathPos)
 { 
 	if(!b_exist)return;
@@ -1644,6 +1650,7 @@ void CPHSimpleCharacter::DeathPosition(Fvector& deathPos)
 		if(!_valid(deathPos))deathPos.set(m_safe_position);
 	}
 }
+
 void	CPHSimpleCharacter::	AddControlVel						(const Fvector& vel)
 {
 	m_acceleration.add(vel);
@@ -1684,6 +1691,7 @@ CPHSimpleCharacter::SCollisionDamageInfo::SCollisionDamageInfo()
 {
 	Construct();
 }
+
 void CPHSimpleCharacter::SCollisionDamageInfo::Construct()
 {
 	m_contact_velocity=0.f;
@@ -1694,6 +1702,7 @@ void CPHSimpleCharacter::SCollisionDamageInfo::Construct()
 	//m_dmc_type;
 
 }
+
 float CPHSimpleCharacter::SCollisionDamageInfo::ContactVelocity()const
 {
 	 dReal ret= m_contact_velocity; 
@@ -1716,6 +1725,7 @@ void CPHSimpleCharacter::SCollisionDamageInfo::HitDir(Fvector& dir)	const
 //	if(ds) return ds->Initiator();
 //	return u16(-1);
 //}
+
 void CPHSimpleCharacter::SCollisionDamageInfo::Reinit()
 {
 	//m_damege_contact;
@@ -1726,29 +1736,21 @@ void CPHSimpleCharacter::SCollisionDamageInfo::Reinit()
 	//float					m_dmc_signum;
 	//enum{ctStatic,ctObject}	m_dmc_type;
 }
+
 void CPHSimpleCharacter::GetSmothedVelocity(Fvector& vvel)
 {
 	if(!b_exist) {vvel.set(0,0,0);return;}
-	vvel.set(m_last_move);
-	
-	//if(IsEnabled()&&m_count<m_frames)
-	//{
-	//	vvel.set(m_mean_velocity.sum);
-	//	vvel.mul(1.f/(m_frames-m_count)/fixed_step);
-	//}
-	//else
-	//{
-	//	GetSavedVelocity(vvel);
-	//}
+	vvel.set(m_last_move);	
 }
+
 ALife::EHitType	CPHSimpleCharacter:: HitType	()const	
 {
-	if(GMLib.GetMaterialByIdx(LastMaterialIDX())->Flags.test(SGameMtl::flInjurious)&&IsGameTypeSingle())
+	if(GMLib.GetMaterialByIdx(LastMaterialIDX())->Flags.test(SGameMtl::flInjurious))
 		return ALife::eHitTypeRadiation;
 	else									
-//		return ALife::eHitTypeStrike;
-	return (GameID() == GAME_SINGLE) ? ALife::eHitTypeStrike : ALife::eHitTypePhysicStrike;
-}//
+		return ALife::eHitTypeStrike;
+}
+
 CElevatorState*	CPHSimpleCharacter::ElevatorState()
 {
 	return &m_elevator_state;
@@ -1758,8 +1760,10 @@ SCollisionHitCallback*	CPHSimpleCharacter::HitCallback					()const
 {
 	return m_collision_damage_info.m_hit_callback;
 }
+
 const	float	resolve_depth=0.05f;
 static	float	restrictor_depth=0.f;
+
 void	CPHSimpleCharacter::	TestRestrictorContactCallbackFun	(bool& do_colide,bool bo1,dContact& c,SGameMtl* material_1,SGameMtl* material_2)
 {
 	
@@ -1843,8 +1847,10 @@ bool	CPHSimpleCharacter::	UpdateRestrictionType(CPHCharacter* ach)
 #endif
 	return false;
 }
+
 bool	CPHSimpleCharacter::	TouchRestrictor	(ERestrictionType rttype)
 {
 	b_collision_restrictor_touch=true;
 	return rttype==RestrictionType();
 }
+

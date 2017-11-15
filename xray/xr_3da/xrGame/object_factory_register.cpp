@@ -172,17 +172,10 @@ void CObjectFactory::register_classes	()
 	add<CLevel>													(CLSID_GAME_LEVEL				,"level");
 	add<CGamePersistent>										(CLSID_GAME_PERSISTANT			,"game");
 	add<CHUDManager>											(CLSID_HUDMANAGER				,"hud_manager");
-	//Server Game type
 	add<game_sv_Single>											(CLSID_SV_GAME_SINGLE			,"game_sv_single");
-
-	//Client Game type
 	add<game_cl_Single>											(CLSID_CL_GAME_SINGLE			,"game_cl_single");
-
-	//Game UI type
 	add<CUIGameSP>												(CLSID_GAME_UI_SINGLE			,"game_ui_single");
-
 #endif // NO_XR_GAME
-
 	ADD(CActor					,CSE_ALifeCreatureActor			,CLSID_OBJECT_ACTOR				,"actor");
 
 	// server entities
@@ -245,8 +238,8 @@ void CObjectFactory::register_classes	()
 	//  [8/17/2006]
 	ADD(CWeaponMagazinedWGrenade,CSE_ALifeItemWeaponMagazinedWGL,CLSID_OBJECT_W_MAGAZWGL		,"wpn_wmaggl");
 	//  [8/17/2006]
-	ADD(CWeaponFN2000			,CSE_ALifeItemWeaponMagazinedWGL	,CLSID_OBJECT_W_FN2000			,"wpn_fn2000");
-	ADD(CWeaponAK74				,CSE_ALifeItemWeaponMagazinedWGL	,CLSID_OBJECT_W_AK74			,"wpn_ak74");
+	ADD(CWeaponFN2000			,CSE_ALifeItemWeaponMagazinedWGL,CLSID_OBJECT_W_FN2000			,"wpn_fn2000");
+	ADD(CWeaponAK74				,CSE_ALifeItemWeaponMagazinedWGL,CLSID_OBJECT_W_AK74			,"wpn_ak74");
 	ADD(CWeaponLR300			,CSE_ALifeItemWeaponMagazined	,CLSID_OBJECT_W_LR300			,"wpn_lr300");
 	ADD(CWeaponHPSA				,CSE_ALifeItemWeaponMagazined	,CLSID_OBJECT_W_HPSA			,"wpn_hpsa");
 	ADD(CWeaponPM				,CSE_ALifeItemWeaponMagazined	,CLSID_OBJECT_W_PM				,"wpn_pm");

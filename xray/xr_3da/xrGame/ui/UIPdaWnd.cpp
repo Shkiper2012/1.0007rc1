@@ -71,7 +71,6 @@ void CUIPdaWnd::Init()
 	
 	m_pActiveDialog			= NULL;
 
-
 	xml_init.InitWindow		(uiXml, "main", 0, this);
 
 	UIMainPdaFrame			= xr_new<CUIStatic>(); UIMainPdaFrame->SetAutoDelete(true);
@@ -95,46 +94,34 @@ void CUIPdaWnd::Init()
 	UIMapWnd				= xr_new<CUIMapWnd>();
 	UIMapWnd->Init			("pda_map.xml","map_wnd");
 
-	if( IsGameTypeSingle() )
-	{
-		// Oкно коммуникaции
-		UIPdaContactsWnd		= xr_new<CUIPdaContactsWnd>();
-		UIPdaContactsWnd->Init	();
+	// Oкно коммуникaции
+	UIPdaContactsWnd		= xr_new<CUIPdaContactsWnd>();
+	UIPdaContactsWnd->Init	();
 
+	// Oкно новостей
+	UIDiaryWnd				= xr_new<CUIDiaryWnd>();
+	UIDiaryWnd->Init		();
 
-		// Oкно новостей
-		UIDiaryWnd				= xr_new<CUIDiaryWnd>();
-		UIDiaryWnd->Init		();
+	// Окно энциклопедии
+	UIEncyclopediaWnd		= xr_new<CUIEncyclopediaWnd>();
+	UIEncyclopediaWnd->Init	();
 
-		// Окно энциклопедии
-		UIEncyclopediaWnd		= xr_new<CUIEncyclopediaWnd>();
-		UIEncyclopediaWnd->Init	();
+	// Окно статистики о актере
+	UIActorInfo				= xr_new<CUIActorInfoWnd>();
+	UIActorInfo->Init		();
 
-		// Окно статистики о актере
-		UIActorInfo				= xr_new<CUIActorInfoWnd>();
-		UIActorInfo->Init		();
+	// Окно рейтинга сталкеров
+	UIStalkersRanking		= xr_new<CUIStalkersRankingWnd>();
+	UIStalkersRanking->Init	();
 
-		// Окно рейтинга сталкеров
-		UIStalkersRanking		= xr_new<CUIStalkersRankingWnd>();
-		UIStalkersRanking->Init	();
+	UIEventsWnd				= xr_new<CUIEventsWnd>();
+	UIEventsWnd->Init		();
 
-		UIEventsWnd				= xr_new<CUIEventsWnd>();
-		UIEventsWnd->Init		();
-	}
 	// Tab control
-	UITabControl				= xr_new<CUITabControl>(); UITabControl->SetAutoDelete(true);
-	UIMainPdaFrame->AttachChild	(UITabControl);
-	xml_init.InitTabControl		(uiXml, "tab", 0, UITabControl);
-	UITabControl->SetMessageTarget(this);
-
-	if(GameID()!=GAME_SINGLE){
-		UITabControl->GetButtonsVector()->at(0)->Enable(false);
-		UITabControl->GetButtonsVector()->at(2)->Enable(false);
-		UITabControl->GetButtonsVector()->at(3)->Enable(false);
-		UITabControl->GetButtonsVector()->at(4)->Enable(false);
-		UITabControl->GetButtonsVector()->at(5)->Enable(false);
-		UITabControl->GetButtonsVector()->at(6)->Enable(false);
-	}
+	UITabControl					= xr_new<CUITabControl>(); UITabControl->SetAutoDelete(true);
+	UIMainPdaFrame->AttachChild		(UITabControl);
+	xml_init.InitTabControl			(uiXml, "tab", 0, UITabControl);
+	UITabControl->SetMessageTarget	(this);
 	
 	m_updatedSectionImage			= xr_new<CUIStatic>();
 	xml_init.InitStatic				(uiXml, "updated_section_static", 0, m_updatedSectionImage);
@@ -160,7 +147,7 @@ void CUIPdaWnd::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 	}
 }
 
-#include "../../../../build_config_defines.h" // for: UI_LOCK_PDA_WITHOUT_PDA_IN_SLOT, HIDE_WEAPON_IN_INV
+#include "../../../../build_config_defines.h" // for: UI_LOCK_PDA_WITHOUT_PDA_IN_SLOT
 #if defined(UI_LOCK_PDA_WITHOUT_PDA_IN_SLOT)
 	#include "../Actor.h"
 	#include "../Inventory.h"
@@ -173,12 +160,10 @@ void CUIPdaWnd::Show()
 	InventoryUtilities::SendInfoToActor("ui_pda");
 
 	inherited::Show();
-#ifdef HIDE_WEAPON_IN_INV
 	CActor* pActor = smart_cast<CActor*>(Level().CurrentEntity());
 	if( pActor ){
 		pActor->SetWeaponHideState(INV_STATE_BLOCK_ALL, true);		
 	}
-#endif
 }
 
 void CUIPdaWnd::Hide()
@@ -188,12 +173,10 @@ void CUIPdaWnd::Hide()
 	InventoryUtilities::SendInfoToActor("ui_pda_hide");
 	HUD().GetUI()->UIMainIngameWnd->SetFlashIconState_(CUIMainIngameWnd::efiPdaTask, false);
 
-#ifdef HIDE_WEAPON_IN_INV
 	CActor* pActor = smart_cast<CActor*>(Level().CurrentEntity());
 	if( pActor ){
 		pActor->SetWeaponHideState(INV_STATE_BLOCK_ALL, false);		
 	}
-#endif
 }
 
 void CUIPdaWnd::UpdateDateTime()

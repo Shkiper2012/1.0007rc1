@@ -54,7 +54,7 @@ game_PlayerState*	game_sv_GameState::get_id					(ClientID id)
 	else				return C->ps;
 }
 
-ClientID				game_sv_GameState::get_it_2_id				(u32 it)
+ClientID			game_sv_GameState::get_it_2_id				(u32 it)
 {
 	xrClientData*	C	= (xrClientData*)m_server->client_Get		(it);
 	if (0==C){
@@ -182,7 +182,7 @@ s32					game_sv_GameState::get_option_i				(LPCSTR lst, LPCSTR name, s32 def)
 	else				return def;
 }
 
-float					game_sv_GameState::get_option_f				(LPCSTR lst, LPCSTR name, float def)
+float				game_sv_GameState::get_option_f				(LPCSTR lst, LPCSTR name, float def)
 {
 	string64		op;
 	strconcat		(sizeof(op),op,"/",name,"=");
@@ -218,6 +218,7 @@ string64&			game_sv_GameState::get_option_s				(LPCSTR lst, LPCSTR name, LPCSTR 
 	}
 	return ret;
 }
+
 void				game_sv_GameState::signal_Syncronize		()
 {
 	sv_force_sync	= TRUE;
@@ -345,17 +346,7 @@ void game_sv_GameState::Create					(shared_str &options)
 				GameType				= O->r_u8	();
 				//u16 res					= 
 				O->r_u8	();
-
-				if (GameType != rpgtGameAny)
-				{
-					if ((GameType == rpgtGameDeathmatch && Type() != GAME_DEATHMATCH) ||
-						(GameType == rpgtGameTeamDeathmatch && Type() != GAME_TEAMDEATHMATCH)	||
-						(GameType == rpgtGameArtefactHunt && Type() != GAME_ARTEFACTHUNT)
-						)
-					{
-						continue;
-					};
-				};
+				
 				switch (type)
 				{
 				case rptActorSpawn:
@@ -420,7 +411,7 @@ void game_sv_GameState::Create					(shared_str &options)
 	ReadOptions(options);	
 }
 
-void	game_sv_GameState::ReadOptions				(shared_str &options)
+void game_sv_GameState::ReadOptions				(shared_str &options)
 {
 	g_sv_base_dwRPointFreezeTime = get_option_i(*options, "rpfrz", g_sv_base_dwRPointFreezeTime/1000) * 1000;
 
@@ -656,27 +647,17 @@ void game_sv_GameState::OnEvent (NET_Packet &tNetPacket, u16 type, u32 time, Cli
 			OnPlayerDisconnect(ID, PlayerName, GameID);
 		}break;
 
-	case GAME_EVENT_PLAYER_KILLED:
-		{
-		}break	;
 	case GAME_EVENT_ON_HIT:
 		{
 			u16		id_dest				= tNetPacket.r_u16();
 			u16     id_src				= tNetPacket.r_u16();
 			CSE_Abstract*	e_src		= get_entity_from_eid	(id_src	);
-
-			if(!e_src)  // && !IsGameTypeSingle() added by andy because of Phantom does not have server entity
-			{
-				if( IsGameTypeSingle() ) break;
-
-				game_PlayerState* ps	= get_eid(id_src);
-				if (!ps)				break;
-				id_src					= ps->GameID;
-			}
+			if(!e_src)	break;
 
 			OnHit(id_src, id_dest, tNetPacket);
 			m_server->SendBroadcast		(BroadcastCID,tNetPacket,net_flags(TRUE,TRUE));
 		}break;
+	
 	case GAME_EVENT_CREATE_CLIENT:
 		{
 			IClient* CL					= (IClient*)m_server->ID_to_client(sender);
@@ -684,9 +665,6 @@ void game_sv_GameState::OnEvent (NET_Packet &tNetPacket, u16 type, u32 time, Cli
 			
 			CL->flags.bConnected		= TRUE;
 			m_server->AttachNewClient	(CL);
-		}break;
-	case GAME_EVENT_PLAYER_AUTH:
-		{
 		}break;
 	default:
 		{

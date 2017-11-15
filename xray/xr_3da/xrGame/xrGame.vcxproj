@@ -2188,12 +2188,9 @@
     <ClInclude Include="WaveForm.h" />
     <ClInclude Include="xrEProps.h" />
     <ClInclude Include="game_base.h" />
-    <ClInclude Include="game_base_kill_type.h" />
-    <ClInclude Include="game_base_menu_events.h" />
     <ClInclude Include="game_base_space.h" />
     <ClInclude Include="game_cl_single.h" />
     <ClInclude Include="game_cl_base.h" />
-    <ClInclude Include="game_cl_base_weapon_usage_statistic.h" />
     <ClInclude Include="game_sv_base.h" />
     <ClInclude Include="game_sv_base_console_vars.h" />
     <ClInclude Include="game_sv_event_queue.h" />
@@ -10008,8 +10005,6 @@
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)$(ProjectName)_script.pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release_w_STLPORT|x64'">$(IntDir)$(ProjectName)_script.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
-    <ClCompile Include="game_cl_base_weapon_usage_statistic.cpp" />
-    <ClCompile Include="game_cl_base_weapon_usage_statistic_save.cpp" />
     <ClCompile Include="game_sv_base.cpp" />
     <ClCompile Include="game_sv_base_console_vars.cpp" />
     <ClCompile Include="game_sv_base_script.cpp">

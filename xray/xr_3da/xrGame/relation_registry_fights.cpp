@@ -6,10 +6,6 @@
 #include "stdafx.h"
 #include "relation_registry.h"
 
-
-
-//////////////////////////////////////////////////////////////////////////
-
 RELATION_REGISTRY::FIGHT_DATA::FIGHT_DATA			()
 {
 	attacker = defender = 0xffff;
@@ -20,8 +16,6 @@ RELATION_REGISTRY::FIGHT_DATA::FIGHT_DATA			()
 	defender_to_attacker = ALife::eRelationTypeDummy;
 }
 
-//////////////////////////////////////////////////////////////////////////
-extern bool	IsGameTypeSingle();
 void RELATION_REGISTRY::FightRegister (u16 attacker, u16 defender, ALife::ERelationType defender_to_attacker, float hit_amount)
 {
 	UpdateFightRegister();
@@ -68,7 +62,6 @@ RELATION_REGISTRY::FIGHT_DATA* RELATION_REGISTRY::FindFight(u16 object_id, bool 
 	return NULL;
 }
 
-
 bool fight_time_pred(RELATION_REGISTRY::FIGHT_DATA& fight_data)
 {
 	//(c) время которое про драку помнит реестр (иначе считать неактуальным)
@@ -87,3 +80,4 @@ void RELATION_REGISTRY::UpdateFightRegister ()
 	FIGHT_VECTOR_IT it = std::remove_if(fights.begin(), fights.end(), fight_time_pred);
 	fights.erase(it, fights.end());
 }
+

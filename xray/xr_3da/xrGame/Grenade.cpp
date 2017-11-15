@@ -237,8 +237,6 @@ void CGrenade::UpdateCL()
 {
 	inherited::UpdateCL			();
 	CExplosive::UpdateCL		();
-
-	if(!IsGameTypeSingle())	make_Interpolation();
 }
 
 

@@ -330,7 +330,7 @@ void CTorch::UpdateCL()
 		CActor*			actor = smart_cast<CActor*>(H_Parent());
 		if (actor)		smart_cast<CKinematics*>(H_Parent()->Visual())->CalculateBones_Invalidate	();
 
-		if (H_Parent()->XFORM().c.distance_to_sqr(Device.vCameraPosition)<_sqr(OPTIMIZATION_DISTANCE) || GameID() != GAME_SINGLE) {
+		if( H_Parent()->XFORM().c.distance_to_sqr(Device.vCameraPosition)<_sqr(OPTIMIZATION_DISTANCE) ){
 			// near camera
 			smart_cast<CKinematics*>(H_Parent()->Visual())->CalculateBones	();
 			M.mul_43				(XFORM(),BI.mTransform);

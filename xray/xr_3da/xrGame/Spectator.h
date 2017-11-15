@@ -1,6 +1,3 @@
-#ifndef __SPECTATOR_H__
-#define __SPECTATOR_H__
-
 #pragma once
 
 #include "../feel_touch.h"
@@ -62,7 +59,5 @@ public:
 	virtual IInputReceiver*	cast_input_receiver		()						{return this;}
 
 	virtual void			net_Relcase				(CObject *O);
-			void			GetSpectatorString		(string1024& pStr);
 };
 
-#endif // __SPECTATOR_H__

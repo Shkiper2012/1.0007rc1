@@ -83,22 +83,16 @@ void CPHShell::EnableObject(CPHObject* obj)
 }
 void CPHShell::DisableObject()
 {
-
-	CPhysicsShellHolder* ref_object=(*elements.begin())->PhysicsRefObject();
-//.	if (!ref_object) return;
-
-	if (ref_object)
-		ref_object->on_physics_disable	();
-
 	//InterpolateGlobalTransform(&mXFORM);
 	CPHObject::deactivate();
 	if(m_spliter_holder)m_spliter_holder->Deactivate();
 	if(m_flags.test(flRemoveCharacterCollisionAfterDisable))
-										DisableCharacterCollision		();
+		DisableCharacterCollision();
 }
-void	 CPHShell::	DisableCharacterCollision		()
+
+void CPHShell::DisableCharacterCollision()
 {
-		CPHCollideValidator::SetCharacterClassNotCollide(*this);
+	CPHCollideValidator::SetCharacterClassNotCollide(*this);
 }
 void CPHShell::Disable()
 {

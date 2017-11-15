@@ -216,21 +216,15 @@ void CUIMainIngameWnd::Init()
 	UIZoneMap->Init				();
 	UIZoneMap->SetScale			(DEFAULT_MAP_SCALE);
 
-	if(IsGameTypeSingle())
-	{
-		xml_init.InitStatic					(uiXml, "static_pda_online", 0, &UIPdaOnline);
-		UIZoneMap->Background().AttachChild	(&UIPdaOnline);
-	}
-
+	xml_init.InitStatic			(uiXml, "static_pda_online", 0, &UIPdaOnline);
+	UIZoneMap->Background().AttachChild	(&UIPdaOnline);
 
 	//Полоса прогресса здоровья
 	UIStaticHealth.AttachChild	(&UIHealthBar);
-//.	xml_init.InitAutoStaticGroup(uiXml,"static_health", &UIStaticHealth);
 	xml_init.InitProgressBar	(uiXml, "progress_bar_health", 0, &UIHealthBar);
 
 	//Полоса прогресса армора
 	UIStaticArmor.AttachChild	(&UIArmorBar);
-//.	xml_init.InitAutoStaticGroup(uiXml,"static_armor", &UIStaticArmor);
 	xml_init.InitProgressBar	(uiXml, "progress_bar_armor", 0, &UIArmorBar);
 
 	// Подсказки, которые возникают при наведении прицела на объект
@@ -244,14 +238,11 @@ void CUIMainIngameWnd::Init()
 	AttachChild					(m_UIIcons);
 
 	// Загружаем иконки 
-	if(IsGameTypeSingle())
-	{
-		xml_init.InitStatic		(uiXml, "starvation_static", 0, &UIStarvationIcon);
-		UIStarvationIcon.Show	(false);
+	xml_init.InitStatic			(uiXml, "starvation_static", 0, &UIStarvationIcon);
+	UIStarvationIcon.Show		(false);
 
-		xml_init.InitStatic		(uiXml, "psy_health_static", 0, &UIPsyHealthIcon);
-		UIPsyHealthIcon.Show	(false);
-	}
+	xml_init.InitStatic			(uiXml, "psy_health_static", 0, &UIPsyHealthIcon);
+	UIPsyHealthIcon.Show		(false);
 
 	xml_init.InitStatic			(uiXml, "weapon_jammed_static", 0, &UIWeaponJammedIcon);
 	UIWeaponJammedIcon.Show		(false);
@@ -264,12 +255,6 @@ void CUIMainIngameWnd::Init()
 
 	xml_init.InitStatic			(uiXml, "invincible_static", 0, &UIInvincibleIcon);
 	UIInvincibleIcon.Show		(false);
-
-
-	if(GameID()==GAME_ARTEFACTHUNT){
-		xml_init.InitStatic		(uiXml, "artefact_static", 0, &UIArtefactIcon);
-		UIArtefactIcon.Show		(false);
-	}
 	
 	shared_str warningStrings[6] = 
 	{	
@@ -302,7 +287,6 @@ void CUIMainIngameWnd::Init()
 		j = static_cast<EWarningIcons>(j + 1);
 	}
 
-
 	// Flashing icons initialize
 	uiXml.SetLocalRoot						(uiXml.NavigateToNode("flashing_icons"));
 	InitFlashingIcons						(&uiXml);
@@ -315,11 +299,8 @@ void CUIMainIngameWnd::Init()
 	AttachChild								(&UIMotionIcon);
 	UIMotionIcon.Init						();
 
-	if(IsGameTypeSingle())
-	{
-		m_artefactPanel->InitFromXML		(uiXml, "artefact_panel", 0);
-		this->AttachChild					(m_artefactPanel);	
-	}
+	m_artefactPanel->InitFromXML			(uiXml, "artefact_panel", 0);
+	this->AttachChild						(m_artefactPanel);	
 
 	HUD_SOUND::LoadSound					("maingame_ui", "snd_new_contact"		, m_contactSnd		, SOUND_TYPE_IDLE);
 }
@@ -410,7 +391,7 @@ void CUIMainIngameWnd::Update()
 		return;
 	}
 
-	if( !(Device.dwFrame%30) && IsGameTypeSingle() )
+	if( !(Device.dwFrame%30) )
 	{
 			string256				text_str;
 			CPda* _pda	= m_pActor->GetPDA();
@@ -1304,27 +1285,6 @@ void CUIMainIngameWnd::reset_ui()
 }
 
 #ifdef DEBUG
-/*
-#include "d3dx9core.h"
-#include "winuser.h"
-#pragma comment(lib,"d3dx9.lib")
-#pragma comment(lib,"d3d9.lib")
-ID3DXFont*     g_pTestFont = NULL;
-ID3DXSprite*        g_pTextSprite = NULL;   // Sprite for batching draw text calls
-*/
-
-/*
-#include "UIGameTutorial.h"
-#include "../actor_statistic_mgr.h"
-CUIGameTutorial* g_tut = NULL;
-*/
-//#include "../postprocessanimator.h"
-//CPostprocessAnimator* pp = NULL;
-//extern void create_force_progress();
-
-//#include "UIVotingCategory.h"
-
-//CUIVotingCategory* v = NULL;
 #include "UIFrameWindow.h"
 CUIFrameWindow*		pUIFrame = NULL;
 

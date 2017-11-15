@@ -18,7 +18,6 @@
 
 using namespace luabind;
 
-
 CUISequencer* g_tutorial = NULL;
 CUISequencer* g_tutorial2 = NULL;
 

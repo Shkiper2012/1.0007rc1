@@ -8,7 +8,6 @@
 #include "Physics.h"
 #include "xrServer.h"
 #include "Actor.h"
-#include "game_cl_base_weapon_usage_statistic.h"
 #include "ai_space.h"
 #include "saved_game_wrapper.h"
 #include "level_graph.h"
@@ -16,9 +15,7 @@
 
 void CLevel::ClientReceive()
 {
-
 	Demo_StartFrame();
-
 	Demo_Update();
 
 	m_dwRPC = 0;
@@ -108,10 +105,6 @@ void CLevel::ClientReceive()
 				u32 NumSteps = ph_world->CalcNumSteps(dTime);
 				SetNumCrSteps(NumSteps);
 			}break;
-//		case M_UPDATE_OBJECTS:
-//			{
-//				Objects.net_Import		(P);
-//			}break;
 		//----------- for E3 -----------------------------
 		case M_CL_UPDATE:
 			{
@@ -131,9 +124,6 @@ void CLevel::ClientReceive()
 				u32 dTime = 0;
 				if ((Level().timeServer() + Ping) < P->timeReceive)
 				{
-#ifdef DEBUG
-//					Msg("! TimeServer[%d] < TimeReceive[%d]", Level().timeServer(), P->timeReceive);
-#endif
 					dTime = Ping;
 				}
 				else					
@@ -299,29 +289,10 @@ void CLevel::ClientReceive()
 			{
 				net_OnChangeSelfName(P);
 			}break;
-		case M_BULLET_CHECK_RESPOND:
-			{
-				if (!game) break;
-				if (GameID() != GAME_SINGLE)
-					Game().m_WeaponUsageStatistic->On_Check_Respond(P);
-			}break;
-		case M_STATISTIC_UPDATE:
-			{
-				if (!game) break;
-				if (GameID() != GAME_SINGLE)
-					Game().m_WeaponUsageStatistic->OnUpdateRequest(P);
-			}break;
-		case M_STATISTIC_UPDATE_RESPOND:
-			{
-				if (!game) break;
-				if (GameID() != GAME_SINGLE)
-					Game().m_WeaponUsageStatistic->OnUpdateRespond(P);
-			}break;
 		}
 
 		net_msg_Release();
 	}
-//	if (!g_bDebugEvents) ProcessGameSpawns();
 }
 
 void				CLevel::OnMessage				(void* data, u32 size)

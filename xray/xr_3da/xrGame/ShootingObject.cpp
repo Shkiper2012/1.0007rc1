@@ -468,14 +468,7 @@ void CShootingObject::FireBullet(const Fvector& pos,
 	float l_fHitPower;
 	if (ParentIsActor())//если из оружия стреляет актёр(игрок)
 	{
-		if (GameID() == GAME_SINGLE)
-		{
-			l_fHitPower=fvHitPower[g_SingleGameDifficulty];
-		}
-		else
-		{
-			l_fHitPower=fvHitPower[egdMaster];
-		}
+		l_fHitPower=fvHitPower[g_SingleGameDifficulty];
 	}
 	else
 	{
@@ -502,3 +495,4 @@ void CShootingObject::StartShotParticles	()
 	StartParticles(pSmokeParticles, *m_sShotParticles, 
 					m_vCurrentShootPos, m_vCurrentShootDir, true);
 }
+

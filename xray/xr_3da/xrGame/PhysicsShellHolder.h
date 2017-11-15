@@ -117,8 +117,6 @@ public:
 	virtual bool			register_schedule	() const;
 
 public:
-	virtual	void			on_physics_disable	();
-
 	virtual void			UpdateXFORM(const Fmatrix &upd); // alpet: для обновления позиции и направления
 };
 

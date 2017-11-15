@@ -21,10 +21,6 @@ add_to_type_list(SZoneMapEntityData)
 #undef script_type_list
 #define script_type_list save_type_list(SZoneMapEntityData)
 
-//#include "game_cl_base_weapon_usage_statistic.h"
-
-struct WeaponUsageStatistic;
-
 class	game_cl_GameState	: public game_GameState, public ISheduled
 {
 	typedef game_GameState	inherited;
@@ -43,10 +39,7 @@ public:
 	PLAYERS_MAP							players;
 	ClientID							local_svdpnid;
 	game_PlayerState*					local_player;
-//.	xr_vector<CGameObject*>				targets;
 
-
-	WeaponUsageStatistic				*m_WeaponUsageStatistic;	
 	virtual		void				reset_ui				();
 	virtual		void				CommonMessageOut		(LPCSTR msg);
 

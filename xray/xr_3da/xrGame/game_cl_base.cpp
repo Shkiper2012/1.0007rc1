@@ -10,12 +10,9 @@
 #include "UI/UIGameTutorial.h"
 #include "UI/UIMessagesWindow.h"
 #include "string_table.h"
-#include "game_cl_base_weapon_usage_statistic.h"
 
 game_cl_GameState::game_cl_GameState()
 {
-	m_WeaponUsageStatistic		= xr_new<WeaponUsageStatistic>();
-
 	local_player				= 0;
 	m_game_type_name			= 0;
 
@@ -36,8 +33,6 @@ game_cl_GameState::~game_cl_GameState()
 	players.clear();
 
 	shedule_unregister();
-
-	xr_delete					(m_WeaponUsageStatistic);
 }
 
 void	game_cl_GameState::net_import_GameTime		(NET_Packet& P)
@@ -97,7 +92,6 @@ void	game_cl_GameState::net_import_state	(NET_Packet& P)
 	P.r_u32			(m_start_time);
 	m_u16VotingEnabled = u16(P.r_u8());
 	m_bServerControlHits = !!P.r_u8();	
-	m_WeaponUsageStatistic->SetCollectData(!!P.r_u8());
 
 	// Players
 	u16	p_count;
@@ -120,25 +114,18 @@ void	game_cl_GameState::net_import_state	(NET_Packet& P)
 		{
 			IP = I->second;
 			//***********************************************
-			u16 OldFlags = IP->flags__;
 			u8 OldVote = IP->m_bCurrentVoteAgreed;
 			//-----------------------------------------------
 			IP->net_Import(P);
 			//-----------------------------------------------
-			if (OldFlags != IP->flags__)
-				if (Type() != GAME_SINGLE) OnPlayerFlagsChanged(IP);
 			if (OldVote != IP->m_bCurrentVoteAgreed)
 				OnPlayerVoted(IP);
 			//***********************************************
-
 			players_new.insert(mk_pair(ID,IP));
 			players.erase(I);
 		}else{
 			IP = createPlayerState();
 			IP->net_Import		(P);
-
-			if (Type() != GAME_SINGLE) OnPlayerFlagsChanged(IP);
-
 			players_new.insert(mk_pair(ID,IP));
 		}
 		if (IP->testFlag(GAME_PLAYER_FLAG_LOCAL) ) local_player = IP;
@@ -167,13 +154,10 @@ void	game_cl_GameState::net_import_update(NET_Packet& P)
 		game_PlayerState* IP		= I->second;
 //		CopyMemory	(&IP,&PS,sizeof(PS));		
 		//***********************************************
-		u16 OldFlags = IP->flags__;
 		u8 OldVote = IP->m_bCurrentVoteAgreed;
 		//-----------------------------------------------
 		IP->net_Import(P);
 		//-----------------------------------------------
-		if (OldFlags != IP->flags__)
-			if (Type() != GAME_SINGLE) OnPlayerFlagsChanged(IP);
 		if (OldVote != IP->m_bCurrentVoteAgreed)
 			OnPlayerVoted(IP);
 		//***********************************************
@@ -182,7 +166,6 @@ void	game_cl_GameState::net_import_update(NET_Packet& P)
 	{
 		game_PlayerState*	PS = createPlayerState();
 		PS->net_Import		(P);
-		if (Type() != GAME_SINGLE) OnPlayerFlagsChanged(PS);
 		xr_delete(PS);
 	};
 
@@ -277,8 +260,6 @@ ClientID game_cl_GameState::GetClientIDByOrderID	(u32 idx)
 	return I->first;
 }
 
-
-
 void game_cl_GameState::CommonMessageOut (LPCSTR msg)
 {
 	if (!HUD().GetUI()) return;
@@ -290,7 +271,6 @@ float game_cl_GameState::shedule_Scale		()
 	return 1.0f;
 }
 
-
 void game_cl_GameState::shedule_Update		(u32 dt)
 {
 	ISheduled::shedule_Update	(dt);
@@ -299,18 +279,6 @@ void game_cl_GameState::shedule_Update		(u32 dt)
 		if( HUD().GetUI() )
 			m_game_ui_custom = HUD().GetUI()->UIGame();
 	} 
-	//---------------------------------------
-	switch (Phase())
-	{
-	case GAME_PHASE_INPROGRESS:
-		{
-			if (!IsGameTypeSingle())
-				m_WeaponUsageStatistic->Update();
-		}break;
-	default:
-		{
-		}break;
-	};
 };
 
 void game_cl_GameState::StartStopMenu(CUIDialogWnd* pDialog, bool bDoHideIndicators)
@@ -369,28 +337,8 @@ void game_cl_GameState::u_EventSend(NET_Packet& P)
 	Level().Send(P,net_flags(TRUE,TRUE));
 }
 
-void				game_cl_GameState::OnSwitchPhase			(u32 old_phase, u32 new_phase)
+void 				game_cl_GameState::OnSwitchPhase			(u32 old_phase, u32 new_phase)
 {
-	switch (old_phase)
-	{
-	case GAME_PHASE_INPROGRESS:
-		{
-		}break;
-	default:
-		{
-		}break;
-	};
-
-	switch (new_phase)
-	{
-		case GAME_PHASE_INPROGRESS:
-			{
-				m_WeaponUsageStatistic->Clear();
-			}break;
-		default:
-			{
-			}break;
-	}	
 }
 
 void				game_cl_GameState::SendPickUpEvent		(u16 ID_who, u16 ID_what)

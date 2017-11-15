@@ -9,7 +9,6 @@
 #include "Actor.h"
 #include "gamepersistent.h"
 #include "mt_config.h"
-#include "game_cl_base_weapon_usage_statistic.h"
 
 #ifdef DEBUG
 #	include "debug_renderer.h"
@@ -178,9 +177,7 @@ void CBulletManager::AddBullet(const Fvector& position,
 	bullet.Init			(position, direction, starting_speed, power, impulse, sender_id, sendersweapon_id, e_hit_type, maximum_distance, cartridge, SendHit);
 	bullet.frame_num	= Device.dwFrame;
 	bullet.flags.aim_bullet	=	AimBullet;
-	if (SendHit && GameID() != GAME_SINGLE)
-		Game().m_WeaponUsageStatistic->OnBullet_Fire(&bullet, cartridge);
-	m_Lock.Leave	();
+	m_Lock.Leave		();
 }
 
 void CBulletManager::UpdateWorkload()
@@ -196,7 +193,7 @@ void CBulletManager::UpdateWorkload()
 	for(int k=m_Bullets.size()-1; k>=0; k--){
 		SBullet& bullet = m_Bullets[k];
 		//для пули пущенной на этом же кадре считаем только 1 шаг
-		//(хотя по теории вообще ничего считать на надо)
+		//(хотя по теории вообще ничего считать не надо)
 		//который пропустим на следующем кадре, 
 		//это делается для того чтоб при скачках FPS не промазать
 		//с 2х метров
@@ -211,10 +208,6 @@ void CBulletManager::UpdateWorkload()
 			if(!CalcBullet(rq_storage,rq_spatial,&bullet, m_dwStepTime)){
 				collide::rq_result res;
 				RegisterEvent(EVENT_REMOVE, FALSE, &bullet, Fvector().set(0, 0, 0), res, (u16)k);
-//				if (bullet.flags.allow_sendhit && GameID() != GAME_SINGLE)
-//					Game().m_WeaponUsageStatistic->OnBullet_Remove(&bullet);
-//				m_Bullets[k] = m_Bullets.back();
-//				m_Bullets.pop_back();
 				break;
 			}
 		}
@@ -282,10 +275,7 @@ bool CBulletManager::CalcBullet (collide::rq_results & rq_storage, xr_vector<ISp
 		bullet->dir.mul(bullet->speed);
 
 		Fvector air_resistance = bullet->dir;
-		if (GameID() == GAME_SINGLE)
-			air_resistance.mul(-m_fAirResistanceK*delta_time_sec);
-		else
-			air_resistance.mul(-bullet->air_resistance*(bullet->speed)/(bullet->max_speed)*delta_time_sec);
+		air_resistance.mul(-m_fAirResistanceK*delta_time_sec);
 ///		Msg("Speed - %f; ar - %f, %f", bullet->dir.magnitude(), air_resistance.magnitude(), air_resistance.magnitude()/bullet->dir.magnitude()*100);
 
 		bullet->dir.add(air_resistance);
@@ -448,8 +438,6 @@ void CBulletManager::CommitEvents			()	// @ the start of frame
 			}break;
 		case EVENT_REMOVE:
 			{
-				if (E.bullet.flags.allow_sendhit && GameID() != GAME_SINGLE)
-					Game().m_WeaponUsageStatistic->OnBullet_Remove(&E.bullet);
 				m_Bullets[E.tgt_material] = m_Bullets.back();
 				m_Bullets.pop_back();
 			}break;
@@ -476,23 +464,8 @@ void CBulletManager::RegisterEvent			(EventType Type, BOOL _dynamic, SBullet* bu
 			E.tgt_material	= tgt_material		;
 			if (_dynamic)	
 			{
-				//	E.Repeated = (R.O->ID() == E.bullet.targetID);
-				//	bullet->targetID = R.O->ID();
-
 				E.Repeated = (R.O->ID() == E.bullet.targetID);
-				if (GameID() == GAME_SINGLE)
-				{
-					bullet->targetID = R.O->ID();
-				}
-				else
-				{
-					if (bullet->targetID != R.O->ID())
-					{
-						CGameObject* pGO = smart_cast<CGameObject*>(R.O);
-						if (!pGO || !pGO->BonePassBullet(R.element))
-							bullet->targetID = R.O->ID();						
-					}
-				}
+				bullet->targetID = R.O->ID();
 			};
 		}break;
 	case EVENT_REMOVE:
@@ -501,3 +474,4 @@ void CBulletManager::RegisterEvent			(EventType Type, BOOL _dynamic, SBullet* bu
 		}break;
 	}	
 }
+

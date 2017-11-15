@@ -14,7 +14,6 @@
 #define MAX_HEALTH 1.0f
 #define MIN_HEALTH -0.01f
 
-
 #define MAX_POWER 1.0f
 #define MAX_RADIATION 1.0f
 #define MAX_PSY_HEALTH 1.0f
@@ -148,7 +147,6 @@ void CEntityCondition::ChangePower(float value)
 }
 
 
-
 void CEntityCondition::ChangeRadiation(float value)
 {
 	m_fDeltaRadiation += value;
@@ -159,16 +157,15 @@ void CEntityCondition::ChangePsyHealth(float value)
 	m_fDeltaPsyHealth += value;
 }
 
-
 void CEntityCondition::ChangeCircumspection(float value)
 {
 	m_fDeltaCircumspection += value;
 }
+
 void CEntityCondition::ChangeEntityMorale(float value)
 {
 	m_fDeltaEntityMorale += value;
 }
-
 
 void CEntityCondition::ChangeBleeding(float percent)
 {
@@ -180,6 +177,7 @@ void CEntityCondition::ChangeBleeding(float percent)
 			(*it)->SetDestroy		(true);
 	}
 }
+
 bool RemoveWoundPred(CWound* pWound)
 {
 	if(pWound->GetDestroy())
@@ -205,7 +203,7 @@ void  CEntityCondition::UpdateWounds		()
 
 void CEntityCondition::UpdateConditionTime()
 {
-	u64 _cur_time = (GameID() == GAME_SINGLE) ? Level().GetGameTime() : Level().timeServer();
+	u64 _cur_time = Level().GetGameTime();
 	
 	if(m_bTimeValid)
 	{
@@ -235,38 +233,11 @@ void CEntityCondition::UpdateConditionTime()
 void CEntityCondition::UpdateCondition()
 {
 	if(GetHealth()<=0)			return;
-	//-----------------------------------------
-	bool CriticalHealth			= false;
 
-	if (m_fDeltaHealth+GetHealth() <= 0)
-	{
-		CriticalHealth			= true;
-		m_object->OnCriticalHitHealthLoss();
-	}
-	else
-	{
-		if (m_fDeltaHealth<0) m_object->OnHitHealthLoss(GetHealth()+m_fDeltaHealth);
-	}
-	//-----------------------------------------
 	UpdateHealth				();
-	//-----------------------------------------
-	if (!CriticalHealth && m_fDeltaHealth+GetHealth() <= 0)
-	{
-		CriticalHealth			= true;
-		m_object->OnCriticalWoundHealthLoss();
-	};
-	//-----------------------------------------
 	UpdatePower					();
 	UpdateRadiation				();
-	//-----------------------------------------
-	if (!CriticalHealth && m_fDeltaHealth+GetHealth() <= 0)
-	{
-		CriticalHealth = true;
-		m_object->OnCriticalRadiationHealthLoss();
-	};
-	//-----------------------------------------
 	UpdatePsyHealth				();
-
 	UpdateEntityMorale			();
 
 	health()					+= m_fDeltaHealth;
@@ -288,8 +259,6 @@ void CEntityCondition::UpdateCondition()
 	clamp						(m_fEntityMorale,	0.0f,		m_fEntityMoraleMax);
 	clamp						(m_fPsyHealth,		0.0f,		m_fPsyHealthMax);
 }
-
-
 
 float CEntityCondition::HitOutfitEffect(float hit_power, ALife::EHitType hit_type, s16 element, float AP)
 {
@@ -436,7 +405,6 @@ CWound* CEntityCondition::ConditionHit(SHit* pHDS)
 		return NULL;
 }
 
-
 float CEntityCondition::BleedingSpeed()
 {
 	float bleeding_speed		=0;
@@ -447,7 +415,6 @@ float CEntityCondition::BleedingSpeed()
 	
 	return (m_WoundVector.empty() ? 0.f : bleeding_speed / m_WoundVector.size());
 }
-
 
 void CEntityCondition::UpdateHealth()
 {
@@ -491,7 +458,6 @@ void CEntityCondition::UpdateEntityMorale()
 		m_fDeltaEntityMorale += m_change_v.m_fV_EntityMorale*m_fDeltaTime;
 	}
 }
-
 
 bool CEntityCondition::IsLimping() const
 {
@@ -546,7 +512,6 @@ const LPCSTR CCV_NAMES[7]  = {
 	"radiation_v",  "radiation_health_v",	"morale_v", "psy_health_v",
 	"bleeding_v",	"wound_incarnation_v",  "health_restore_v" };
 
-
 float &CEntityCondition::SConditionChangeV::value(LPCSTR name)
 {
 	// CEntityCondition::SConditionChangeV::
@@ -561,6 +526,7 @@ float &CEntityCondition::SConditionChangeV::value(LPCSTR name)
 	static float fake = 0;
 	return fake;
 }
+
 void CEntityCondition::SConditionChangeV::load(LPCSTR sect, LPCSTR prefix)
 {
 	string256				str;
