@@ -54,4 +54,3 @@ void CGrenadeLauncher::renderable_Render()
 	inherited::renderable_Render();
 }
 
-#pragma message(" ===================== Compiling: 38% ===================== ")

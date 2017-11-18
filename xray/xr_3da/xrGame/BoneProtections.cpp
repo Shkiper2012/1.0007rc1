@@ -69,4 +69,3 @@ void SBoneProtections::reload(const shared_str& bone_sect, CKinematics* kinemati
 
 }
 
-#pragma message(" ===================== Compiling: 42% ===================== ")

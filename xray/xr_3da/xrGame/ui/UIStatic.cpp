@@ -668,4 +668,3 @@ void CUIStatic::SetColorAll(u32 color)
 	//}
 }
 
-#pragma message(" ===================== Compiling: 66% ===================== ")

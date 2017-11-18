@@ -56,33 +56,34 @@ CWeapon::CWeapon(LPCSTR name)
 	iAmmoCurrent = -1;
 	m_dwAmmoCurrentCalcFrame = 0;
 
-	iAmmoElapsed = -1;
-	iMagazineSize = -1;
-	m_ammoType = 0;
-	m_ammoName = NULL;
+	iAmmoElapsed	= -1;
+	iMagazineSize	= -1;
+	m_ammoType		= 0;
+	m_ammoName		= NULL;
 
 	eHandDependence = hdNone;
 
-	m_fZoomFactor = g_fov;
-	m_fZoomRotationFactor = 0.f;
+	m_fZoomFactor			= g_fov;
+	m_fIronSightZoomFactor	= g_fov;
+	m_fZoomRotationFactor	= 0.f;
 
 	m_pAmmo = NULL;
 
-	m_pFlameParticles2 = NULL;
-	m_sFlameParticles2 = NULL;
+	m_pFlameParticles2		= NULL;
+	m_sFlameParticles2		= NULL;
 
 	m_fCurrentCartirdgeDisp = 1.f;
-	m_strap_bone0 = 0;
-	m_strap_bone1 = 0;
-	m_strapped_mode = false;
-	m_can_be_strapped = false;
-	m_ef_main_weapon_type = u32(-1);
-	m_ef_weapon_type = u32(-1);
-	m_UIScope = NULL;
+	m_strap_bone0			= 0;
+	m_strap_bone1			= 0;
+	m_strapped_mode			= false;
+	m_can_be_strapped		= false;
+	m_ef_main_weapon_type	= u32(-1);
+	m_ef_weapon_type		= u32(-1);
+	m_UIScope				= NULL;
 	m_set_next_ammoType_on_reload = u32(-1);
-	m_bZoomingIn = false;
-	m_class_name = get_class_name<CWeapon>(this);
-	need_slot = true;
+	m_bZoomingIn			= false;
+	m_class_name			= get_class_name<CWeapon>(this);
+	need_slot				= true;
 }
 
 CWeapon::~CWeapon()
@@ -90,14 +91,8 @@ CWeapon::~CWeapon()
 	xr_delete(m_UIScope);
 }
 
-//void CWeapon::Hit(float P, Fvector &dir,
-//		    CObject* who, s16 element,
-//		    Fvector position_in_object_space,
-//		    float impulse,
-//		    ALife::EHitType hit_type)
 void CWeapon::Hit(SHit* pHDS)
 {
-	//	inherited::Hit(P, dir, who, element, position_in_object_space,impulse,hit_type);
 	inherited::Hit(pHDS);
 }
 

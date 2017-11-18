@@ -1,3 +1,5 @@
+-- -*- mode: lua; coding: windows-1251-dos -*-
+
 --[[ -------------------------------------------------------------------------------------------------------
 -- File: 		news_manager.script
 -- Last edit: 	23.04.2017. (by Shkiper2012)
@@ -203,11 +205,11 @@ function send_task(actor, type, task, objective)
 	
 	local news_text
 	if type == "new" or type == "update" then
-		news_text = "%c[255,1,255,255]"..game.translate_string(action_descr_by_type[type]).."\\n".."%c[default]"..game.translate_string(task:get_title())
+		news_text = "%c[255,1,255,255]" ..game.translate_string(action_descr_by_type[type]).."\\n".."%c[default]"..game.translate_string(task:get_title())
 	elseif type == "complete"	then
 		news_text = "%c[255,85,255,170]"..game.translate_string(action_descr_by_type[type]).."\\n".."%c[default]"..game.translate_string(task:get_title())
 	elseif type == "fail"	then
-		news_text = "%c[255,1,1,255]"..game.translate_string(action_descr_by_type[type]).."\\n".."%c[default]"..game.translate_string(task:get_title())
+		news_text = "%c[255,1,1,255]"   ..game.translate_string(action_descr_by_type[type]).."\\n".."%c[default]"..game.translate_string(task:get_title())
 	end
 	
 	if db.actor:is_talking() then	
@@ -303,5 +305,5 @@ function relocate_money(actor, type, amount)
 			db.actor:give_game_news(news_text, task_texture, task_rect, 0, 3000)
 		end		
 	end
-	
 end
+

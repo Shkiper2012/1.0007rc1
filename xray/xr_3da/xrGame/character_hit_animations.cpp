@@ -160,4 +160,3 @@ void character_hit_animation_controller::GetBaseMatrix( Fmatrix &m,CEntityAlive 
 	m.mul_43(ea.XFORM(),CA->LL_GetTransform(base_bone));
 }
 
-#pragma message(" ===================== Compiling: 58% ===================== ")

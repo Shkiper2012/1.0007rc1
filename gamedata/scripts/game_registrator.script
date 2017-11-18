@@ -1,3 +1,5 @@
+-- -*- mode: lua; coding: windows-1251-dos -*-
+
 
 function get_game_clsid( game_type_option, is_server )
 

@@ -53,27 +53,14 @@ void	game_cl_GameState::net_import_GameTime		(NET_Packet& P)
 
 	u64 OldTime = Level().GetEnvironmentGameTime();
 	Level().SetEnvironmentGameTimeFactor	(GameEnvironmentTime,EnvironmentTimeFactor);
-	// >>> // INFO_shkiper_marker // 
-	/*
-		Shkiper2012: 
-			Здесь, судя по репо Krodin - можно закомментировать для восттановления солнца. 
-		Krodin: 
-			<цитата>
-			Внимание! Установку погоды теперь нужно делать не ранее, чем на первом апдейте. 
-			В ОГСЕ проблем быть не должно, там погодный менеджер всё контроллирует.
-			<конец цитаты>
-		Shkiper2012: 
-			В методе 'Invalidate()', который здесь вызывается установка солнца сбрасывается в нуль!
-			Может проще закомментить этот кусок в 'Environment.cpp' - 
-			И посмотреть, что будет. =)
-		Файл: 
-			X:\trunk\xray\xr_3da\Environment.cpp
-			Current[0]				= 0;
-			Current[1]				= 0;
+
+	/* 	
+		Закомментировано для восстановления Солнца. 
+		Внимание! Установку погоды теперь нужно делать не ранее, чем на первом апдейте. // by Krodin //
+
+		if (OldTime > GameEnvironmentTime)
+			GamePersistent().Environment().Invalidate(); 
 	*/
-	if (OldTime > GameEnvironmentTime)
-		GamePersistent().Environment().Invalidate();
-	// <<< // INFO_shkiper_marker //
 }
 
 void	game_cl_GameState::net_import_state	(NET_Packet& P)

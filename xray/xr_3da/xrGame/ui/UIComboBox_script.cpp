@@ -31,4 +31,3 @@ void CUIComboBox::script_register(lua_State *L)
 	];
 }
 
-#pragma message(" ===================== Compiling: 99% ===================== ")

@@ -99,4 +99,3 @@ void CSE_ALifePsyDogPhantom::script_register(lua_State *L)
 	];
 }
 
-#pragma message(" ===================== Compiling: 98% ===================== ")

@@ -18,10 +18,9 @@
 ENGINE_API	bool g_dedicated_server;
 
 #define			MAPROT_LIST_NAME		"maprot_list.ltx"
-string_path		MAPROT_LIST		= "";
-BOOL	net_sv_control_hit	= FALSE		;
-BOOL	g_bCollectStatisticData = FALSE;
-
+string_path		MAPROT_LIST				= "";
+BOOL			net_sv_control_hit		= FALSE;
+BOOL			g_bCollectStatisticData = FALSE;
 //-----------------------------------------------------------------
 u32		g_sv_base_dwRPointFreezeTime	= 0;
 int		g_sv_base_iVotingEnabled		= 0x00ff;
@@ -152,19 +151,6 @@ CSE_Abstract*		game_sv_GameState::get_entity_from_eid		(u16 id)
 }
 
 // Utilities
-u32					game_sv_GameState::get_alive_count			(u32 team)
-{
-	u32		cnt		= get_players_count	();
-	u32		alive	= 0;
-	for		(u32 it=0; it<cnt; ++it)	
-	{
-		game_PlayerState*	ps	=	get_it	(it);
-		if (!ps) continue;
-		if (u32(ps->team) == team)	alive	+=	(ps->testFlag(GAME_PLAYER_FLAG_VERY_VERY_DEAD))?0:1;
-	}
-	return alive;
-}
-
 xr_vector<u16>*		game_sv_GameState::get_children				(ClientID id)
 {
 	xrClientData*	C	= (xrClientData*)m_server->ID_to_client	(id);

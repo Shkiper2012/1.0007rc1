@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<window>
+	<back_video x="0" y="0" width="1024" height="430">
+		<texture x="0" y="0" width="1024" height="430">ui\ui_mm_window_back_crop</texture>
+	</back_video>
+
+	<_back_video x="0" y="0" width="1024" height="512" stretch="1">
+		<texture>ui\ui_vid_back_02</texture>
+	</_back_video>
+
+	<background x="0" y="0" width="1024" height="768">
+		<texture>ui\ui_static_mm_back_03</texture>
+	</background>
+
+	<rug_video x="275" y="425" width="128" height="256">
+		<texture>ui\ui_mm_rug02</texture>
+	</rug_video>
+	
+	<main_dialog>
+		<dialog x="319" y="168" width="664" height="475" stretch="1">
+			<texture x="0" y="5" width="707" height="470">ui\ui_cheat_naxac</texture>
+		</dialog>
+		<cap_cheat x="45" y="9" width="378" height="33">
+			<text font="graffiti22" r="255" g="210" b="63">ui_mm_cheat</text>
+		</cap_cheat>
+		
+		<list_frame x="62" y="251" width="572" height="168">
+			<texture>ui_tablist_textbox</texture>
+		</list_frame>
+		<list_window x="72" y="261" width="552" height="148" item_height="18">
+			<font font="letterica16" r="216" g="186" b="140" />
+		</list_window>
+		
+		<tab x="55" y="48" width="580" height="26">
+			<button x="0" y="0" width="116" height="26">
+				<texture_offset x="0" y="-7"/>
+				<texture>ui_button_tablist</texture>
+				<text font="graffiti19" align="c">ui_mm_cheat_weapons</text>				
+				<text_color>
+					<e r="106" g="95" b="91"/> <t r="227" g="199" b="178"/> <h r="180" g="153" b="155"/>
+				</text_color>
+			</button>
+			<button x="116" y="0" width="116" height="26">
+				<texture_offset x="0" y="-7"/>
+				<texture>ui_button_tablist</texture>
+				<text font="graffiti19" align="c">ui_mm_cheat_ammo</text>
+				<text_color>
+					<e r="106" g="95" b="91"/> <t r="227" g="199" b="178"/> <h r="180" g="153" b="155"/>
+				</text_color>
+			</button>
+			<button x="232" y="0" width="116" height="26">
+				<texture_offset x="0" y="-7"/>
+				<texture>ui_button_tablist</texture>
+				<text font="graffiti19" align="c">ui_mm_cheat_outfit</text>
+				<text_color>
+					<e r="106" g="95" b="91"/> <t r="227" g="199" b="178"/> <h r="180" g="153" b="155"/>
+				</text_color>
+			</button>
+			<button x="348" y="0" width="116" height="26">
+				<texture_offset x="0" y="-7"/>
+				<texture>ui_button_tablist</texture>
+				<text font="graffiti19" align="c">ui_mm_cheat_arts</text>
+				<text_color>
+					<e r="106" g="95" b="91"/> <t r="227" g="199" b="178"/> <h r="180" g="153" b="155"/>
+				</text_color>
+			</button>
+			<button x="464" y="0" width="116" height="26">
+				<texture_offset x="0" y="-7"/>
+				<texture>ui_button_tablist</texture>
+				<text font="graffiti19" align="c">ui_mm_cheat_items</text>				
+				<text_color>
+					<e r="106" g="95" b="91"/> <t r="227" g="199" b="178"/> <h r="180" g="153" b="155"/>
+				</text_color>
+			</button>
+		</tab>
+		<btn_spawn x="335" y="429" width="157" height="48">
+			<text font="graffiti22" align="c">ui_mm_spawn</text>
+			<texture>ui_button_main02</texture>
+			<text_color>
+				<e r="227" g="199" b="178"/> <t r="180" g="153" b="155"/> <d r="106" g="95" b="91"/> <h r="0" g="0" b="0"/>
+			</text_color>
+		</btn_spawn>
+		<btn_cancel x="491" y="429" width="157" height="48">
+			<text font="graffiti19" align="c">ui_mm_cancel</text>
+			<texture>ui_button_main03</texture>
+			<text_color>
+				<e r="227" g="199" b="178"/> <t r="180" g="153" b="155"/> <d r="106" g="95" b="91"/> <h r="0" g="0" b="0"/>
+			</text_color>
+		</btn_cancel>
+	</main_dialog>
+	<frame x="55" y="74" width="586" height="353">
+		<texture>ui_tablist_textbox</texture>		
+	</frame>
+	<frame_descr x="15" y="45" width="300" height="700">
+		<texture>ui_tablist_textbox</texture>		
+	</frame_descr>
+	<descr_list x="20" y="90" width="280" height="650">
+		<text font="letterica18" complex_mode="1" align="l"/>
+	</descr_list>
+	<frame_search x="743" y="253" width="170" height="23">
+		<texture>ui_linetext_e</texture>
+		<text font="letterica18" a="0" r="0" g="0" b="0"/>
+	</frame_search>
+</window>

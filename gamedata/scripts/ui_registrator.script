@@ -1,0 +1,3 @@
+-- -*- mode: lua; coding: windows-1251-dos -*-
+
+abort("File deleted:  "..script_name()..".script ")

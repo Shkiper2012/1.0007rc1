@@ -139,4 +139,4 @@ void _destroy_item_data_vector_cont(T_VECTOR* vec)
 	delete_data	(_tmp);
 }
 
-#pragma message(" ===================== Compiling: 92% ===================== ")
+#pragma message(" ===================== Compiling: 82% ===================== ")

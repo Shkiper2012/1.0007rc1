@@ -1547,3 +1547,5 @@ void CPHElement::ClearDestroyInfo()
 //	m_fratures_holder->m_fractures
 //	m_fratures_holder->Fracture()
 //}
+
+#pragma message(" ===================== Compiling: 52% ===================== ")

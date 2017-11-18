@@ -13,4 +13,4 @@ void CAI_Dog::script_register(lua_State *L)
 	];
 }
 
-#pragma message(" ===================== Compiling: 82% ===================== ")
+#pragma message(" ===================== Compiling: 72% ===================== ")

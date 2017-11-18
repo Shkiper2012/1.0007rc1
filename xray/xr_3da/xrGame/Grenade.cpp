@@ -46,7 +46,7 @@ void CGrenade::Load(LPCSTR section)
 	m_grenade_detonation_threshold_hit=READ_IF_EXISTS(pSettings,r_float,section,"detonation_threshold_hit",default_grenade_detonation_threshold_hit);
 }
 
-void CGrenade::Hit					(SHit* pHDS)
+void CGrenade::Hit(SHit* pHDS)
 {
 	if( ALife::eHitTypeExplosion==pHDS->hit_type && m_grenade_detonation_threshold_hit<pHDS->damage()&&CExplosive::Initiator()==u16(-1)) 
 	{
@@ -128,7 +128,6 @@ void CGrenade::State(u32 state)
 	inherited::State(state);
 }
 
-
 void CGrenade::Throw() 
 {
 	if (!m_fake_missile || m_thrown)
@@ -156,8 +155,6 @@ void CGrenade::Throw()
 	// Real Wolf.End.18.12.14
 }
 
-
-
 void CGrenade::Destroy() 
 {
 	//Generate Expode event
@@ -165,8 +162,6 @@ void CGrenade::Destroy()
 	FindNormal					(normal);
 	CExplosive::GenExplodeEvent	(Position(), normal);
 }
-
-
 
 bool CGrenade::Useful() const
 {
@@ -231,14 +226,11 @@ void CGrenade::OnAnimationEnd(u32 state)
 	}
 }
 
-
-
 void CGrenade::UpdateCL() 
 {
 	inherited::UpdateCL			();
 	CExplosive::UpdateCL		();
 }
-
 
 bool CGrenade::Action(s32 cmd, u32 flags) 
 {
@@ -253,20 +245,90 @@ bool CGrenade::Action(s32 cmd, u32 flags)
 			{
 				if(m_pCurrentInventory)
 				{
-					TIItemContainer::iterator it = m_pCurrentInventory->m_ruck.begin();
-					TIItemContainer::iterator it_e = m_pCurrentInventory->m_ruck.end();
-					for(;it!=it_e;++it) 
-					{
-						CGrenade *pGrenade = smart_cast<CGrenade*>(*it);
-						if(pGrenade && xr_strcmp(pGrenade->cNameSect(), cNameSect())) 
-						{
-							m_pCurrentInventory->Ruck(this);
-							m_pCurrentInventory->SetActiveSlot(NO_ACTIVE_SLOT);
-							m_pCurrentInventory->Slot(pGrenade);
-							return true;
-						}
-					}
-					return true;
+                    // (c) NanoBot
+                    xr_vector<shared_str>    types_sect_grn;        // текущий список секций гранат
+                    // Находим список секций гранат разных типов в активе
+                    // в m_belt или m_ruck нет гранаты которую актор держит в руках, т.е. this
+                    types_sect_grn.push_back(this->cNameSect());
+                    int        count_types = 1;    // текущие количество типов гранат в активе
+                    //GRENADE_FROM_BELT
+                    TIItemContainer::iterator    it, it_e;
+                    if(Belt())
+                    {
+                        it        = m_pCurrentInventory->m_belt.begin();
+                        it_e    = m_pCurrentInventory->m_belt.end();
+                    }
+                    else
+                    {
+                        it        = m_pCurrentInventory->m_ruck.begin();
+                        it_e    = m_pCurrentInventory->m_ruck.end();
+                    }
+                    for(;it!=it_e;++it)
+                    {
+                        CGrenade *pGrenade = smart_cast<CGrenade*>(*it);
+                        if(pGrenade)
+                        {
+                            // составляем список типов гранат (с) НаноБот
+                            xr_vector<shared_str>::const_iterator    I = types_sect_grn.begin();
+                            xr_vector<shared_str>::const_iterator    E = types_sect_grn.end();
+                            bool    new_type = true;
+                            for (; I != E; ++I)
+                            {
+                                if(!xr_strcmp(pGrenade->cNameSect(), *I)) // если совпадают
+                                    new_type = false;
+                            }
+                            if(new_type)    // новый тип гранаты?, добавляем
+                            {
+                                types_sect_grn.push_back(pGrenade->cNameSect());
+                                count_types++;
+                            }
+                        }
+                    }
+                    // Если типов больше 1 то, сортируем список по алфавиту
+                    // и находим номер текущей гранаты в списке.
+                    if(count_types>1)
+                    {
+                        int        curr_num = 0;        // номер типа текущей гранаты
+                        std::sort(types_sect_grn.begin(), types_sect_grn.end());
+                        xr_vector<shared_str>::const_iterator    I = types_sect_grn.begin();
+                        xr_vector<shared_str>::const_iterator    E = types_sect_grn.end();
+                        for (; I != E; ++I)
+                        {
+                            if(!xr_strcmp(this->cNameSect(), *I)) // если совпадают
+                                break;
+                            curr_num++;
+                        }
+                        int        next_num = curr_num+1;    // номер секции следующей гранаты
+                        if(next_num>=count_types)    next_num = 0;
+                        shared_str    sect_next_grn = types_sect_grn[next_num];    // секция следущей гранаты
+                        // Ищем в активе гранату с секцией следущего типа
+                        //GRENADE_FROM_BELT
+                        TIItemContainer::iterator    it, it_e;
+                        if(Belt())
+                        {
+                            it        = m_pCurrentInventory->m_belt.begin();
+                            it_e    = m_pCurrentInventory->m_belt.end();
+                        }
+                        else
+                        {
+                            it        = m_pCurrentInventory->m_ruck.begin();
+                            it_e    = m_pCurrentInventory->m_ruck.end();
+                        }
+                        for(;it!=it_e;++it)
+                        {
+                            CGrenade *pGrenade = smart_cast<CGrenade*>(*it);
+                            if(pGrenade && !xr_strcmp(pGrenade->cNameSect(), sect_next_grn))
+                            {
+                                m_pCurrentInventory->Ruck(this);
+                                m_pCurrentInventory->SetActiveSlot(NO_ACTIVE_SLOT);
+                                m_pCurrentInventory->Slot(pGrenade);
+                                //GRENADE_FROM_BELT
+                                if(Belt())
+                                    m_pCurrentInventory->Belt(this);                    // текущую гранату, обратно в пояс.
+                                return true;
+                            }
+                        }
+                    }
 				}
 			}
 			return true;
@@ -274,7 +336,6 @@ bool CGrenade::Action(s32 cmd, u32 flags)
 	}
 	return false;
 }
-
 
 bool CGrenade::NeedToDestroyObject()	const
 {

@@ -28,4 +28,4 @@ BOOL CAnimatorCamEffectorScriptCB::Valid()
 	return res;
 }
 
-#pragma message(" ===================== Compiling: 90% ===================== ")
+#pragma message(" ===================== Compiling: 80% ===================== ")

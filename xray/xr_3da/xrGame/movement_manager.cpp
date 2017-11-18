@@ -371,4 +371,4 @@ void CMovementManager::enable_movement			(bool enabled)
 	m_enabled							= enabled;
 }
 
-#pragma message(" ===================== Compiling: 78% ===================== ")
+#pragma message(" ===================== Compiling: 68% ===================== ")

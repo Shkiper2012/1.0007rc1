@@ -242,3 +242,5 @@ void CDialogHolder::CleanInternals()
 	m_dialogsToRender.clear	();
 	GetUICursor()->Hide		();
 }
+
+#pragma message(" ===================== Compiling: 56% ===================== ")

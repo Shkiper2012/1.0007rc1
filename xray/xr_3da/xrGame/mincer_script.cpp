@@ -13,4 +13,4 @@ void CMincer::script_register	(lua_State *L)
 	];
 }
 
-#pragma message(" ===================== Compiling: 96% ===================== ")
+#pragma message(" ===================== Compiling: 86% ===================== ")

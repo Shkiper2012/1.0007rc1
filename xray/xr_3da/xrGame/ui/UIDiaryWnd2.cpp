@@ -311,4 +311,3 @@ void CUIDiaryWnd::AddDiaryArticle(shared_str article_id, bool bReaded)
 		m_pTreeRootFont, m_uTreeRootColor, m_pTreeItemFont, m_uTreeItemColor, bReaded);
 }
 
-#pragma message(" ===================== Compiling: 62% ===================== ")

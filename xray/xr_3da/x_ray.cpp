@@ -1050,11 +1050,8 @@ void CApplication::LoadTitleInt(LPCSTR str)
 	Msg							("* phase cmem: %d K", Memory.mem_usage()/1024);
 //.	Console->Execute			("stat_memory");
 	Log							(app_title);
-	
-	if (g_pGamePersistent->GameType()==1) // Фикс полосы загрузки // by SkyLoader  //
-		max_load_stage			= 17;
-	else
-		max_load_stage			= 14;
+	max_load_stage				= 18; 	// = 17 + st_actor_netspawn //
+
 #ifndef DEDICATED_SERVER
 	UpdateTexture				(TRUE);
 #endif

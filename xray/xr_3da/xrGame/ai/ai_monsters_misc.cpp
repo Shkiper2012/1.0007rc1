@@ -200,4 +200,4 @@ void CAniVector::Load(CKinematicsAnimated *tpKinematics, LPCSTR caBaseName)
 					break;
 }
 
-#pragma message(" ===================== Compiling: 80% ===================== ")
+#pragma message(" ===================== Compiling: 70% ===================== ")

@@ -487,4 +487,3 @@ std::pair<float, float>  CBulletManager::ObjectHit	(SBullet* bullet, const Fvect
 	return std::make_pair(power, impulse);
 }
 
-#pragma message(" ===================== Compiling: 30% ===================== ")

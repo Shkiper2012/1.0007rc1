@@ -949,21 +949,20 @@ bool CWeaponMagazined::Detach(const char* item_section_name, bool b_spawn_item)
 
 void CWeaponMagazined::InitAddons()
 {
-	//////////////////////////////////////////////////////////////////////////
-	// Прицел
-	m_fIronSightZoomFactor = READ_IF_EXISTS(pSettings, r_float, cNameSect(), "ironsight_zoom_factor", 50.0f);
-
+	m_fIronSightZoomFactor = READ_IF_EXISTS(pSettings, r_float, cNameSect(), "ironsight_zoom_factor", g_fov );
+	
+	// Прицел //
 	if (IsScopeAttached())
-	{
+	{	// Оптическй прицел. //
 		if (m_eScopeStatus == ALife::eAddonAttachable)
 		{
-			m_sScopeName = pSettings->r_string(cNameSect(), "scope_name");
-			m_iScopeX = pSettings->r_s32(cNameSect(), "scope_x");
-			m_iScopeY = pSettings->r_s32(cNameSect(), "scope_y");
+			m_sScopeName 	= pSettings->r_string(cNameSect(), "scope_name");
+			m_iScopeX 		= pSettings->r_s32(cNameSect(), "scope_x");
+			m_iScopeY 		= pSettings->r_s32(cNameSect(), "scope_y");
 
 			shared_str scope_tex_name;
-			scope_tex_name = pSettings->r_string(*m_sScopeName, "scope_texture");
-			m_fScopeZoomFactor = pSettings->r_float(*m_sScopeName, "scope_zoom_factor");
+			scope_tex_name 		= pSettings->r_string(*m_sScopeName, "scope_texture");
+			m_fScopeZoomFactor 	= pSettings->r_float(*m_sScopeName, "scope_zoom_factor");
 
 			if (m_UIScope) xr_delete(m_UIScope);
 			m_UIScope = xr_new<CUIStaticItem>();
@@ -984,13 +983,11 @@ void CWeaponMagazined::InitAddons()
 		}
 	}
 	else
-	{
+	{	// Открытый прицел (мушка). //
 		if (m_UIScope) xr_delete(m_UIScope);
-
-		if (IsZoomEnabled())
-			m_fIronSightZoomFactor = pSettings->r_float(cNameSect(), "scope_zoom_factor");
 	}
 
+	// ПБС (глушители) //
 	if (IsSilencerAttached() && SilencerAttachable())
 	{
 		m_sFlameParticlesCurrent = m_sSilencerFlameParticles;

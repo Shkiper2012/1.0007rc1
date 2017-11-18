@@ -1,3 +1,5 @@
+-- -*- mode: lua; coding: windows-1251-dos -*-
+
 --[[------------------------------------------------------------------------------------------------------------------
 автор: Диденко Руслан (Stohe)
 
@@ -7,6 +9,11 @@ reinit
 load
 net_spawn
 --------------------------------------------------------------------------------------------------------------------]]
+local debug_log 	= false 	-- Пишем лог? 	Да = true / Нет = false
+local module_init 	= true
+local module_name 	= script_name()
+local dbg_logf 		= function(fmt,...) if debug_log then log1(fmt,...) end end
+
 memtsg = {} --' временная таблица
 lasthealth = 0
 lastime = nil
@@ -15,15 +22,14 @@ lastime = nil
 class "motivator_binder" (object_binder)
 
 function motivator_binder:__init (obj) super(obj)
-	self.loaded = false
-	self.last_update = 0
-	----memusage.collect_info(self.object, "__init")
-
-    self.first_update = false
+	self.loaded 			= false
+	self.last_update 		= 0
+    self.first_update 		= false
 	self.treasure_processed = false
 end
 
 function motivator_binder:extrapolate_callback(cur_pt)
+    if self.object == nil then return false end
 	if self.st.active_section then
 		xr_logic.issue_event(self.object, self.st[self.st.active_scheme], "extrapolate_callback")
 		self.st.move_mgr:extrapolate_callback(self.object)
@@ -36,9 +42,8 @@ function motivator_binder:extrapolate_callback(cur_pt)
 end
 
 function motivator_binder:reinit()
+    if self.object == nil then return end
     object_binder.reinit(self)
-    --memusage.collect_info(self.object, "reinit_start")
-    --printf("motivator_binder:reinit(): self.object:name()='%s'", self.object:name())
 
     -- КОЛЛБЕКИ ЗДЕСЬ СТАВИТЬ НЕЛЬЗЯ! Здесь еще неизвестна активная схема.
     -- Ставьте коллбеки в методе update в отмеченном комментарием месте.
@@ -52,7 +57,6 @@ function motivator_binder:reinit()
     self.st = db.storage[self.object:id()]
 
     --' Создание менеджера контроля положений тела
-    --memusage.collect_info(self.object, "before_statemgr")
 	if self.object:alive() then
 		self.st.state_mgr 	= state_mgr.bind_manager(self.object)
 		self.st.move_mgr 	= move_mgr.move_mgr(self.object)
@@ -61,22 +65,12 @@ function motivator_binder:reinit()
 		self.st.state_mgr 	= nil
 		self.st.move_mgr 	= nil
 	end
-
-	--memusage.collect_info(self.object, "after_statemgr")
-	--memusage.collect_info(self.object, "reinit_end")
 end
 ----------------------------------------------------------------------------------------------------------------------
 function motivator_binder:net_spawn(sobject)
-	printf("motivator_binder:net_spawn(): self.object:name()='%s'", self.object:name())
-	--memusage.collect_info(self.object, "netspawn_start")
 	if not object_binder.net_spawn(self, sobject) then
 		return false
 	end
-
---	if self.object:spawn_ini():section_exist("dont_spawn_online") then
---		printf("!!!OFFLINE")
---		alife():object(self.object:id()).dont_spawn_online = true
---	end
 
 	db.add_obj(self.object)
 
@@ -85,9 +79,6 @@ function motivator_binder:net_spawn(sobject)
 	self.object:set_callback(callback.hit, motivator_binder.hit_callback, self)
 	self.object:set_callback(callback.death, motivator_binder.death_callback, self)
 	self.object:set_callback(callback.use_object, motivator_binder.use_callback, self)
-	--memusage.collect_info(self.object, "after__callback")
-
-	--self.object:set_callback(callback.sound, motivator_binder.hear_callback, self)
 
     --' Загрузка историй для лагеря.
 	if self.loaded == false then
@@ -100,17 +91,12 @@ function motivator_binder:net_spawn(sobject)
 	end
 
 	--' Для зомбированных чуваков говорим что аномалий не существует
---	if self.object:character_community() == "zombied" then
-		local manager = self.object:motivation_action_manager()
-		manager:remove_evaluator	(stalker_ids.property_anomaly)
-		manager:add_evaluator		(stalker_ids.property_anomaly, property_evaluator_const(false))
---	end
+	local manager = self.object:motivation_action_manager()
+	manager:remove_evaluator	(stalker_ids.property_anomaly)
+	manager:add_evaluator		(stalker_ids.property_anomaly, property_evaluator_const(false))
 	
     --' загрузка озвучки
-    --memusage.collect_info(self.object, "before_soundmgr")
     xr_sound.load_sound(self.object)
-    --memusage.collect_info(self.object, "after_soundmgr_netspawn_end")
-
 	xr_gulag.setup_gulag_and_logic_on_spawn( self.object, self.st, sobject, modules.stype_stalker, self.loaded )
 
 	return true
@@ -141,6 +127,20 @@ function motivator_binder:clear_callbacks()
 end
 
 function motivator_binder:hit_callback(obj, amount, local_direction, who, bone_index)
+	if not self.object then
+		self.object = obj
+	end
+
+	-- Если по нам стреляют, но мы не видим кто, то увеличим дальность зрения и посмотрим на врага. --
+	if tonumber(amount) > 0.01 then
+		local chk_dist = self.object:position():distance_to(who:position())
+		local range = self.object:range()
+		if chk_dist > range then
+			self.object:set_range(chk_dist*1.1)
+		end
+		self.object:make_object_visible_somewhen(who)
+	end
+
 	-- FIXME: коллбеки неплохо было бы регистрировать в общем storage, а не посхемно...
 	-- просто всегда ставить их при включении схемы и снимать при отключении.
 	if self.st.active_section then
@@ -156,17 +156,23 @@ function motivator_binder:hit_callback(obj, amount, local_direction, who, bone_i
 		xr_logic.issue_event(self.object, self.st.hit, "hit_callback", obj, amount, local_direction, who, bone_index)
 	end
 	if amount > 0 then
-		printf("HIT_CALLBACK: %s amount=%s bone=%s", obj:name(), amount, tostring(bone_index))
+		-- printf("HIT_CALLBACK: %s amount=%s bone=%s", obj:name(), amount, tostring(bone_index))
 		sr_territory.issue_event(self.object, "hit_callback", obj, amount, local_direction, who, bone_index)
 		xr_wounded.hit_callback(self.object:id())
 	end
 end
 
 function motivator_binder:death_callback(victim, who)
+	if self.object then
+		smart_terrain.on_death(self.object:id())
+	elseif victim then
+		smart_terrain.on_death(victim:id())
+		self.object = victim
+	end
 	
 	self.st.state_mgr = nil
 	
-	if who:id() == db.actor:id() then
+	if db.actor and who:id() == db.actor:id() then
 		xr_statistic.addKillCount(self.object)
 	end
 	
@@ -180,7 +186,7 @@ function motivator_binder:death_callback(victim, who)
 
 	sr_light.check_light(self.object)
 
-	smart_terrain.on_death( self.object:id() )
+	-- smart_terrain.on_death( self.object:id() )
 	
 	death_manager.drop_manager(self.object):create_release_item()
 
@@ -210,6 +216,14 @@ function motivator_binder:death_callback(victim, who)
 end
 
 function motivator_binder:use_callback(obj, who)
+	if not self.object then 
+		if obj then
+			self.object = obj
+		else	
+			return
+		end
+	end
+
 	if self.object:alive() then
 		xr_use.notify_on_use(obj, who)
 		if self.st.active_section then
@@ -279,65 +293,59 @@ function motivator_binder:update(delta)
 		self.object:info_add('section -- ' .. active_section)
 	end
 	self.object:info_add('name -- ' .. self.object:name())
-
-	--' Проверка потери жизни
---[[
-	if lasttime == nil or
-	   game.get_game_time():diffSec(lasttime) > 1
-	then
-		printf("%f * %f", self.object.health, self.object.health - lasthealth)
-		lasthealth = self.object.health
-		lasttime = game.get_game_time()
-	end
-]]
---[[	if not self.debug_smrt then
-		for k, v in pairs( db.smart_terrain_by_id ) do
-			self.debug_smrt = true
-
-			local o = alife():object( self.object:id() )
-
-			if v:enabled(o) then
-				v:register(o)
-			end
-
-			break
-		end
-	end]]
 end
 
 function motivator_binder:reload(section)
-	--memusage.collect_info(self.object, "reload_start")
 	object_binder.reload(self, section)
-	--printf("motivator_binder:reload(): self.object:name()='%s'", self.object:name())
-	--self.object:set_pda_callback(pda_callback)
-	--memusage.collect_info(self.object, "reload_end")
 end
 
 function motivator_binder:net_save_relevant()
-	--printf("motivator_binder:net_save_relevant(): self.object:name()='%s'", self.object:name())
 	return true
 end
 
 function motivator_binder:save(packet)
-	printf("motivator_binder:save(): self.object:name()='%s'", self.object:name())
 	object_binder.save(self, packet)
-
 	packet:w_bool(self.treasure_processed)
-
 	xr_logic.save_obj(self.object, packet)
 	dialog_manager.save(self.object, packet)
 	trade_manager.save(self.object, packet)
 end
 
 function motivator_binder:load(reader)
+	local sobj = alife():object( self.object:id() )
+	if not sobj then
+		log1("~~XR_Motivator  >>>  LOAD(packet)  >>>  Not server_object:  "..tostring(self.object:name()))
+		-- Разрегистрируем НПС, на всякий... --
+		local storage_npc = db.storage[self.object:id()]
+		if storage_npc then
+			if storage_npc.death then
+				xr_logic.issue_event(self.object, storage_npc.death, "death_callback", self.object, self.object)
+			end		
+			if storage_npc.active_section then
+				xr_logic.issue_event(self.object, storage_npc[storage_npc.active_scheme], "death_callback", self.object, self.object)
+			end
+		end
+		if self.object then 
+			sr_territory.issue_event(self.object, "death_callback", self.object, self.object)
+			smart_terrain.on_death(self.object:id())
+		end
+		self:clear_callbacks()
+		return false
+	end
 	self.loaded = true
 
-	printf("motivator_binder:load(): self.object:name()='%s'", self.object:name())
 	object_binder.load(self, reader)
-	printf("motivator_binder:object_binder.load(): self.object:name()='%s'", self.object:name())
 
 	if reader:r_eof() then
-		abort("SAVE FILE IS CORRUPT")
+		if self.object:alive() then
+			abort("XR_Motivator  >>>  SAVE FILE IS CORRUPT  >>>  OBJ_Name: "..tostring(self.object:name()).."  ID: "..tostring(self.object:id()).."  Profile: "..tostring(self.object:profile_name()))
+		else
+			log1("!!ERROR  >>>  XR_Motivator  >>>  CORRUPTED QUEST BODY FOUND!  >>>  Name: "..tostring(self.object:name()).."  ID: "..tostring(self.object:id()).."  Profile: "..tostring(self.object:profile_name()))
+			if debug_log then
+				db.actor:give_game_news("XR_Motivator  >>>  ВНИМАНИЕ! Обнаружен повреждённый квестовый труп! \\nОбъект_name: "..tostring(self.object:character_name()).." \\nИД: "..tostring(self.object:id()).." \\nПрофиль: "..tostring(self.object:profile_name()).." \\nУбедитесь что с телом всё в порядке, и с него выдаются все необходимые инфопоршены и вещи!", "ui\\ui_iconsTotal", Frect():set(498,47,83,47),7000, 20000)
+			end
+			return true
+		end
 	end
 
 
@@ -345,7 +353,7 @@ function motivator_binder:load(reader)
 
 	xr_logic.load_obj(self.object, reader)
 
-	self.npc_script_version = alife():object(self.object:id()).script_version
+	self.npc_script_version = alife():object(self.object:id()).script_version or 0
 	dialog_manager.load(self.object, reader, self.npc_script_version)
 	trade_manager.load(self.object, reader)
 end
@@ -413,4 +421,8 @@ function addCommonPrecondition(action)
 	action:add_precondition (world_property(xr_evaluators_id.sidor_wounded_base + 0,  false))
 	action:add_precondition (world_property(xr_evaluators_id.chugai_heli_hunter_base, false))
 	action:add_precondition (world_property(xr_evaluators_id.abuse_base, false))
+end
+
+if module_init then
+	dbg_logf("**DBG: INIT_MODULE: "..module_name..".script -- Ok. --")
 end

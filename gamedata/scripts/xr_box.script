@@ -1,3 +1,5 @@
+-- -*- mode: lua; coding: windows-1251-dos -*-
+
 --' Ключем является группировка персонажа. Значением является таблица, содержашая имена секций предметов.
 local item_by_community = {}
 
@@ -202,11 +204,9 @@ function create_obligatory_items(obj, item , count)
 		position.x = obj:position().x + math.random(-30,30)/100
 		position.z = obj:position().z + math.random(-30,30)/100
 		position.y = obj:position().y + math.random(30,50)/100
-
-		-- alife():create(item, position, obj:level_vertex_id(), obj:game_vertex_id())
 	
 		-->>-- Правка проваливания предметов через текстуры при разбивании ящиков. -->>-- Автор Bak. -->>--
-		local obj_itm 	= alife():create( item,position, obj:level_vertex_id(), obj:game_vertex_id() )
+		local obj_itm 	= alife():create( item, position, obj:level_vertex_id(), obj:game_vertex_id() )
 		local sobj_item = alife():object( obj_itm.id )
 		local pk 		= m_netpk.get( sobj_item )
 		local data 		= pk:get()

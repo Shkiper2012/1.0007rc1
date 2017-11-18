@@ -14,28 +14,14 @@ void CUICarPanel::Init			(float x, float y, float width, float height)
 
 	CUIXmlInit	xml_init;
 	////////////////////////////////////////////////////////////////////
-	AttachChild(&UIStaticCarHealth);
-	xml_init.InitStatic(uiXml, "car_health_static", 0, &UIStaticCarHealth);
+	AttachChild						(&UIStaticCarHealth);
+	xml_init.InitStatic				(uiXml, "car_health_static", 0, &UIStaticCarHealth);
 
-	UIStaticCarHealth.AttachChild(&UICarHealthBar);
-//.	xml_init.InitAutoStaticGroup(uiXml,"car_health_static", &UIStaticCarHealth);
-	xml_init.InitProgressBar(uiXml, "car_health_progress_bar", 0, &UICarHealthBar);
+	UIStaticCarHealth.AttachChild	(&UICarHealthBar);
+	xml_init.InitProgressBar		(uiXml, "car_health_progress_bar", 0, &UICarHealthBar);
 
-/*
-	AttachChild(&UISpeedometer);
-	xml_init.InitStatic(uiXml, "speedometer", 0, &UISpeedometer);
-	UISpeedometer.InitPointer(POINTER_ARROW_TEX, 0, 0, M_PI*1.f/3.f, -M_PI*1.f/3.f);
-	SetSpeed(0.3f);
-
-	AttachChild(&UITachometer);
-	xml_init.InitStatic(uiXml, "tachometer", 0, &UITachometer);
-	UITachometer.InitPointer(POINTER_ARROW_TEX,  0, 0, M_PI*1.f/3.f, -M_PI*1.f/3.f);
-	SetSpeed(0.3f);
-*/
 	Show(false);
 	Enable(false);
-
-
 
 	inherited::Init(x,y, width, height);
 }

@@ -22,4 +22,3 @@ void CPHDestroyableNotificate::spawn_notificate(CSE_Abstract* so)
 	po->source_id=BI_NONE;
 }
 
-#pragma message(" ===================== Compiling: 34% ===================== ")

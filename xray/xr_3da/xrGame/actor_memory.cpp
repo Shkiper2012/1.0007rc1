@@ -48,3 +48,5 @@ void CActorMemory::camera					(
 	near_plane		= .1f;
 	far_plane		= g_pGamePersistent->Environment().CurrentEnv.far_plane;
 }
+
+#pragma message(" ===================== Compiling: 32% ===================== ")

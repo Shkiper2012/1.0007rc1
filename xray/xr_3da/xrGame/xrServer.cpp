@@ -777,11 +777,6 @@ void			xrServer::Server_Client_Check	( IClient* CL )
 	clients_Unlock();
 };
 
-bool		xrServer::OnCL_QueryHost		() 
-{
-	return false;
-};
-
 CSE_Abstract*	xrServer::GetEntity			(u32 Num)
 {
 	xrS_entities::iterator	I=entities.begin(),E=entities.end();
@@ -795,10 +790,6 @@ CSE_Abstract*	xrServer::GetEntity			(u32 Num)
 
 void		xrServer::OnChatMessage(NET_Packet* P, xrClientData* CL)
 {
-//	string256 ChatMsg;
-//	u16 PlayerID = P->r_u16();
-	s16 team = P->r_s16();
-//	P->r_stringZ(ChatMsg);
 	if (!CL->net_Ready) return;
 	game_PlayerState* Cps = CL->ps;
 	for (u32 client=0; client<net_Players.size(); ++client)
@@ -807,7 +798,7 @@ void		xrServer::OnChatMessage(NET_Packet* P, xrClientData* CL)
 		xrClientData*	Client		= (xrClientData*) net_Players	[client];
 		game_PlayerState* ps = Client->ps;
 		if (!Client->net_Ready) continue;
-		if (team != 0 && ps->team != team) continue;
+
 		if (Cps->testFlag(GAME_PLAYER_FLAG_VERY_VERY_DEAD) && !ps->testFlag(GAME_PLAYER_FLAG_VERY_VERY_DEAD))
 			continue;
 		SendTo(Client->ID, *P);

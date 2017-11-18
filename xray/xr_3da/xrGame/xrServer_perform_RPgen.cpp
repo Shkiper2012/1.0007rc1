@@ -33,4 +33,4 @@ BOOL xrServer::PerformRP	(CSE_Abstract* EEE)
 	return TRUE;
 }
 
-#pragma message(" ===================== Compiling: 52% ===================== ")
+#pragma message(" ===================== Compiling: 48% ===================== ")

@@ -227,3 +227,5 @@ void CUIItemInfo::Draw()
 	if(m_pInvItem || m_b_force_drawing)
 		inherited::Draw();
 }
+
+#pragma message(" ===================== Compiling: 60% ===================== ")

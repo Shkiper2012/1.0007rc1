@@ -93,4 +93,3 @@ void CMMSound::all_Stop(){
 	m_whell_click.stop();
 }
 
-#pragma message(" ===================== Compiling: 64% ===================== ")

@@ -348,8 +348,6 @@ void			CLevel::OnConnectResult				(NET_Packet*	P)
 	
 	if (IsDemoSave())
 	{
-//		P->r_stringZ(m_sDemoHeader.LevelName);
-//		P->r_stringZ(m_sDemoHeader.GameType);
 		m_sDemoHeader.bServerClient = P->r_u8();
 		P->r_stringZ(m_sDemoHeader.ServerOptions);
 		//-----------------------------------------

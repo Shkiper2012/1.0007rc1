@@ -106,3 +106,5 @@ void CUINewsWnd::Show(bool status)
 	inherited::Show(status);
 
 }
+
+#pragma message(" ===================== Compiling: 58% ===================== ")

@@ -73,4 +73,3 @@ void CHARACTER_REPUTATION::DeleteIdToIndexData	()
 	inherited::DeleteIdToIndexData();
 }
 
-#pragma message(" ===================== Compiling: 36% ===================== ")

@@ -168,3 +168,5 @@ void CWeaponRG6::OnEvent(NET_Packet& P, u16 type)
 		} break;
 	}
 }
+
+#pragma message(" ===================== Compiling: 38% ===================== ")

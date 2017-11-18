@@ -36,7 +36,7 @@ const int maxRP					= 64;
 const int maxTeams				= 32;
 
 //class CFogOfWar;
-class CFogOfWarMngr;
+// class CFogOfWarMngr;
 class CBulletManager;
 class CMapManager;
 

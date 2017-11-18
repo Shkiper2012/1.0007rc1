@@ -123,4 +123,4 @@ void CScriptFlags::script_register(lua_State *L)
 	];
 }
 
-#pragma message(" ===================== Compiling: 86% ===================== ")
+#pragma message(" ===================== Compiling: 76% ===================== ")

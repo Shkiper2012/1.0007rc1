@@ -1,0 +1,96 @@
+-- -*- mode: lua; coding: windows-1251-dos -*-
+
+--[[ -------------------------------------------------------------------------------------------------------
+-- File: 			_noclip.script
+-- Description: 	Noclip режим (режим свободного полета).
+-- Last edit:		17.11.2017. (by Shkiper2012)
+--]] -------------------------------------------------------------------------------------------------------
+local noclip_active = false		-- Вкл. = true / ВЫКЛ. = false
+local distant_step 	= 1 		-- Кол-во метров(только целые числа), на который смещается камера в режиме NOclip.
+-->								-- Кол-во метров не должно быть меньше 1, иначе камеру "колбасит".
+
+-----------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------
+---- TODO_shkiper_marker: перенести этот режим в движок и вызывать из консоли. ----
+-----------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------
+
+-- Вкл./ВЫКЛ. режима NOclip. --
+function ON_OFF()
+	if (noclip_active == true) then
+		log1("~ noclip OFF ")
+		noclip_active = false
+		-- cmd("g_god off") -- Выкл. режим бога.
+	else
+		log1("- noclip ON ")
+		noclip_active = true
+		-- cmd("g_god on") -- Вкл. режим бога.
+	end
+end
+
+-- Коллбэк на удержание клавиши. --
+function on_key_hold( key, bind )
+	if (noclip_active == false) then return true end
+	
+	-- kW -- Вперед! --
+	if key == 17 then
+		local position 	= db.actor:position() 
+		local direction = device().cam_dir
+		db.actor:set_actor_position(position:mad(direction, distant_step))
+	end
+
+	-- kS -- Назад! --
+	if key == 31 then
+		local position 	= db.actor:position() 
+		local direction = device().cam_dir
+		db.actor:set_actor_position(position:mad(direction, (-distant_step)))
+	end
+
+	-- kA -- Стрейф влево! --
+	if key == 30 then
+		local position 	= db.actor:position() 
+		local direction = device().cam_right
+		db.actor:set_actor_position(position:mad(direction, (-distant_step)))
+	end 
+
+	-- kD -- Стрейф вправо! --
+	if key == 32 then
+		local position 	= db.actor:position() 
+		local direction = device().cam_right
+		db.actor:set_actor_position(position:mad(direction, distant_step))
+	end
+
+	-- kSpace -- Наверх! --
+	if key == 57 then
+		local position 	= db.actor:position() 
+		local direction = device().cam_top
+		db.actor:set_actor_position(position:mad(direction, distant_step))
+	end
+
+	-- kLeftSHIFT -- Вниз! --
+	if key == 42 then
+		local position 	= db.actor:position() 
+		local direction = device().cam_top
+		db.actor:set_actor_position(position:mad(direction, (-distant_step)))
+	end
+
+end
+
+-- Коллбэк на прокрутку колесика мышки. --
+function on_mouse_wheel( vol )
+	-- +1 метр к скорости! --
+	if vol > 0 then
+		distant_step = distant_step + 1
+		if distant_step >= 7 then
+			distant_step = 6 -- чтобы сильно не разгоняться.
+		end
+	end
+	
+	-- -1 метр к скорости! --
+	if vol < 0 then
+		distant_step = distant_step - 1
+		if distant_step <= 0 then
+			distant_step = 1
+		end
+	end
+end

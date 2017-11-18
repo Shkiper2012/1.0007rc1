@@ -60,34 +60,7 @@ void CSpectator::UpdateCL()
 
 	if (g_pGameLevel->CurrentViewEntity()==this){
 		if (eacFreeFly!=cam_active){
-			//-------------------------------------
-			
-			//-------------------------------------
-			int idx			= 0;
-			game_PlayerState* P = Game().local_player;
-			if (P&&(P->team>=0)&&(P->team<(int)Level().seniority_holder().teams().size())){
-				const CTeamHierarchyHolder& T		= Level().seniority_holder().team(P->team);
-				for (u32 i=0; i<T.squads().size(); ++i){
-					const CSquadHierarchyHolder& S = T.squad(i);
-					for (u32 j=0; j<S.groups().size(); ++j){
-						const CGroupHierarchyHolder& G = S.group(j);
-						for (u32 k=0; k<G.members().size(); ++k){
-							CActor* A = smart_cast<CActor*>(G.members()[k]);
-							if (A/*&&A->g_Alive()*/){
-								if(idx==look_idx){
-									cam_Update	(A);
-									return;
-								}
-								++idx;
-							}
-						}
-					}
-				}
-			}
-			// не найден объект с таким индексом - сбросим на первый объект
-			look_idx = 0;
-			// никого нет за кем смотреть - переключимся на 
-			if (0==idx) cam_Set(eacFreeFly);
+			cam_Set(eacFreeFly);
 		}
 		// по умолчанию eacFreeFly
 		cam_Update		(0);
@@ -97,7 +70,6 @@ void CSpectator::UpdateCL()
 void CSpectator::shedule_Update		(u32 DT)
 {
 	inherited::shedule_Update	(DT);
-//	if (!getEnabled())	return;
 	if (!Ready())		return;
 }
 
@@ -106,8 +78,7 @@ static float Accel_mul = START_ACCEL;
 
 void CSpectator::IR_OnKeyboardPress(int cmd)
 {
-	if (Remote())												return;
-
+	if (Remote()) return;
 
 	switch(cmd) 
 	{

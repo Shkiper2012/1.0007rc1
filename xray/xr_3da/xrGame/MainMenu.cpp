@@ -446,18 +446,14 @@ void CMainMenu::OnDeviceReset()
 		SetNeedVidRestart();
 }
 
+XRCORE_API		u32		build_id;
+XRCORE_API		LPCSTR	build_date;
+
 LPCSTR CMainMenu::GetGSVer()
-{	/*
-	static string256	buff;
-	static string256	buff2;
-	if(m_pGameSpyFull)
-	{
-		strcpy(buff2, m_pGameSpyFull->GetGameVersion(buff));
-	}else
-	{
-		buff[0]		= 0;
-		buff2[0]	= 0;
-	}
-	*/
-	return "NO_CMainMenu::GetGSVer_edit_by_Shkiper2012";
+{
+	static char 		id[6];
+	static string1024  	version;
+	itoa( build_id, id, 10);
+	strconcat( sizeof(version), version, "1.0007rc1, build ", id, " (", build_date, ") "  );
+	return version;
 }

@@ -550,4 +550,3 @@ bool CUIInventoryWnd::OnKeyboard(int dik, EUIMessages keyboard_action)
 	return false;
 }
 
-#pragma message(" ===================== Compiling: 99.9% ===================== ")

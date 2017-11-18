@@ -1,0 +1,546 @@
+-- -*- mode: lua; coding: windows-1251-dos -*-
+
+
+local debug_log 	= true 	-- Пишем лог? 	Да = true / Нет = false
+local module_init 	= true
+local module_name 	= "- "..script_name().."::"
+local dbg_logf 		= function(fmt,...) if debug_log then log1( module_name .. fmt, ... ) end end
+local ini 			= system_ini() -- переменная, кеширующая функцию system_ini(), для чтения конфигов.
+
+function init    (obj)
+	xr_motivator.AddToMotivator(obj)
+end
+
+function actor_init    (npc)
+	npc:bind_object(actor_binder(npc))
+end
+
+local game_difficulty_by_num = {
+	[0] = "gd_novice",
+	[1] = "gd_stalker",
+	[2] = "gd_veteran",
+	[3] = "gd_master"
+	}
+
+lasthealth  = 0
+lasttime	= 0
+post_process = 0
+local weapon_hide = false
+----------------------------------------------------------------------------------------------------------------------
+class "actor_binder" (object_binder)
+----------------------------------------------------------------------------------------------------------------------
+function actor_binder:__init (obj) super(obj)
+	self.bCheckStart = false
+	self.weather_manager = level_weathers.WeatherManager()
+	self.actor_detector = xr_detector.actor_detector()
+end
+
+function actor_binder:net_spawn(data)
+	printf("actor net spawn")		
+
+	level.show_indicators()
+
+	self.bCheckStart = true
+	self.weapon_hide = false -- спрятано или нет оружие при разговоре.
+	weapon_hide = false -- устанавливаем глобальный дефолтовый флаг.
+
+	if object_binder.net_spawn(self,data) == false then
+		return false
+	end
+
+	db.add_actor(self.object)
+	
+	if self.st.disable_input_time == nil then
+		level.enable_input()
+	end
+
+	if(actor_stats.add_to_ranking~=nil)then
+		actor_stats.add_to_ranking(self.object:id())
+	end
+
+	--' Загружаем настройки дропа
+	death_manager.init_drop_settings()
+
+	return true
+end
+
+function actor_binder:net_destroy()
+	if(actor_stats.remove_from_ranking~=nil)then
+		actor_stats.remove_from_ranking(self.object:id())
+	end
+--	game_stats.shutdown ()
+	db.del_actor(self.object)
+
+    sr_light.clean_up ()
+
+	self.object:set_callback( callback.inventory_info, 		nil )
+	self.object:set_callback( callback.article_info, 		nil )
+	self.object:set_callback( callback.on_item_take, 		nil )
+	self.object:set_callback( callback.on_item_drop, 		nil )
+--	self.object:set_callback( callback.actor_sleep, 		nil )
+	self.object:set_callback( callback.task_state, 			nil )
+--	self.object:set_callback( callback.map_location_added, 	nil )
+	self.object:set_callback( callback.level_border_enter, 	nil )
+	self.object:set_callback( callback.level_border_exit,   nil )
+	self.object:set_callback( callback.take_item_from_box,  nil )
+	self.object:set_callback( callback.on_group_items, 		nil )
+	self.object:set_callback( callback.on_before_save, 		nil )
+	self.object:set_callback( callback.on_postsave, 		nil )
+	self.object:set_callback( callback.on_throw_grenade, 	nil )
+	self.object:set_callback( callback.use_object, 			nil )
+	self.object:set_callback( callback.on_item_belt, 		nil )
+	self.object:set_callback( callback.on_item_slot, 		nil )
+	self.object:set_callback( callback.on_item_ruck, 		nil )
+	self.object:set_callback( callback.on_key_press, 		nil )
+	self.object:set_callback( callback.on_key_release, 		nil )
+	self.object:set_callback( callback.on_key_hold, 		nil )
+	self.object:set_callback( callback.on_mouse_move, 		nil )
+	self.object:set_callback( callback.on_mouse_wheel, 		nil )
+
+	if sr_psy_antenna.psy_antenna then
+		sr_psy_antenna.psy_antenna:destroy()
+		sr_psy_antenna.psy_antenna = false
+	end
+
+	xr_sound.stop_all_sound_object()
+
+	object_binder.net_destroy(self)
+end
+
+function actor_binder:reinit()
+	object_binder.reinit(self)
+	
+	local npc_id = self.object:id()
+
+	db.storage[npc_id] = { }
+
+	self.st = db.storage[npc_id]
+	self.st.pstor = nil
+
+	self.next_restrictors_update_time = -10000
+
+	self.object:set_callback( callback.inventory_info, 			self.info_callback, 		self )
+	self.object:set_callback( callback.article_info, 			self.article_callback, 		self )
+	self.object:set_callback( callback.on_item_take, 			self.on_item_take, 			self )
+	self.object:set_callback( callback.on_item_drop, 			self.on_item_drop, 			self )
+	self.object:set_callback( callback.trade_sell_buy_item, 	self.on_trade, 				self ) -- for game stats
+--	self.object:set_callback( callback.actor_sleep, 			self.sleep_callback, 		self )
+	self.object:set_callback( callback.task_state, 				self.task_callback, 		self )
+--	self.object:set_callback( callback.map_location_added, 		self.map_location_added_callback, self )
+	self.object:set_callback( callback.level_border_enter, 		self.level_border_enter, 	self )
+	self.object:set_callback( callback.level_border_exit, 		self.level_border_exit, 	self )
+	self.object:set_callback( callback.take_item_from_box, 		self.take_item_from_box, 	self )	
+	self.object:set_callback( callback.on_group_items, 			self.on_group_items, 		self )
+	self.object:set_callback( callback.on_before_save, 			self.on_before_save, 		self )
+	self.object:set_callback( callback.on_postsave, 			self.on_postsave, 			self )
+	self.object:set_callback( callback.on_throw_grenade, 		self.on_throw_grenade, 		self )
+	self.object:set_callback( callback.use_object, 				self.use_object, 			self )
+	self.object:set_callback( callback.on_item_belt, 			self.on_item_belt, 			self )
+	self.object:set_callback( callback.on_item_slot, 			self.on_item_slot, 			self )
+	self.object:set_callback( callback.on_item_ruck, 			self.on_item_ruck, 			self )
+	self.object:set_callback( callback.on_key_press, 			self.on_key_press, 			self )
+	self.object:set_callback( callback.on_key_release, 			self.on_key_release, 		self )
+	self.object:set_callback( callback.on_key_hold, 			self.on_key_hold, 			self )
+	self.object:set_callback( callback.on_mouse_move, 			self.on_mouse_move, 		self )
+	self.object:set_callback( callback.on_mouse_wheel, 			self.on_mouse_wheel, 		self )	
+end
+
+-- Коллбэк на нажатие клавиши. --
+function actor_binder:on_key_press( key )
+	-- local bind 		= dik_to_bind(key)
+	-- local key_name 	= dik_key_to_name[key] or "no_name_key"
+	-- Здесь:     key - код клавиши,     bind - код команды-экшена,     key_name - имя клавиши. --
+	-- dbg_logf("on_key_press  >>>  key:  "..tostring(key).."   bind:  "..tostring(bind).."   key_name:  "..tostring(key_name))
+end
+
+-- Коллбэк на отпускание клавиши. --
+function actor_binder:on_key_release( key )
+	-- local bind 		= dik_to_bind(key)
+	-- local key_name 	= dik_key_to_name[key] or "no_name_key"
+	-- Здесь:     key - код клавиши,     bind - код команды-экшена,     key_name - имя клавиши. --
+	-- dbg_logf("on_key_release  >>>  key:  "..tostring(key).."   bind:  "..tostring(bind).."   key_name:  "..tostring(key_name))
+end
+
+-- Коллбэк на удержание клавиши. --
+function actor_binder:on_key_hold( key )
+	local bind 		= dik_to_bind(key)
+	local key_name 	= dik_key_to_name[key] or "no_name_key"
+	-- Здесь:     key - код клавиши,     bind - код команды-экшена,     key_name - имя клавиши. --
+	-- dbg_logf("on_key_hold  >>>  key:  "..tostring(key).."   bind:  "..tostring(bind).."   key_name:  "..tostring(key_name))
+	
+	if( _noclip )then
+		_noclip.on_key_hold( key, bind )
+	end
+end
+
+-- Коллбэк на движение мышки. --
+function actor_binder:on_mouse_move( velx, vely )
+	-- local x = velx-100000
+	-- local y = vely-100000
+end
+
+-- Коллбэк на прокрутку колесика мышки. --
+function actor_binder:on_mouse_wheel( vol )
+	-- dbg_logf("on_mouse_wheel: vol = "..tostring( vol ))
+	if( _noclip )then
+		_noclip.on_mouse_wheel( vol )
+	end
+end
+
+-- Коллбэк на перемещение предмета на пояс. --
+function actor_binder:on_item_belt( obj )
+end
+
+-- Коллбэк на перемещение предмета в слот. --
+function actor_binder:on_item_slot( obj )
+end
+
+-- Коллбэк на перемещение предмета в рюкзак. --
+function actor_binder:on_item_ruck( obj )
+end
+
+-- Коллбэк на использование предмета. --
+function actor_binder:use_object( obj )
+	local portions = obj:get_portions()
+	if portions > 0 then 
+		set_item_ungroupable( obj ) 
+	end
+end
+
+-- Коллбэк перед сохранением. --
+function actor_binder:on_before_save()
+end
+
+-- Коллбэк после сохранения. --
+function actor_binder:on_postsave()
+end
+
+-- Коллбэк на бросок гранаты. --
+function actor_binder:on_throw_grenade( obj )
+end
+
+-- Коллбэк на группировку предметов в инвентаре. --
+function actor_binder:on_group_items( obj1, obj2 )
+	local sect1 = obj1:section()
+	local sect2 = obj2:section()
+	if sect1 == sect2 then
+		local slot1 = db.actor:is_in_slot( obj1 );		local belt1 = db.actor:is_on_belt( obj1 );
+		local slot2 = db.actor:is_in_slot( obj2 );		local belt2 = db.actor:is_on_belt( obj2 );
+
+		-- Если в слоте или на поясе. --
+		if slot1 or belt1 then set_item_ungroupable( obj1 ) end
+		if slot2 or belt2 then set_item_ungroupable( obj2 ) end
+
+		-- Если это съедобное, и уже съели хотя бы одну порцию. --
+		local portions1 = obj1:get_portions()
+		local portions2 = obj2:get_portions()
+		if 		portions1 < portions2 then  set_item_ungroupable( obj1 )
+		elseif 	portions1 > portions2 then  set_item_ungroupable( obj2 )
+		end 
+	end
+end 
+
+function actor_binder:take_item_from_box(box, item)
+	local story_id = box:story_id()
+	if story_id == nil then
+		return
+	end
+
+	treasure_manager.take_item_from_box(box, story_id)
+--[[	
+	local respawner = se_respawn.get_respawner_by_parent(story_id)
+	if respawner == nil then
+		return
+	end
+	
+	--' Необходимо уменьшить счетчик в респавнере
+	respawner:remove_spawned(item:id())
+
+	local smart_terrain = db.strn_by_respawn[respawner:name()]
+	if smart_terrain == nil then
+		return
+	end
+
+	local npc = smart_terrain.gulag:get_nearest_online_obj(db.actor:position())
+    if npc ~= nil then
+	    xr_sound.set_sound_play(npc, "reac_box")
+	    xr_gulag.setGulagEnemy(smart_terrain:name() , db.actor)		
+    end
+]]
+end
+
+function actor_binder:level_border_enter(npc, info_id)
+	self.actor_detector:actor_enter()
+end
+
+function actor_binder:level_border_exit(npc, info_id)
+	self.actor_detector:actor_exit()
+end
+
+function actor_binder:info_callback(npc, info_id)
+	printf("*INFO*: npc='%s' id='%s'", npc:name(), info_id)
+	--' Сюжет
+	level_tasks.proceed(self.object)
+	-- Отметки на карте
+	level_tasks.process_info_portion(info_id)
+end
+
+function actor_binder:on_trade (item, sell_bye, money)
+    if sell_bye == true then
+       game_stats.money_trade_update (money)
+    else       
+       game_stats.money_trade_update (-money) 
+    end   
+end
+
+function actor_binder:article_callback(npc, group, name)
+	--printf("article_callback [%s][%s]", group, name)
+	if device().precache_frame >1 then return end
+	
+	if group == "Diary" then
+		news_manager.send_encyclopedy("diary", group)
+	else
+		news_manager.send_encyclopedy("encyclopedy", group)
+	end
+end
+
+function actor_binder:on_item_take (obj)
+    level_tasks.proceed(self.object)
+    --game_stats.update_take_item (obj, self.object)
+end
+
+function actor_binder:on_item_drop (obj)
+    level_tasks.proceed(self.object)
+    --game_stats.update_drop_item (obj, self.object)
+end
+
+function actor_binder:task_callback(_task, _objective, _state)
+	task_manager.task_callback(_task:get_id(), _objective:get_idx(), _state)
+	if _objective:get_idx() == 0 then
+		if _state == task.fail then
+			news_manager.send_task(db.actor, "fail", _task, _objective)
+		elseif _state == task.completed then
+			task_manager.reward_by_task(_task)
+			news_manager.send_task(db.actor, "complete", _task, _objective)
+		else
+			news_manager.send_task(db.actor, "new", _task, _objective)
+		end
+	else
+		if _task:get_objective(0):get_state() == task.in_progress then
+			news_manager.send_task(db.actor, "update", _task, _objective)
+		end
+	end
+end
+
+function actor_binder:map_location_added_callback(spot_type_str, object_id)
+	if (false==app_ready()) or (device().precache_frame>1) then return end
+	--'news_manager.send_task(db.actor, "new")
+end
+
+local actor_first_update = false
+function actor_binder:update(delta)
+	object_binder.update(self, delta)
+
+	if (actor_first_update == false) then
+		actor_first_update = true
+		self.weather_manager:reset()
+	end
+
+	local time = time_global()
+	
+	game_stats.update (delta, self.object)
+
+	-- апдейт погоды
+	self.weather_manager:update()
+	
+	-- апдейт схемы детектора
+	self.actor_detector:update()
+
+	-- апдейт звуковой схемы актера
+	xr_sound.update_actor()
+	
+	-- Обновление отключения ввода с клавиатуры.
+	if self.st.disable_input_time ~= nil and
+	   game.get_game_time():diffSec(self.st.disable_input_time) >= self.st.disable_input_idle 
+	then
+		level.enable_input()
+		self.st.disable_input_time = nil
+	end
+	-- Обновление сна с переносом чувака в указанную позицию
+	if self.st.sleep_relocate_time ~= nil and
+	   game.get_game_time():diffSec(self.st.sleep_relocate_time) >= self.st.sleep_relocate_idle 
+	then
+		self.object:set_actor_position(self.st.sleep_relocate_point)
+		local dir = self.st.sleep_relocate_point:sub(self.st.sleep_relocate_look)
+		self.object:set_actor_direction(dir:getH())
+		self.st.sleep_relocate_time = nil
+	end
+
+	-- Апдейт прятание оружия игрока во время диалога
+	if weapon_hide == true or self.object:is_talking() then
+		if self.weapon_hide == false then
+			self.object:hide_weapon()
+			self.weapon_hide = true
+		end
+	else
+		if self.weapon_hide == true then
+			self.object:restore_weapon()
+			self.weapon_hide = false
+		end
+	end	
+
+	-- обновление рестрикторов, которые под логикой, срабатывает через интервалы времени
+	if self.next_restrictors_update_time < time then
+		bind_restrictor.actor_update(delta)
+
+		self.next_restrictors_update_time = time + 200
+
+		task_manager.actor_update()
+	end
+
+	-- обновление постпроцессов
+	if post_process ~= 0 then
+		if post_process:update () == true then
+		   post_process = 0
+		end
+	end
+
+	-- обновление пси-антенны
+	if sr_psy_antenna.psy_antenna then
+		sr_psy_antenna.psy_antenna:update(delta)
+	end
+
+	--' Вывод сообщения о большой радиации
+	if self.object.radiation >= 0.7 then
+		local hud = get_hud()
+		local custom_static = hud:GetCustomStatic("cs_radiation_danger")
+		if custom_static == nil then
+			hud:AddCustomStatic("cs_radiation_danger", true)
+			hud:GetCustomStatic("cs_radiation_danger"):wnd():SetTextST("st_radiation_danger")
+		end
+	else
+		local hud = get_hud()
+		local custom_static = hud:GetCustomStatic("cs_radiation_danger")
+		if custom_static ~= nil then
+			hud:RemoveCustomStatic("cs_radiation_danger")
+		end
+	end
+
+
+
+ 	if self.bCheckStart then
+		printf("SET DEFAULT INFOS")		
+
+		if not has_alife_info("storyline_actor_start") and
+		   (level.name() == "l01_escape")
+		then
+			self.object:give_info_portion("storyline_actor_start")
+			_G.g_start_avi = true
+			printf("*AVI* RUN START AVI")			
+		end
+
+--		if not has_alife_info("encyclopedy") then
+--			self.object:give_info_portion("encyclopedy")
+--		end
+
+		if not has_alife_info("global_dialogs") then
+			self.object:give_info_portion("global_dialogs")
+		end
+
+		if not has_alife_info("level_changer_icons") then
+			self.object:give_info_portion("level_changer_icons")
+		end
+
+		level_tasks.add_lchanger_location()
+
+		self.bCheckStart = false		
+	end		
+end
+
+function actor_binder:save(packet)
+	
+	local save_treasure_manager = true
+	
+	printf("actor_binder:save(): self.object:name()='%s'", self.object:name())
+	object_binder.save(self, packet)
+
+	--' Сохраняем уровень сложности
+	if save_treasure_manager == true then
+		packet:w_u8(level.get_game_difficulty() + 128)
+	else
+		packet:w_u8(level.get_game_difficulty())
+	end
+
+
+	--' Сохраняем данные об отключенном вводе
+	if self.st.disable_input_time == nil then
+		packet:w_bool(false)
+	else
+		packer:w_bool(true)
+		utils.w_CTime(packet, self.st.disable_input_time)
+	end
+
+	xr_logic.pstor_save_all(self.object, packet)
+	self.weather_manager:save(packet)
+
+	sr_psy_antenna.save( packet )
+	
+	if save_treasure_manager == true then
+		treasure_manager.save(packet)      
+	end                                  
+
+	task_manager.save(packet)
+	self.actor_detector:save(packet)	
+end
+
+function actor_binder:load(reader)
+	printf("actor_binder:load(): self.object:name()='%s'", self.object:name())
+	object_binder.load(self, reader)
+	printf("actor_binder:object_binder.load(): self.object:name()='%s'", self.object:name())
+
+	--' Загружаем уровень сложности
+	local game_difficulty = reader:r_u8()
+	
+	local load_treasure_manager = false      
+	if game_difficulty >= 128 then           
+		game_difficulty = game_difficulty - 128
+		load_treasure_manager = true           
+	end                                      
+
+	
+	get_console():execute("g_game_difficulty "..game_difficulty_by_num[game_difficulty])
+
+	if reader:r_eof() then
+		abort("SAVE FILE IS CORRUPT")
+	end
+
+	local stored_input_time = reader:r_u8()
+	if stored_input_time == true then
+		self.st.disable_input_time = utils.r_CTime(reader)
+	end
+
+	xr_logic.pstor_load_all(self.object, reader)
+	self.weather_manager:load(reader)
+
+	sr_psy_antenna.load(reader)
+	
+	if load_treasure_manager == true then
+		treasure_manager.load(reader)      
+	end                                  
+
+	
+	task_manager.load(reader)
+	self.actor_detector:load(reader)	
+end
+
+-- Weapon functions
+function hide_weapon()
+	weapon_hide = true
+end
+function restore_weapon()
+	weapon_hide = false
+end
+
+if module_init then
+	dbg_logf("INIT_MODULE::Ok.")
+end

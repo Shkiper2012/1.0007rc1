@@ -30,8 +30,6 @@ private:
 		u8			bServerClient;
 		char		Head[31];
 		shared_str		ServerOptions;
-//		string64		LevelName;
-//		string64		GameType;
 	};
 
 	DemoHeaderStruct							m_sDemoHeader;

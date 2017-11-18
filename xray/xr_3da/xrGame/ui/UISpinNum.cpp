@@ -165,4 +165,3 @@ bool CUISpinFlt::CanPressDown()
 	return (m_fVal - m_fStep > m_fMin) || fsimilar(m_fVal-m_fStep, m_fMin);
 }
 
-#pragma message(" ===================== Compiling: 70% ===================== ")

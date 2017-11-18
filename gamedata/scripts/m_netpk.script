@@ -3338,7 +3338,7 @@ _G.torch_flags = { --/ torch
 	NightVisionActive = 2,
 	Attached          = 4
 }
-if not ogse_wpn_utils then --KRodin: вот это совершенно не нужно, в ogse_wpn_utils свои флаги.
+if not ogse_wpn_utils then
 	_G.addon_flags = { --/ weapon
 		scope    = 1,
 		launcher = 2,

@@ -240,4 +240,3 @@ void	get_box(CPhysicsShell*	shell,const	Fmatrix& form,	Fvector&	sz,Fvector&	c)
 	}
 }
 
-#pragma message(" ===================== Compiling: 56% ===================== ")
