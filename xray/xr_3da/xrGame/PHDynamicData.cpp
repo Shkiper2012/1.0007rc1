@@ -201,5 +201,3 @@ void PHDynamicData::SetZeroTransform(Fmatrix& aTransform){
 	ZeroTransform.set(aTransform);
 }
 #endif // #if 0
-
-#pragma message(" ===================== Compiling: 50% ===================== ")

@@ -26,3 +26,4 @@ void CPHShellSimpleCreator::CreatePhysicsShell()
 	owner->PPhysicsShell()->SetAirResistance		(0.001f, 0.02f);
 }
 
+#pragma message(" ===================== Compiling: 54% ===================== ")

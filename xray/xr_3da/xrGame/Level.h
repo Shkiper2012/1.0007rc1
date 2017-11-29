@@ -36,7 +36,7 @@ const int maxRP					= 64;
 const int maxTeams				= 32;
 
 //class CFogOfWar;
-// class CFogOfWarMngr;
+class CFogOfWarMngr;
 class CBulletManager;
 class CMapManager;
 
@@ -144,6 +144,7 @@ private:
 	u32							m_dwDeltaUpdate ;
 	u32							m_dwLastNetUpdateTime;
 	void						UpdateDeltaUpd					( u32 LastTime );
+	void						BlockCheatLoad					()				;
 
 	BOOL						Connect2Server					(LPCSTR options);
 private:
@@ -387,6 +388,8 @@ IC CPHCommander & CLevel::ph_commander_scripts()
 //by Mad Max 
 IC bool					OnServer()	{ return Level().IsServer();}
 IC bool					OnClient()	{ return Level().IsClient();}
+
+	bool				IsGameTypeSingle();
 
 class  CPHWorld;
 extern CPHWorld*				ph_world;

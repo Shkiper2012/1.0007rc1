@@ -138,10 +138,10 @@ void CPHDestroyable::Destroy(u16 source_id/*=u16(-1)*/,LPCSTR section/*="ph_skel
 	
 	if(!CanDestroy())return ;
 	m_notificate_objects.clear();
-	CPhysicsShellHolder		*obj	= PPhysicsShellHolder();
-	CPHSkeleton 			*phs 	= obj->PHSkeleton();
+	CPhysicsShellHolder	*obj	=PPhysicsShellHolder()		;
+	CPHSkeleton *phs= obj->PHSkeleton();
 	if(phs)phs->SetNotNeedSave();
-	if(obj->PPhysicsShell())	obj->PPhysicsShell()->Enable();
+	if(obj->PPhysicsShell())	obj->PPhysicsShell()->Enable()	;
 	obj->processing_activate();
 	if(source_id==obj->ID())
 	{
@@ -149,9 +149,12 @@ void CPHDestroyable::Destroy(u16 source_id/*=u16(-1)*/,LPCSTR section/*="ph_skel
 	}
 	xr_vector<shared_str>::iterator i=m_destroyed_obj_visual_names.begin(),e=m_destroyed_obj_visual_names.end();
 
-	for(;e!=i;i++)
-		GenSpawnReplace(source_id,section,*i);
-
+	if (IsGameTypeSingle())
+	{
+		for(;e!=i;i++)
+			GenSpawnReplace(source_id,section,*i);
+	};	
+///////////////////////////////////////////////////////////////////////////
 	m_flags.set(fl_destroyed,TRUE);
 	return;
 }

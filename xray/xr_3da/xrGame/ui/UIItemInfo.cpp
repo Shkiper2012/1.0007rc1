@@ -130,6 +130,8 @@ void CUIItemInfo::Init(float x, float y, float width, float height, LPCSTR xml_n
     Init			(xml_name);
 }
 
+bool				IsGameTypeSingle();
+
 void CUIItemInfo::InitItem(CInventoryItem* pInvItem)
 {
 	m_pInvItem				= pInvItem;
@@ -145,7 +147,7 @@ void CUIItemInfo::InitItem(CInventoryItem* pInvItem)
 		sprintf_s				(str, "%3.2f kg", pInvItem->Weight());
 		UIWeight->SetText	(str);
 	}
-	if(UICost)
+	if( UICost && IsGameTypeSingle() )
 	{
 		sprintf_s				(str, "%d %s", pInvItem->Cost(),*CStringTable().translate("ui_st_money_regional"));		// will be owerwritten in multiplayer
 		UICost->SetText		(str);
@@ -227,5 +229,3 @@ void CUIItemInfo::Draw()
 	if(m_pInvItem || m_b_force_drawing)
 		inherited::Draw();
 }
-
-#pragma message(" ===================== Compiling: 60% ===================== ")

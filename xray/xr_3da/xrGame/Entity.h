@@ -121,8 +121,8 @@ public:
 	virtual	bool			use_simplified_visual	() const {return false;};
 
 public:
-	virtual	void			on_before_change_team	(){};
-	virtual	void			on_after_change_team	(){};
+	virtual	void			on_before_change_team	();
+	virtual	void			on_after_change_team	();
 
 private:
 	bool					m_registered_member;

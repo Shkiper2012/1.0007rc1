@@ -183,4 +183,4 @@ void CAI_Stalker::process_enemies		()
 	}
 }
 
-#pragma message(" ===================== Compiling: 74% ===================== ")
+#pragma message(" ===================== Compiling: 84% ===================== ")

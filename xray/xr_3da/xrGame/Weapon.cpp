@@ -56,34 +56,34 @@ CWeapon::CWeapon(LPCSTR name)
 	iAmmoCurrent = -1;
 	m_dwAmmoCurrentCalcFrame = 0;
 
-	iAmmoElapsed	= -1;
-	iMagazineSize	= -1;
-	m_ammoType		= 0;
-	m_ammoName		= NULL;
+	iAmmoElapsed = -1;
+	iMagazineSize = -1;
+	m_ammoType = 0;
+	m_ammoName = NULL;
 
 	eHandDependence = hdNone;
 
-	m_fZoomFactor			= g_fov;
+	m_fZoomFactor = g_fov;
 	m_fIronSightZoomFactor	= g_fov;
-	m_fZoomRotationFactor	= 0.f;
+	m_fZoomRotationFactor = 0.f;
 
 	m_pAmmo = NULL;
 
-	m_pFlameParticles2		= NULL;
-	m_sFlameParticles2		= NULL;
+	m_pFlameParticles2 = NULL;
+	m_sFlameParticles2 = NULL;
 
 	m_fCurrentCartirdgeDisp = 1.f;
-	m_strap_bone0			= 0;
-	m_strap_bone1			= 0;
-	m_strapped_mode			= false;
-	m_can_be_strapped		= false;
-	m_ef_main_weapon_type	= u32(-1);
-	m_ef_weapon_type		= u32(-1);
-	m_UIScope				= NULL;
+	m_strap_bone0 = 0;
+	m_strap_bone1 = 0;
+	m_strapped_mode = false;
+	m_can_be_strapped = false;
+	m_ef_main_weapon_type = u32(-1);
+	m_ef_weapon_type = u32(-1);
+	m_UIScope = NULL;
 	m_set_next_ammoType_on_reload = u32(-1);
-	m_bZoomingIn			= false;
-	m_class_name			= get_class_name<CWeapon>(this);
-	need_slot				= true;
+	m_bZoomingIn = false;
+	m_class_name = get_class_name<CWeapon>(this);
+	need_slot = true;
 }
 
 CWeapon::~CWeapon()
@@ -106,7 +106,13 @@ void CWeapon::UpdateXForm()
 
 		// Get access to entity and its visual
 		CEntityAlive*	E = smart_cast<CEntityAlive*>(H_Parent());
-		if (!E) return;
+
+		if (!E)
+		{
+			if (!IsGameTypeSingle())
+				UpdatePosition(H_Parent()->XFORM());
+			return;
+		}
 
 		const CInventoryOwner	*parent = smart_cast<const CInventoryOwner*>(E);
 		if (parent && parent->use_simplified_visual())
@@ -120,7 +126,7 @@ void CWeapon::UpdateXForm()
 		VERIFY(V);
 
 		// Get matrices
-		int				 boneL, boneR, boneR2;
+		int				boneL, boneR, boneR2;
 		E->g_WeaponBones(boneL, boneR, boneR2);
 		if ((HandDependence() == hd1Hand) || (GetState() == eReload) || (!E->g_Alive()))
 			boneL = boneR2;
@@ -718,6 +724,9 @@ void CWeapon::UpdateCL()
 	//нарисовать партиклы
 	UpdateFlameParticles();
 	UpdateFlameParticles2();
+
+	if (!IsGameTypeSingle())
+		make_Interpolation();
 
 	VERIFY(smart_cast<CKinematics*>(Visual()));
 }
@@ -1548,8 +1557,12 @@ void CWeapon::OnDrawUI()
 
 bool CWeapon::unlimited_ammo()
 {
-	return 	psActorFlags.test(AF_UNLIMITEDAMMO) && 
-			m_DefaultCartridge.m_flags.test(CCartridge::cfCanBeUnlimited);
+	if (GameID() == GAME_SINGLE)
+		return psActorFlags.test(AF_UNLIMITEDAMMO) &&
+		m_DefaultCartridge.m_flags.test(CCartridge::cfCanBeUnlimited);
+
+	return (GameID() != GAME_ARTEFACTHUNT) &&
+		m_DefaultCartridge.m_flags.test(CCartridge::cfCanBeUnlimited);
 };
 
 LPCSTR CWeapon::GetCurrentAmmo_ShortName()
@@ -1601,7 +1614,11 @@ float CWeapon::Weight()
 
 void CWeapon::Hide()
 {
-	SwitchState(eHiding);
+	if (IsGameTypeSingle())
+		SwitchState(eHiding);
+	else
+		SwitchState(eHidden);
+
 	OnZoomOut();
 }
 

@@ -23,7 +23,7 @@ BOOL CLevel::Load_GameSpecific_Before()
 	g_pGamePersistent->LoadTitle		("st_loading_ai_objects");
 	string_path							fn_game;
 	
-	if( !ai().get_alife() && FS.exist(fn_game,"$level$","level.ai") )
+	if (GamePersistent().GameType() == GAME_SINGLE && !ai().get_alife() && FS.exist(fn_game,"$level$","level.ai"))
 		ai().load						(net_SessionName());
 
 	if (!g_dedicated_server && !ai().get_alife() && ai().get_game_graph() && FS.exist(fn_game, "$level$", "level.game")) {
@@ -109,6 +109,7 @@ BOOL CLevel::Load_GameSpecific_After()
 			ai().script_engine().add_script_process(ScriptEngine::eScriptProcessorLevel,xr_new<CScriptProcess>("level",""));
 	}
 		
+	BlockCheatLoad();
 	return TRUE;
 }
 
@@ -197,3 +198,7 @@ void CLevel::Load_GameSpecific_CFORM	( CDB::TRI* tris, u32 count )
 	}
 }
 
+void CLevel::BlockCheatLoad()
+{
+	if( game && (GameID() != GAME_SINGLE) ) phTimefactor=1.f;
+}

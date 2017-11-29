@@ -73,3 +73,4 @@ bool CDelayedActionFuse::Update(float current_condition)
 	return ret;
 }
 
+#pragma message(" ===================== Compiling: 46% ===================== ")

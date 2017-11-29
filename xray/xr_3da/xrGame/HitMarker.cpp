@@ -94,5 +94,3 @@ void	SHitMark::Draw(float cam_dir)
 	float res_h						= cam_dir + m_HitDirection;
 	m_UIStaticItem->Render			(res_h);
 }
-
-#pragma message(" ===================== Compiling: 66% ===================== ")

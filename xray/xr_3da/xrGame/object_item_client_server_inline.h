@@ -5,6 +5,10 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Object item client and server class inline functions
 ////////////////////////////////////////////////////////////////////////////
+
+#ifndef object_item_client_server_inlineH
+#define object_item_client_server_inlineH
+
 #pragma once
 
 #define TEMPLATE_SPECIALIZATION template <typename _client_type, typename _server_type>
@@ -48,14 +52,22 @@ ObjectFactory::SERVER_BASE_CLASS *CSObjectItemClientServer::server_object	(LPCST
 	TEMPLATE_SPECIALIZATION
 	ObjectFactory::CLIENT_BASE_CLASS *CSObjectItemClientServerSingleMp::client_object	() const
 	{
-		ObjectFactory::CLIENT_BASE_CLASS	*result = xr_new<_client_type_single>();
+		ObjectFactory::CLIENT_BASE_CLASS	*result = 
+			IsGameTypeSingle() ?
+			xr_new<_client_type_single>() :
+			xr_new<_client_type_mp>();
+		
 		return								(result->_construct());
 	}
 
 	TEMPLATE_SPECIALIZATION
 	ObjectFactory::SERVER_BASE_CLASS *CSObjectItemClientServerSingleMp::server_object	(LPCSTR section) const
 	{
-		ObjectFactory::SERVER_BASE_CLASS	*result = xr_new<_server_type_single>(section);
+		ObjectFactory::SERVER_BASE_CLASS	*result = 
+			IsGameTypeSingle() ?
+			xr_new<_server_type_single>(section) :
+			xr_new<_server_type_mp>(section);
+
 		result								= result->init();
 		R_ASSERT							(result);
 		return								(result);
@@ -66,3 +78,4 @@ ObjectFactory::SERVER_BASE_CLASS *CSObjectItemClientServer::server_object	(LPCST
 
 #endif // NO_XR_GAME
 
+#endif

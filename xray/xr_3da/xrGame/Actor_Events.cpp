@@ -82,6 +82,8 @@ void CActor::OnEvent		(NET_Packet& P, u16 type)
 						pGameSP->InventoryMenu->AddItemToBag(smart_cast<CInventoryItem*>(O));
 					}
 				}
+				
+				SelectBestWeapon(O);
 			} 
 			else 
 			{
@@ -107,8 +109,12 @@ void CActor::OnEvent		(NET_Packet& P, u16 type)
 			if (inventory().DropItem(smart_cast<CGameObject*>(O)) && !O->getDestroy()) 
 			{
 				O->H_SetParent(0,just_before_destroy);
+//.				feel_touch_deny(O,2000);
 				Level().m_feel_deny.feel_touch_deny(O, 1000);
+
 			}
+
+			SelectBestWeapon(O);
 
 			if (Level().CurrentViewEntity() == this && HUD().GetUI() && HUD().GetUI()->UIGame())
 				HUD().GetUI()->UIGame()->ReInitShownUI();

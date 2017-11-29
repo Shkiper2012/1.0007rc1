@@ -4,7 +4,6 @@
 #include "UIMessagesWindow.h"
 #include "../UIZoneMap.h"
 
-
 #include <dinput.h>
 #include "../ai_space.h"
 #include "../script_engine.h"
@@ -30,8 +29,6 @@
 #include "../../LightAnimLibrary.h"
 
 #include "UIInventoryUtilities.h"
-
-
 #include "UIXmlInit.h"
 #include "UIPdaMsgListItem.h"
 #include "../alife_registry_wrappers.h"
@@ -54,10 +51,8 @@
 #include "../game_news.h"
 #include "../pch_script.h"
 
-
 #ifdef DEBUG
 #	include "../debug_renderer.h"
-
 void test_draw	();
 void test_key	(int dik);
 void test_update();
@@ -216,8 +211,12 @@ void CUIMainIngameWnd::Init()
 	UIZoneMap->Init				();
 	UIZoneMap->SetScale			(DEFAULT_MAP_SCALE);
 
-	xml_init.InitStatic			(uiXml, "static_pda_online", 0, &UIPdaOnline);
-	UIZoneMap->Background().AttachChild	(&UIPdaOnline);
+	if(IsGameTypeSingle())
+	{
+		xml_init.InitStatic					(uiXml, "static_pda_online", 0, &UIPdaOnline);
+		UIZoneMap->Background().AttachChild	(&UIPdaOnline);
+	}
+
 
 	//ѕолоса прогресса здоровь€
 	UIStaticHealth.AttachChild	(&UIHealthBar);
@@ -238,11 +237,14 @@ void CUIMainIngameWnd::Init()
 	AttachChild					(m_UIIcons);
 
 	// «агружаем иконки 
-	xml_init.InitStatic			(uiXml, "starvation_static", 0, &UIStarvationIcon);
-	UIStarvationIcon.Show		(false);
+	if(IsGameTypeSingle())
+	{
+		xml_init.InitStatic		(uiXml, "starvation_static", 0, &UIStarvationIcon);
+		UIStarvationIcon.Show	(false);
 
-	xml_init.InitStatic			(uiXml, "psy_health_static", 0, &UIPsyHealthIcon);
-	UIPsyHealthIcon.Show		(false);
+		xml_init.InitStatic		(uiXml, "psy_health_static", 0, &UIPsyHealthIcon);
+		UIPsyHealthIcon.Show	(false);
+	}
 
 	xml_init.InitStatic			(uiXml, "weapon_jammed_static", 0, &UIWeaponJammedIcon);
 	UIWeaponJammedIcon.Show		(false);
@@ -255,6 +257,12 @@ void CUIMainIngameWnd::Init()
 
 	xml_init.InitStatic			(uiXml, "invincible_static", 0, &UIInvincibleIcon);
 	UIInvincibleIcon.Show		(false);
+
+
+	if(GameID()==GAME_ARTEFACTHUNT){
+		xml_init.InitStatic		(uiXml, "artefact_static", 0, &UIArtefactIcon);
+		UIArtefactIcon.Show		(false);
+	}
 	
 	shared_str warningStrings[6] = 
 	{	
@@ -299,8 +307,11 @@ void CUIMainIngameWnd::Init()
 	AttachChild								(&UIMotionIcon);
 	UIMotionIcon.Init						();
 
-	m_artefactPanel->InitFromXML			(uiXml, "artefact_panel", 0);
-	this->AttachChild						(m_artefactPanel);	
+	if(IsGameTypeSingle())
+	{
+		m_artefactPanel->InitFromXML		(uiXml, "artefact_panel", 0);
+		this->AttachChild					(m_artefactPanel);	
+	}
 
 	HUD_SOUND::LoadSound					("maingame_ui", "snd_new_contact"		, m_contactSnd		, SOUND_TYPE_IDLE);
 }
@@ -391,7 +402,7 @@ void CUIMainIngameWnd::Update()
 		return;
 	}
 
-	if( !(Device.dwFrame%30) )
+	if( !(Device.dwFrame%30) && IsGameTypeSingle() )
 	{
 			string256				text_str;
 			CPda* _pda	= m_pActor->GetPDA();
@@ -411,13 +422,15 @@ void CUIMainIngameWnd::Update()
 	{
 		
 		if(!(Device.dwFrame%30))
-		{
-			bool b_God = (GodMode()||(!Game().local_player)) ? true : Game().local_player->testFlag(GAME_PLAYER_FLAG_INVINCIBLE);
-			if(b_God)
+		{							// COMMENT_shkiper_marker // чтобы иконка была только при режиме бога. //
+		// 	bool b_God = (GodMode()||(!Game().local_player)) ? true : Game().local_player->testFlag(GAME_PLAYER_FLAG_INVINCIBLE);
+			BOOL b_God = GodMode();
+			if(  b_God ){
 				SetWarningIconColor	(ewiInvincible,0xffffffff);
-			else
-			if (!external_icon_ctrl)
-				TurnOffWarningIcon (ewiInvincible);
+			}else{
+				if (!external_icon_ctrl)
+					TurnOffWarningIcon (ewiInvincible);
+			}
 		}
 
 		// Armor indicator stuff

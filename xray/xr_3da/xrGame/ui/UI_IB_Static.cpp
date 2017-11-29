@@ -27,3 +27,4 @@ void CUI_IB_Static::SetTextureOffset(float x, float y){
         m_stateTouched->SetTextureOffset(x,y);
 }
 
+#pragma message(" ===================== Compiling: 68% ===================== ")

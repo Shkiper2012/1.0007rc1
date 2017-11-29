@@ -71,5 +71,3 @@ void CCar::SExhaust::Stop()
 	VERIFY(!ph_world->Processing());
 	p_pgobject->Stop();
 }
-
-#pragma message(" ===================== Compiling: 44% ===================== ")

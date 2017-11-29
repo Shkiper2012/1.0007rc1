@@ -53,4 +53,4 @@ void CScriptSound::script_register(lua_State *L)
 	];
 }
 
-#pragma message(" ===================== Compiling: 78% ===================== ")
+#pragma message(" ===================== Compiling: 88% ===================== ")

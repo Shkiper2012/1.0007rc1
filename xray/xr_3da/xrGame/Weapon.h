@@ -142,7 +142,7 @@ public:
 	BOOL					CheckForMisfire();
 
 	BOOL					AutoSpawnAmmo() const		{ return m_bAutoSpawnAmmo; };
-	bool					IsTriStateReload() const	{ return m_bTriStateReload; }
+	bool					IsTriStateReload() const		{ return m_bTriStateReload; }
 	EWeaponSubStates		GetReloadState() const		{ return (EWeaponSubStates)m_sub_state; }
 protected:
 	bool					m_bTriStateReload;
@@ -213,31 +213,45 @@ protected:
 	//	для режима приближения и снайперского прицела
 	///////////////////////////////////////////////////
 protected:
-	bool			m_bScopeDynamicZoom; 		// разрешение регулирования приближения. Real Wolf.
-	bool			m_bZoomEnabled; 			// разрешение режима приближения.
-	float			m_fZoomFactor;				// текущий фактор приближения (на сколько будет менятся fov при прокрутке колесика мышки).
-	float			m_fZoomRotateTime; 			// время приближения.
-	CUIStaticItem*	m_UIScope;					// текстура для оптического прицела, в режиме приближения.
-	float			m_fIronSightZoomFactor;		// коэффициент увеличения fov прицеливания через мушку.
-	float			m_fScopeZoomFactor;			// коэффициент увеличения fov прицеливания через оптический прицел.
-	bool			m_bZoomMode;				// когда режим приближения включен.
-	bool            m_bZoomingIn; 				// Member added by cribbledirge for testing weapon zoom in/out.
-	float			m_fZoomRotationFactor;		// от 0 до 1, показывает насколько процентов мы перемещаем HUD.
-	bool			m_bHideCrosshairInZoom; 	// разрешение прятать перекрестие прицела во время прицеливания.
-
+	// разрешение регулирования приближения. Real Wolf.
+	bool			m_bScopeDynamicZoom;
+	//разрешение режима приближения
+	bool			m_bZoomEnabled;
+	//текущий фактор приближения
+	float			m_fZoomFactor;
+	//время приближения
+	float			m_fZoomRotateTime;
+	//текстура для снайперского прицела, в режиме приближения
+	CUIStaticItem*	m_UIScope;
+	//коэффициент увеличения прицеливания
+	float			m_fIronSightZoomFactor;
+	//коэффициент увеличения прицела
+	float			m_fScopeZoomFactor;
+	//когда режим приближения включен
+	bool			m_bZoomMode;
+	// Member added by cribbledirge for testing weapon zoom in/out.
+	bool            m_bZoomingIn;
+	//от 0 до 1, показывает насколько процентов
+	//мы перемещаем HUD
+	float			m_fZoomRotationFactor;
+	bool			m_bHideCrosshairInZoom;
 public:
+
 	IC bool					IsZoomEnabled()	const	{ return m_bZoomEnabled; }
-	virtual	void			ZoomInc();			// приближение - увеличение кратности зума.
-	virtual	void			ZoomDec(); 			// отдаление   - уменьшение крастности зума.
-	virtual void			OnZoomIn(); 		// вкл.  прицеливание.
-	virtual void			OnZoomOut(); 		// выкл. прицеливание.
-	bool					IsZoomed()	const	{ return m_bZoomMode; }; 	// Сейчас целимся? //
+	virtual	void			ZoomInc();
+	virtual	void			ZoomDec();
+
+	virtual void			OnZoomIn();
+	virtual void			OnZoomOut();
+	bool					IsZoomed()	const	{ return m_bZoomMode; };
 	CUIStaticItem*			ZoomTexture();
 	bool					ZoomHideCrosshair()			{ return m_bHideCrosshairInZoom || ZoomTexture(); }
 
 	IC float				GetZoomFactor() const		{ return m_fZoomFactor; }
 	virtual	float			CurrentZoomFactor();
-	bool					IsRotatingToZoom() const	{ return (m_fZoomRotationFactor < 1.f); } // показывает, что оружие находится в соостоянии поворота для приближенного прицеливания.
+	//показывает, что оружие находится в соостоянии поворота для приближенного прицеливания
+	bool					IsRotatingToZoom() const		{ return (m_fZoomRotationFactor < 1.f); }
+
 	void					LoadZoomOffset(LPCSTR section, LPCSTR prefix);
 
 	virtual float			Weight();
@@ -466,8 +480,8 @@ protected:
 public:
 	virtual	void			modify_holder_params(float &range, float &fov) const;
 	virtual bool			use_crosshair()	const { return true; }
-			bool			show_crosshair();
-			bool			show_indicators();
+	bool			show_crosshair();
+	bool			show_indicators();
 	virtual BOOL			ParentMayHaveAimBullet();
 	virtual BOOL			ParentIsActor();
 

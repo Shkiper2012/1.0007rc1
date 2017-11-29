@@ -5,6 +5,7 @@
 
 using namespace luabind;
 
+
 template <typename T>
 struct CWrapperBase : public T, public luabind::wrap_base {
 	typedef T inherited;
@@ -25,11 +26,22 @@ void game_PlayerState::script_register(lua_State *L)
 		[
 			luabind::class_<game_PlayerState, WrapType>("game_PlayerState")
 			.def(	constructor<>())
+			.def_readwrite("team",				&BaseType::team)
+			.def_readwrite("kills",				&BaseType::m_iRivalKills)
+			.def_readwrite("deaths",			&BaseType::m_iDeaths)
+			.def_readwrite("money_for_round",	&BaseType::money_for_round)
 			.def_readwrite("flags",				&BaseType::flags__)
 			.def_readwrite("ping",				&BaseType::ping)
 			.def_readwrite("GameID",			&BaseType::GameID)
+//.			.def_readwrite("Skip",				&BaseType::Skip)
+			.def_readwrite("lasthitter",		&BaseType::lasthitter)
+			.def_readwrite("lasthitweapon",		&BaseType::lasthitweapon)
+			.def_readwrite("skin",				&BaseType::skin)
 			.def_readwrite("RespawnTime",		&BaseType::RespawnTime)
+			.def_readwrite("money_delta",		&BaseType::money_delta)
+
 			.def_readwrite("pItemList",			&BaseType::pItemList)
+			.def_readwrite("LastBuyAcount",		&BaseType::LastBuyAcount)
 			.def("testFlag",					&BaseType::testFlag)
 			.def("setFlag",						&BaseType::setFlag)
 			.def("resetFlag",					&BaseType::resetFlag)

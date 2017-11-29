@@ -172,5 +172,3 @@ bool CPHScriptObjectConditionN::obsolete()const
 {
 	return false;
 }
-
-#pragma message(" ===================== Compiling: 94% ===================== ")

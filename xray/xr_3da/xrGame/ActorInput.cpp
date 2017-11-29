@@ -164,15 +164,18 @@ void CActor::IR_OnKeyboardPress(int cmd)
 	case kUSE_BANDAGE:
 	case kUSE_MEDKIT:
 		{
-			PIItem itm = inventory().item((cmd==kUSE_BANDAGE)?  CLSID_IITEM_BANDAGE:CLSID_IITEM_MEDKIT );	
-			if(itm)
+			if(IsGameTypeSingle())
 			{
-				inventory().Eat				(itm);
-				SDrawStaticStruct* _s		= HUD().GetUI()->UIGame()->AddCustomStatic("item_used", true);
-				_s->m_endTime				= Device.fTimeGlobal+3.0f;// 3sec
-				string1024					str;
-				strconcat					(sizeof(str),str,*CStringTable().translate("st_item_used"),": ", itm->Name());
-				_s->wnd()->SetText			(str);
+				PIItem itm = inventory().item((cmd==kUSE_BANDAGE)?  CLSID_IITEM_BANDAGE:CLSID_IITEM_MEDKIT );	
+				if(itm)
+				{
+					inventory().Eat				(itm);
+					SDrawStaticStruct* _s		= HUD().GetUI()->UIGame()->AddCustomStatic("item_used", true);
+					_s->m_endTime				= Device.fTimeGlobal+3.0f;// 3sec
+					string1024					str;
+					strconcat					(sizeof(str),str,*CStringTable().translate("st_item_used"),": ", itm->Name());
+					_s->wnd()->SetText			(str);
+				}
 			}
 		}break;
 #ifdef INV_NEW_SLOTS_SYSTEM
@@ -181,42 +184,46 @@ void CActor::IR_OnKeyboardPress(int cmd)
 	case kUSE_SLOT_QUICK_ACCESS_2:
 	case kUSE_SLOT_QUICK_ACCESS_3:
 		{
-			PIItem itm = 0;
-			switch (cmd){
-			case kUSE_SLOT_QUICK_ACCESS_0:	
-				itm = inventory().m_slots[SLOT_QUICK_ACCESS_0].m_pIItem;
-				break;
-			case kUSE_SLOT_QUICK_ACCESS_1:	
-				itm = inventory().m_slots[SLOT_QUICK_ACCESS_1].m_pIItem;
-				break;
-			case kUSE_SLOT_QUICK_ACCESS_2:
-				itm = inventory().m_slots[SLOT_QUICK_ACCESS_2].m_pIItem;
-				break;
-			case kUSE_SLOT_QUICK_ACCESS_3:
-				itm = inventory().m_slots[SLOT_QUICK_ACCESS_3].m_pIItem;
-				break;					
-			}
+			if(IsGameTypeSingle())
+			{
+				PIItem itm = 0;
+				switch (cmd){
+				case kUSE_SLOT_QUICK_ACCESS_0:
+					
+					itm = inventory().m_slots[SLOT_QUICK_ACCESS_0].m_pIItem;
+					break;
+				case kUSE_SLOT_QUICK_ACCESS_1:	
+					itm = inventory().m_slots[SLOT_QUICK_ACCESS_1].m_pIItem;
+					break;
+				case kUSE_SLOT_QUICK_ACCESS_2:
+					itm = inventory().m_slots[SLOT_QUICK_ACCESS_2].m_pIItem;
+					break;
+				case kUSE_SLOT_QUICK_ACCESS_3:
+					itm = inventory().m_slots[SLOT_QUICK_ACCESS_3].m_pIItem;
+					break;					
+				}
 
-			if (itm){
-				CMedkit*			pMedkit				= smart_cast<CMedkit*>			(itm);
-				CAntirad*			pAntirad			= smart_cast<CAntirad*>			(itm);
-				CEatableItem*		pEatableItem		= smart_cast<CEatableItem*>		(itm);
-				CBottleItem*		pBottleItem			= smart_cast<CBottleItem*>		(itm);				
-				string1024			str;
-	
-				if(pMedkit || pAntirad || pEatableItem || pBottleItem){
-					PIItem iitm = inventory().Same(itm,true);
-					if(iitm){
-						inventory().Eat(iitm);
-						strconcat(sizeof(str),str,*CStringTable().translate("st_item_used"),": ", iitm->Name());
-					}else{
-						inventory().Eat(itm);
-						strconcat(sizeof(str),str,*CStringTable().translate("st_item_used"),": ", itm->Name());
+				if (itm){
+					CMedkit*			pMedkit				= smart_cast<CMedkit*>			(itm);
+					CAntirad*			pAntirad			= smart_cast<CAntirad*>			(itm);
+					CEatableItem*		pEatableItem		= smart_cast<CEatableItem*>		(itm);
+					CBottleItem*		pBottleItem			= smart_cast<CBottleItem*>		(itm);				
+					string1024			str;
+					
+					if(pMedkit || pAntirad || pEatableItem || pBottleItem){
+						PIItem iitm = inventory().Same(itm,true);
+						if(iitm){
+							inventory().Eat(iitm);
+							strconcat(sizeof(str),str,*CStringTable().translate("st_item_used"),": ", iitm->Name());
+						}else{
+							inventory().Eat(itm);
+							strconcat(sizeof(str),str,*CStringTable().translate("st_item_used"),": ", itm->Name());
+						}
+						
+						SDrawStaticStruct* _s		= HUD().GetUI()->UIGame()->AddCustomStatic("item_used", true);
+						_s->m_endTime				= Device.fTimeGlobal+3.0f;// 3sec
+						_s->wnd()->SetText			(str);
 					}
-		
-					SDrawStaticStruct* _s		= HUD().GetUI()->UIGame()->AddCustomStatic("item_used", true);
-					_s->m_endTime				= Device.fTimeGlobal+3.0f;// 3sec
-					_s->wnd()->SetText			(str);
 				}
 			}
 		}break;
@@ -433,16 +440,19 @@ void CActor::ActorUse()
 
 			VERIFY(pEntityAliveWeLookingAt);
 
-			if(pEntityAliveWeLookingAt->g_Alive())
-			{
-				TryToTalk();
-			}
-			//обыск трупа
-			else  if(!Level().IR_GetKeyState(DIK_LSHIFT))
-			{
-				//только если находимся в режиме single
-				CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(HUD().GetUI()->UIGame());
-				if(pGameSP)pGameSP->StartCarBody(this, m_pPersonWeLookingAt );
+			if (GameID()==GAME_SINGLE)
+			{			
+				if(pEntityAliveWeLookingAt->g_Alive())
+				{
+					TryToTalk();
+				}
+				//обыск трупа
+				else  if(!Level().IR_GetKeyState(DIK_LSHIFT))
+				{
+					//только если находимся в режиме single
+					CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(HUD().GetUI()->UIGame());
+					if(pGameSP)pGameSP->StartCarBody(this, m_pPersonWeLookingAt );
+				}
 			}
 		}
 
@@ -452,23 +462,31 @@ void CActor::ActorUse()
 		if(object) 
 			element = (u16)RQ.element;
 
-		if(object && Level().IR_GetKeyState(DIK_LSHIFT)){
+		if(object && Level().IR_GetKeyState(DIK_LSHIFT))
+		{
 			bool b_allow = !!pSettings->line_exist("ph_capture_visuals",object->cNameVisual());
-			if(  b_allow && !character_physics_support()->movement()->PHCapture())
+			if(b_allow && !character_physics_support()->movement()->PHCapture())
 			{
 				character_physics_support()->movement()->PHCaptureObject(object,element);
+
 			}
-		}else{
+
+		}
+		else
+		{
 			if (object && smart_cast<CHolderCustom*>(object))
 			{
-				NET_Packet					P;
-				CGameObject::u_EventGen		(P, GEG_PLAYER_ATTACH_HOLDER, ID());
-				P.w_u32						(object->ID());
-				CGameObject::u_EventSend	(P);
-				return;
+					NET_Packet		P;
+					CGameObject::u_EventGen		(P, GEG_PLAYER_ATTACH_HOLDER, ID());
+					P.w_u32						(object->ID());
+					CGameObject::u_EventSend	(P);
+					return;
 			}
+
 		}
 	}
+
+
 }
 
 BOOL CActor::HUDview				( )const 

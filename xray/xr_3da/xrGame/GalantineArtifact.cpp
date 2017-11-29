@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////
 // GalantineArtifact.cpp
-// GalantineArtefact - артефакт ведьмин студень
+// GalantineArtefact - артефакт ведбмин студень
 ///////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
@@ -20,4 +20,3 @@ void CGalantineArtefact::Load(LPCSTR section)
 	inherited::Load(section);
 }
 
-#pragma message(" ===================== Compiling: 40% ===================== ")

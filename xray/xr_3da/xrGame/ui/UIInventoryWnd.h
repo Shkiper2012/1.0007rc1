@@ -73,6 +73,9 @@ protected:
 
 	CUIStatic					UIBeltSlots;
 	CUIStatic					UIBack;
+	CUIStatic*					UIRankFrame;
+	CUIStatic*					UIRank;
+
 	CUIStatic					UIBagWnd;
 	CUIStatic					UIMoneyWnd;
 	CUIStatic					UIDescrWnd;
@@ -84,8 +87,9 @@ protected:
 	CUIStatic					UIStaticBottom;
 	CUIStatic					UIStaticTime;
 	CUIStatic					UIStaticTimeString;
-	CUIStatic					UIStaticPersonal;
 
+	CUIStatic					UIStaticPersonal;
+		
 	CUIDragDropListEx*			m_pUIBagList;
 	CUIDragDropListEx*			m_pUIBeltList;
 	CUIDragDropListEx*			m_pUIPistolList;

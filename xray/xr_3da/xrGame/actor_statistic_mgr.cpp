@@ -182,5 +182,3 @@ s32 CActorStatisticMgr::GetSectionPoints(const shared_str& key)
 		return _total;
 	}
 }
-
-#pragma message(" ===================== Compiling: 34% ===================== ")

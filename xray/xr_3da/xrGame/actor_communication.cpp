@@ -254,6 +254,8 @@ void CActor::UpdateContact		(u16 contact_id)
 */
 void CActor::NewPdaContact		(CInventoryOwner* pInvOwner)
 {	
+	if(!IsGameTypeSingle()) return;
+
 	bool b_alive = !!(smart_cast<CEntityAlive*>(pInvOwner))->g_Alive();
 	HUD().GetUI()->UIMainIngameWnd->AnimateContacts(b_alive);
 
@@ -261,7 +263,8 @@ void CActor::NewPdaContact		(CInventoryOwner* pInvOwner)
 
 	if( HUD().GetUI() ){
 		CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(HUD().GetUI()->UIGame());
-		if( pGameSP )
+
+		if(pGameSP)
 			pGameSP->PdaMenu->PdaContentsChanged	(pda_section::contacts);
 	}
 }

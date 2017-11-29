@@ -87,6 +87,7 @@ void xrServer::AttachNewClient			(IClient* CL)
 	MSYS_CONFIG	msgConfig;
 	msgConfig.sign1 = 0x12071980;
 	msgConfig.sign2 = 0x26111975;
+	msgConfig.is_battleye = 0;
 
 	if(psNET_direct_connect)  //single_game
 	{

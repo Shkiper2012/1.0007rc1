@@ -13,4 +13,4 @@ void CWeaponRPG7::script_register	(lua_State *L)
 	];
 }
 
-#pragma message(" ===================== Compiling: 84% ===================== ")
+#pragma message(" ===================== Compiling: 94% ===================== ")

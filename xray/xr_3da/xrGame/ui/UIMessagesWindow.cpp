@@ -42,7 +42,10 @@ void CUIMessagesWindow::Init(float x, float y, float width, float height){
 	m_pGameLog = xr_new<CUIGameLog>();m_pGameLog->SetAutoDelete(true);
 	m_pGameLog->Show(true);
 	AttachChild(m_pGameLog);
-	CUIXmlInit::InitScrollView(xml, "sp_log_list", 0, m_pGameLog);
+	if ( IsGameTypeSingle() )
+	{
+		CUIXmlInit::InitScrollView(xml, "sp_log_list", 0, m_pGameLog);
+	}
 }
 
 void CUIMessagesWindow::AddIconedPdaMessage(LPCSTR textureName, Frect originalRect, LPCSTR message, int iDelay){

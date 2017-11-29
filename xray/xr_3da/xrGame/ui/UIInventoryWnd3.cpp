@@ -51,6 +51,7 @@ void CUIInventoryWnd::ActivatePropertiesBox()
 	// Флаг-признак для невлючения пункта контекстного меню: Dreess Outfit, если костюм уже надет
 	bool bAlreadyDressed = false; 
 
+		
 	UIPropertiesBox.RemoveAll();
 
 	CMedkit*			pMedkit				= smart_cast<CMedkit*>			(CurrentIItem());
@@ -147,7 +148,7 @@ void CUIInventoryWnd::ActivatePropertiesBox()
 			UIPropertiesBox.AddItem("st_detach_silencer",  NULL, INVENTORY_DETACH_SILENCER_ADDON);
 		b_show			= true;
 		}
-		if(smart_cast<CWeaponMagazined*>(pWeapon))
+		if(smart_cast<CWeaponMagazined*>(pWeapon) && IsGameTypeSingle())
 		{
 			bool b = (0!=pWeapon->GetAmmoElapsed());
 

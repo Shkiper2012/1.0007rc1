@@ -16,6 +16,7 @@
 #include "Actor.h"
 #include "AI/Stalker/ai_stalker.h"
 #include "character_info.h"
+#include "game_cl_base_weapon_usage_statistic.h"
 #include "../xr_collide_defs.h"
 #include "weapon.h"
 
@@ -33,24 +34,23 @@ extern float gCheckHitK;
 //return TRUE-тестировать объект / FALSE-пропустить объект
 BOOL CBulletManager::test_callback(const collide::ray_defs& rd, CObject* object, LPVOID params)
 {
-	bullet_test_callback_data* 	pData	= (bullet_test_callback_data*)params;
-	SBullet* 					bullet 	= pData->pBullet;
-	BOOL 						bRes	= TRUE;
+	bullet_test_callback_data* pData	= (bullet_test_callback_data*)params;
+	SBullet* bullet = pData->pBullet;
 
+	if( (object->ID() == bullet->parent_id)		&&  
+		(bullet->fly_dist<PARENT_IGNORE_DIST)	&&
+		(!bullet->flags.ricochet_was))			return FALSE;
+
+	BOOL bRes						= TRUE;
 	if (object){
 		CEntity*	entity			= smart_cast<CEntity*>(object);
-		
-		if( (object->ID() == bullet->parent_id)		&&  
-			(bullet->fly_dist<PARENT_IGNORE_DIST)	&&
-			(!bullet->flags.ricochet_was))			return FALSE;
-
 		if (entity&&entity->g_Alive()&&(entity->ID()!=bullet->parent_id)){
 			ICollisionForm*	cform	= entity->collidable.model;
 			if ((NULL!=cform) && (cftObject==cform->Type())){
 				CActor* actor		= smart_cast<CActor*>(entity);
 				CAI_Stalker* stalker= smart_cast<CAI_Stalker*>(entity);
 				// в кого попали?
-				if( actor || stalker ){
+				if (actor && IsGameTypeSingle()/**/||stalker/**/){
 					// попали в актера или сталкера
 					Fsphere S		= cform->getSphere();
 					entity->XFORM().transform_tiny	(S.P)	;
@@ -279,11 +279,13 @@ void CBulletManager::StaticObjectHit	(CBulletManager::_event& E)
 //	ObjectHit	(&E.bullet,					E.point, E.R, E.tgt_material, hit_normal);
 }
 
+static bool g_clear = false;
 void CBulletManager::DynamicObjectHit	(CBulletManager::_event& E)
 {
 	//только для динамических объектов
 	VERIFY(E.R.O);
-	E.Repeated = false;
+	if (g_clear) E.Repeated = false;
+	if (GameID() == GAME_SINGLE) E.Repeated = false;
 	bool NeedShootmark = true;//!E.Repeated;
 	
 	if (E.R.O->CLS_ID == CLSID_OBJECT_ACTOR)
@@ -296,7 +298,7 @@ void CBulletManager::DynamicObjectHit	(CBulletManager::_event& E)
 	}
 	
 	//визуальное обозначение попадание на объекте
-	// Fvector			hit_normal;
+//	Fvector			hit_normal;
 	FireShotmark	(&E.bullet, E.bullet.dir, E.point, E.R, E.tgt_material, E.normal, NeedShootmark);
 	
 	Fvector original_dir = E.bullet.dir;
@@ -312,7 +314,7 @@ void CBulletManager::DynamicObjectHit	(CBulletManager::_event& E)
 	m_inv.invert		(E.R.O->XFORM());
 	m_inv.transform_tiny(p_in_object_space, E.point);
 
-	// bone-space
+// bone-space
 	CKinematics* V = smart_cast<CKinematics*>(E.R.O->Visual());
 
 	if(V)
@@ -331,6 +333,38 @@ void CBulletManager::DynamicObjectHit	(CBulletManager::_event& E)
 	//отправить хит пораженному объекту
 	if (E.bullet.flags.allow_sendhit && !E.Repeated)
 	{
+		//-------------------------------------------------
+		bool AddStatistic = false;
+		if (GameID() != GAME_SINGLE && E.bullet.flags.allow_sendhit && E.R.O->CLS_ID == CLSID_OBJECT_ACTOR
+			&& Game().m_WeaponUsageStatistic->CollectData())
+		{
+			CActor* pActor = smart_cast<CActor*>(E.R.O);
+			if (pActor)// && pActor->g_Alive())
+			{
+				Game().m_WeaponUsageStatistic->OnBullet_Hit(&E.bullet, E.R.O->ID(), (s16)E.R.element, E.point);
+				AddStatistic = true;
+			};
+		};
+/*		
+		NET_Packet		P;
+//		CGameObject::u_EventGen	(P,(AddStatistic)? GE_HIT_STATISTIC : GE_HIT,E.R.O->ID());
+		P.w_u16			(E.bullet.parent_id);
+		P.w_u16			(E.bullet.weapon_id);
+		P.w_dir			(original_dir);
+		P.w_float		(power);
+		P.w_s16			((s16)E.R.element);
+		P.w_vec3		(position_in_bone_space);
+		P.w_float		(impulse);
+		P.w_u16			(u16(E.bullet.hit_type));
+		if (E.bullet.hit_type == ALife::eHitTypeFireWound)
+			P.w_float	(E.bullet.ap);
+
+		if (AddStatistic)
+			P.w_u32(E.bullet.m_dwID);
+
+		CGameObject::u_EventSend (P);
+*/
+
 		SHit	Hit = SHit(	power, 
 							original_dir, 
 							NULL, 
@@ -339,15 +373,16 @@ void CBulletManager::DynamicObjectHit	(CBulletManager::_event& E)
 							impulse, 
 							E.bullet.hit_type,
 							E.bullet.ap,
-							E.bullet.flags.aim_bullet );
+							E.bullet.flags.aim_bullet);
 
-		Hit.GenHeader 		(u16(GE_HIT)&0xffff, E.R.O->ID());
+		Hit.GenHeader(u16((AddStatistic)? GE_HIT_STATISTIC : GE_HIT)&0xffff, E.R.O->ID());
 		Hit.whoID			= E.bullet.parent_id;
 		Hit.weaponID		= E.bullet.weapon_id;
 		Hit.BulletID		= E.bullet.m_dwID;
 
 		NET_Packet			np;
 		Hit.Write_Packet	(np);
+
 
 		if (Hit.hit_type != ALife::eHitTypeFireWound) 
 		    Msg("Hit sended: %d[%d,%d], type = %d", Hit.whoID, Hit.weaponID, Hit.BulletID, Hit.hit_type);
@@ -487,3 +522,4 @@ std::pair<float, float>  CBulletManager::ObjectHit	(SBullet* bullet, const Fvect
 	return std::make_pair(power, impulse);
 }
 
+#pragma message(" ===================== Compiling: 30% ===================== ")

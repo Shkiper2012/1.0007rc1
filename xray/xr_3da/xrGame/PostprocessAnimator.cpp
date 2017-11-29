@@ -449,3 +449,4 @@ BOOL CPostprocessAnimatorControlled::Valid()
 
 #endif
 
+#pragma message(" ===================== Compiling: 28% ===================== ")

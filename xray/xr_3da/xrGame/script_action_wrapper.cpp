@@ -67,3 +67,4 @@ CScriptActionWrapper::_edge_value_type CScriptActionWrapper::weight_static	(CScr
 	return								(((const CScriptActionWrapper*)action)->CScriptActionBase::weight(condition0,condition1));
 }
 
+#pragma message(" ===================== Compiling: 76% ===================== ")

@@ -235,8 +235,8 @@ void CUICarBodyWnd::Hide()
 
 	CActor* pActor = smart_cast<CActor*>(Level().CurrentEntity());
 	if( !pActor )	return;
-	pActor->SetWeaponHideState(INV_STATE_BLOCK_ALL, false);
-	pActor->RepackAmmo();
+		pActor->SetWeaponHideState(INV_STATE_BLOCK_ALL, false);
+		pActor->RepackAmmo();
 }
 
 void CUICarBodyWnd::UpdateLists()
@@ -348,7 +348,7 @@ void CUICarBodyWnd::Show()
 
 	CActor* pActor = smart_cast<CActor*>(Level().CurrentEntity());
 	if( pActor )
-		pActor->SetWeaponHideState(INV_STATE_BLOCK_ALL, true);		
+	pActor->SetWeaponHideState(INV_STATE_BLOCK_ALL, true);		
 }
 
 void CUICarBodyWnd::DisableAll()
@@ -571,18 +571,18 @@ bool CUICarBodyWnd::OnItemDbClick(CUICellItem* itm)
 				new_owner->SetItem		(ci);
 			};
 		}else{
-			if( TransferItem( CurrentIItem(),
+		if( TransferItem		(	CurrentIItem(),
 				(bMoveDir)?m_pOurObject:m_pOthersObject, 
 				(bMoveDir)?m_pOthersObject:m_pOurObject, 
 				(bMoveDir))
 			){
-				CUICellItem* ci			= old_owner->RemoveItem(CurrentItem(), false);
-				new_owner->SetItem		(ci);
-			}
+			CUICellItem* ci			= old_owner->RemoveItem(CurrentItem(), false);
+			new_owner->SetItem		(ci);
+		}
 		}
 	}else{ 	// use invbox //
-		bool bMoveDirection = (old_owner == m_pUIOthersBagList);
-		u16  tmp_id			= (smart_cast<CGameObject*>(m_pOurObject))->ID();
+		bool bMoveDirection		= (old_owner==m_pUIOthersBagList);
+		u16 tmp_id				= (smart_cast<CGameObject*>(m_pOurObject))->ID();
 		
 		if(pInput->iGetAsyncKeyState(DIK_LCONTROL))
 		{
@@ -600,8 +600,8 @@ bool CUICarBodyWnd::OnItemDbClick(CUICellItem* itm)
 						_itm->object().ID());
 		}else{
 			move_item( 	bMoveDirection?m_pInventoryBox->ID():tmp_id,
-						bMoveDirection?tmp_id:m_pInventoryBox->ID(),
-						CurrentIItem()->object().ID());
+								bMoveDirection?tmp_id:m_pInventoryBox->ID(),
+								CurrentIItem()->object().ID());
 		}
 	}
 	SetCurrentItem				(NULL);

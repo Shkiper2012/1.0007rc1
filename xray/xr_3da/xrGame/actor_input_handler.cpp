@@ -32,3 +32,4 @@ void CActorInputHandler::release()
 	m_actor = 0;
 }
 
+#pragma message(" ===================== Compiling: 32% ===================== ")

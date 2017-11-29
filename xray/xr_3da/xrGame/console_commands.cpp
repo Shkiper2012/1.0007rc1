@@ -222,7 +222,7 @@ class CCC_ALifeSwitchDistance : public IConsole_Command {
 public:
 	CCC_ALifeSwitchDistance(LPCSTR N) : IConsole_Command(N)  { };
 	virtual void Execute(LPCSTR args) {
-		if( ai().get_alife() ){
+		if ((GameID() == GAME_SINGLE)  &&ai().get_alife()) {
 			float id1 = 0.0f;
 			sscanf(args ,"%f",&id1);
 			if (id1 < 2.0f)
@@ -243,7 +243,7 @@ class CCC_ALifeProcessTime : public IConsole_Command {
 public:
 	CCC_ALifeProcessTime(LPCSTR N) : IConsole_Command(N)  { };
 	virtual void Execute(LPCSTR args) {
-		if( ai().get_alife() ){
+		if ((GameID() == GAME_SINGLE)  &&ai().get_alife()) {
 			game_sv_Single	*tpGame = smart_cast<game_sv_Single *>(Level().Server->game);
 			VERIFY			(tpGame);
 			int id1 = 0;
@@ -263,7 +263,7 @@ class CCC_ALifeObjectsPerUpdate : public IConsole_Command {
 public:
 	CCC_ALifeObjectsPerUpdate(LPCSTR N) : IConsole_Command(N)  { };
 	virtual void Execute(LPCSTR args) {
-		if( ai().get_alife() ){
+		if ((GameID() == GAME_SINGLE)  &&ai().get_alife()) {
 			game_sv_Single	*tpGame = smart_cast<game_sv_Single *>(Level().Server->game);
 			VERIFY			(tpGame);
 			int id1 = 0;
@@ -279,7 +279,7 @@ class CCC_ALifeSwitchFactor : public IConsole_Command {
 public:
 	CCC_ALifeSwitchFactor(LPCSTR N) : IConsole_Command(N)  { };
 	virtual void Execute(LPCSTR args) {
-		if( ai().get_alife() ){
+		if ((GameID() == GAME_SINGLE)  &&ai().get_alife()) {
 			game_sv_Single	*tpGame = smart_cast<game_sv_Single *>(Level().Server->game);
 			VERIFY			(tpGame);
 			float id1 = 0;
@@ -288,7 +288,7 @@ public:
 			tpGame->alife().set_switch_factor(id1);
 		}
 		else
-			Log("!Not a single player game!");
+			Log		("!Not a single player game!");
 	}
 };
 
@@ -314,6 +314,11 @@ public:
 			Msg("Demo Record is disabled when level is not loaded.");
 			return;
 		}
+		if (GameID() != GAME_SINGLE) 
+		{
+			Msg("For this game type Demo Record is disabled.");
+			return;
+		};
 		#endif
 		Console->Hide	();
 		string_path		fn_; 
@@ -328,24 +333,34 @@ public:
 class CCC_DemoPlay : public IConsole_Command
 {
 public:
-	CCC_DemoPlay(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
-	virtual void Execute(LPCSTR args) {
-		if( 0==g_pGameLevel ){
-			Msg	("! There are no level(s) started");
-		}else{
-			Console->Hide		();
-			string_path			fn;
-			u32		loops	=	0;
-			LPSTR 	comma	=	strchr(const_cast<LPSTR>(args),',');
-			if( comma ){
-				loops		=	atoi( comma+1 );
-				*comma		=	0;	//. :)
-			}
-			strconcat			(sizeof(fn),fn, args, ".xrdemo");
-			FS.update_path		(fn, "$game_saves$", fn);
-			g_pGameLevel->Cameras().AddCamEffector(xr_new<CDemoPlay> (fn, 1.0f, loops));
-		}
-	}
+	CCC_DemoPlay(LPCSTR N) : 
+	  IConsole_Command(N) 
+	  { bEmptyArgsHandled = TRUE; };
+	  virtual void Execute(LPCSTR args) {
+		#ifndef	DEBUG
+		if (GameID() != GAME_SINGLE) 
+		{
+			Msg("For this game type Demo Play is disabled.");
+			return;
+		};
+		#endif
+		  if (0==g_pGameLevel)
+		  {
+			  Msg	("! There are no level(s) started");
+		  } else {
+			  Console->Hide			();
+			  string_path			fn;
+			  u32		loops	=	0;
+			  LPSTR		comma	=	strchr(const_cast<LPSTR>(args),',');
+			  if (comma)	{
+				  loops			=	atoi	(comma+1);
+				  *comma		=	0;	//. :)
+			  }
+			  strconcat			(sizeof(fn),fn, args, ".xrdemo");
+			  FS.update_path	(fn, "$game_saves$", fn);
+			  g_pGameLevel->Cameras().AddCamEffector(xr_new<CDemoPlay> (fn, 1.0f, loops));
+		  }
+	  }
 };
 
 bool valid_file_name(LPCSTR file_name)
@@ -369,6 +384,11 @@ class CCC_ALifeSave : public IConsole_Command {
 public:
 	CCC_ALifeSave(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
 	virtual void Execute(LPCSTR args) {
+		
+		if(!IsGameTypeSingle()){
+			Msg("for single-mode only");
+			return;
+		}
 		if(!g_actor || !Actor()->g_Alive())
 		{
 			Msg("cannot make saved game because actor is dead :(");
@@ -381,7 +401,7 @@ public:
 
 		string_path				S,S1;
 		S[0]					= 0;
-		strcpy_s				(S,args);
+		strcpy_s					(S,args);
 		
 #ifdef DEBUG
 		CTimer					timer;
@@ -566,11 +586,11 @@ public:
 	  virtual void	Execute	(LPCSTR args)
 	  {
 #ifdef _DEBUG
-		 CCC_Float::Execute(args);
+		  CCC_Float::Execute(args);
 #else
-		if( !g_pGameLevel )
-			CCC_Float::Execute(args);
-		else
+		  if (!g_pGameLevel || GameID() == GAME_SINGLE)
+			  CCC_Float::Execute(args);
+		  else
 			Msg	("! There are no level(s) started ");
 #endif
 	  }
@@ -892,7 +912,6 @@ public:
 	  }
 };
 
-#ifdef DEBUG
 class CCC_PHGravity : public IConsole_Command {
 public:
 		CCC_PHGravity(LPCSTR N) :
@@ -913,7 +932,6 @@ public:
 	}
 	
 };
-#endif // DEBUG
 
 class CCC_PHFps : public IConsole_Command {
 public:
@@ -933,7 +951,6 @@ public:
 
 };
 
-// #ifdef DEBUG
 extern void print_help(lua_State *L);
 
 struct CCC_LuaHelp : public IConsole_Command {
@@ -959,10 +976,8 @@ struct CCC_ClearSmartCastStats : public IConsole_Command {
 		clear_smart_cast_stats();
 	}
 };
-// #endif
 
-//#ifndef MASTER_GOLD
-#	include "game_graph.h"
+#include "game_graph.h"
 struct CCC_JumpToLevel : public IConsole_Command {
 	CCC_JumpToLevel(LPCSTR N) : IConsole_Command(N)  {};
 
@@ -984,11 +999,8 @@ struct CCC_JumpToLevel : public IConsole_Command {
 		Msg							("! There is no level \"%s\" in the game graph!",level);
 	}
 };
-//#endif // MASTER_GOLD
 
 #include "GamePersistent.h"
-
-
 class CCC_MainMenu : public IConsole_Command {
 public:
 	CCC_MainMenu(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
@@ -1416,9 +1428,8 @@ void CCC_RegisterCommands()
 	// Physics
 	CMD1(CCC_PHFps,				"ph_frequency"																					);
 	CMD1(CCC_PHIterations,		"ph_iterations"																					);
-
-#ifdef DEBUG
 	CMD1(CCC_PHGravity,			"ph_gravity"																					);
+#ifdef DEBUG
 	CMD4(CCC_FloatBlock,		"ph_timefactor",				&phTimefactor				,			0.0001f	,1000.f			);
 	CMD4(CCC_FloatBlock,		"ph_break_common_factor",		&phBreakCommonFactor		,			0.f		,1000000000.f	);
 	CMD4(CCC_FloatBlock,		"ph_rigid_break_weapon_factor",	&phRigidBreakWeaponFactor	,			0.f		,1000000000.f	);
@@ -1426,17 +1437,13 @@ void CCC_RegisterCommands()
 	CMD4(CCC_FloatBlock,		"ph_tri_query_ex_aabb_rate",	&ph_tri_query_ex_aabb_rate	,			1.01f	,3.f			);
 #endif // DEBUG
 
-
-//#ifndef MASTER_GOLD
 	CMD1(CCC_JumpToLevel,	"jump_to_level"		);
 	CMD3(CCC_Mask,			"g_god",			&psActorFlags,	AF_GODMODE	);
 	CMD3(CCC_Mask,			"g_unlimitedammo",	&psActorFlags,	AF_UNLIMITEDAMMO);
+	CMD3(CCC_Mask,			"g_autopickup",		&psActorFlags,	AF_AUTOPICKUP);
 	CMD1(CCC_Script,		"run_script");
 	CMD1(CCC_ScriptCommand,	"run_string");
 	CMD1(CCC_TimeFactor,	"time_factor");		
-//#endif // MASTER_GOLD
-
-	CMD3(CCC_Mask,		"g_autopickup",			&psActorFlags,	AF_AUTOPICKUP);
 	CMD1(CCC_LuaHelp,   "lua_help");
 
 #ifdef DEBUG
@@ -1496,8 +1503,6 @@ void CCC_RegisterCommands()
 	CMD3(CCC_Mask,		"dbg_draw_ph_ik_limits"			,&ph_dbg_draw_mask1,phDbgDrawIKLimits);
 #endif
 
-
-
 #ifdef DEBUG
 	CMD4(CCC_Integer,	"string_table_error_msg",	&CStringTable::m_bWriteErrorsToLog,	0,	1);
 
@@ -1527,12 +1532,12 @@ void CCC_RegisterCommands()
 #endif // MASTER_GOLD
 
 #ifdef DEBUG
+	CMD1(CCC_Crash,			"crash"						);
 	CMD1(CCC_DumpObjects,							"dump_all_objects");
 	CMD3(CCC_String, "stalker_death_anim", dbg_stalker_death_anim, 32);
 	CMD4(CCC_Integer, "death_anim_velocity", &b_death_anim_velocity, FALSE,	TRUE );
 	CMD4(CCC_Integer,	"show_wnd_rect",				&g_show_wnd_rect, 0, 1);
 	CMD4(CCC_Integer,	"show_wnd_rect_all",			&g_show_wnd_rect2, 0, 1);
-	CMD1(CCC_Crash,		"crash"						);
 	CMD4(CCC_Integer,		"dbg_show_ani_info",	&g_ShowAnimationInfo,	0, 1)	;
 	CMD4(CCC_Integer,		"dbg_dump_physics_step", &g_bDebugDumpPhysicsStep, 0, 1);
 #endif

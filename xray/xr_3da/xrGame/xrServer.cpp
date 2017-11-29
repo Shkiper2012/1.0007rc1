@@ -777,6 +777,12 @@ void			xrServer::Server_Client_Check	( IClient* CL )
 	clients_Unlock();
 };
 
+bool		xrServer::OnCL_QueryHost		() 
+{
+	if (game->Type() == GAME_SINGLE) return false;
+	return (client_Count() != 0); 
+};
+
 CSE_Abstract*	xrServer::GetEntity			(u32 Num)
 {
 	xrS_entities::iterator	I=entities.begin(),E=entities.end();
@@ -790,6 +796,10 @@ CSE_Abstract*	xrServer::GetEntity			(u32 Num)
 
 void		xrServer::OnChatMessage(NET_Packet* P, xrClientData* CL)
 {
+//	string256 ChatMsg;
+//	u16 PlayerID = P->r_u16();
+	s16 team = P->r_s16();
+//	P->r_stringZ(ChatMsg);
 	if (!CL->net_Ready) return;
 	game_PlayerState* Cps = CL->ps;
 	for (u32 client=0; client<net_Players.size(); ++client)
@@ -798,7 +808,7 @@ void		xrServer::OnChatMessage(NET_Packet* P, xrClientData* CL)
 		xrClientData*	Client		= (xrClientData*) net_Players	[client];
 		game_PlayerState* ps = Client->ps;
 		if (!Client->net_Ready) continue;
-
+		if (team != 0 && ps->team != team) continue;
 		if (Cps->testFlag(GAME_PLAYER_FLAG_VERY_VERY_DEAD) && !ps->testFlag(GAME_PLAYER_FLAG_VERY_VERY_DEAD))
 			continue;
 		SendTo(Client->ID, *P);
@@ -946,7 +956,34 @@ void xrServer::GetServerInfo( CServerInfo* si )
 	si->AddItem( "Uptime", time, RGB(255,228,0) );
 
 	strcpy_s( tmp256, get_token_name(game_types, game->Type() ) );
+	/*
+	if ( game->Type() == GAME_DEATHMATCH || game->Type() == GAME_TEAMDEATHMATCH )
+	{
+		strcat_s( tmp256, " [" );
+		strcat_s( tmp256, itoa( g_sv_dm_dwFragLimit, tmp, 10 ) );
+		strcat_s( tmp256, "] " );
+	}
+	else if ( game->Type() == GAME_ARTEFACTHUNT )
+	{
+		strcat_s( tmp256, " [" );
+		strcat_s( tmp256, itoa( g_sv_ah_dwArtefactsNum, tmp, 10 ) );
+		strcat_s( tmp256, "] " );
+		g_sv_ah_iReinforcementTime;
+	}
 	
+	//if ( g_sv_dm_dwTimeLimit > 0 )
+	{
+		strcat_s( tmp256, " time limit [" );
+		strcat_s( tmp256, itoa( g_sv_dm_dwTimeLimit, tmp, 10 ) );
+		strcat_s( tmp256, "] " );
+	}
+	if ( game->Type() == GAME_ARTEFACTHUNT )
+	{
+		strcat_s( tmp256, " RT [" );
+		strcat_s( tmp256, itoa( g_sv_ah_iReinforcementTime, tmp, 10 ) );
+		strcat_s( tmp256, "]" );
+	}
+	// */
 	si->AddItem( "Game type", tmp256, RGB(128,255,255) );
 }
 

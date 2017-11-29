@@ -81,4 +81,3 @@ void CZoneEffector::SetRadius(float r)
 	radius	= r;
 }
 
-#pragma message(" ===================== Compiling: 28% ===================== ")

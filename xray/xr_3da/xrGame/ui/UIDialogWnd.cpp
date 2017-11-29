@@ -175,5 +175,3 @@ bool CUIDialogWnd::IR_process()
 void CUIDialogWnd::Update(){
 	CUIWindow::Update();
 }
-
-#pragma message(" ===================== Compiling: 62% ===================== ")

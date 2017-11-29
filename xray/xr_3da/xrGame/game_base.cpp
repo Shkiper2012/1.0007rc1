@@ -15,25 +15,49 @@ xr_token game_types[];
 
 game_PlayerState::game_PlayerState()
 {
+	skin				= 0;
 	m_online_time		= 0;
+	team				= 0;
+	money_for_round		= 0;	
 	flags__				= 0;
 	m_bCurrentVoteAgreed= 2;
 	RespawnTime			= 0;
+	m_bPayForSpawn		= false;
+
 	clear				();
 }
 
 void game_PlayerState::clear()
 {
 	name[0]				= 0;
+	m_iRivalKills		= 0;
+	m_iSelfKills		= 0;
+	m_iTeamKills		= 0;
+	m_iKillsInRowCurr	= 0;
+	m_iKillsInRowMax	= 0;
+	m_iDeaths			= 0;
+	lasthitter			= 0;
+	lasthitweapon		= 0;	
+	experience_D		= 0;
+	experience_Real		= 0;
 	rank				= 0;
+	af_count			= 0;
+	experience_New		= 0;
 	pItemList.clear		();
+	pSpawnPointsList.clear();
+	m_s16LastSRoint		= -1;
+	LastBuyAcount		= 0;
+	m_bClearRun			= false;
 	DeathTime			= 0;
 	mOldIDs.clear		();
+	money_added			= 0;
+	m_aBonusMoney.clear	();
 }
 
 game_PlayerState::~game_PlayerState()
 {
 	pItemList.clear			();
+	pSpawnPointsList.clear	();
 };
 
 bool game_PlayerState::testFlag	(u16 f) const
@@ -74,6 +98,12 @@ bool	game_PlayerState::HasOldID				(u16 ID)
 	if (ID_i != mOldIDs.end() && *(ID_i)== ID)
 		return true;
 	return false;
+}
+
+game_TeamState::game_TeamState()
+{
+	score				=	0;
+	num_targets			=	0;
 }
 
 game_GameState::game_GameState()
@@ -118,11 +148,31 @@ CLASS_ID game_GameState::getCLASS_ID(LPCSTR game_type_name, bool isServer)
 	if (isServer) {
 		if (!xr_strcmp(game_type_name,"single"))
 			return			(TEXT2CLSID("SV_SINGL"));
+
+		if (!xr_strcmp(game_type_name,"deathmatch"))
+			return			(TEXT2CLSID("SV_DM"));
+
+		if (!xr_strcmp(game_type_name,"teamdeathmatch"))
+			return			(TEXT2CLSID("SV_TDM"));
+
+		if (!xr_strcmp(game_type_name,"artefacthunt"))
+			return			(TEXT2CLSID("SV_AHUNT"));
+
 		return				(TEXT2CLSID(""));
 	}		
 
 	if (!xr_strcmp(game_type_name,"single"))
 		return				(TEXT2CLSID("CL_SINGL"));
+
+	if (!xr_strcmp(game_type_name,"deathmatch"))
+		return				(TEXT2CLSID("CL_DM"));
+
+	if (!xr_strcmp(game_type_name,"teamdeathmatch"))
+		return				(TEXT2CLSID("CL_TDM"));
+
+	if (!xr_strcmp(game_type_name,"artefacthunt"))
+		return				(TEXT2CLSID("CL_AHUNT"));
+
 	return					(TEXT2CLSID(""));
 }
 
@@ -183,4 +233,4 @@ void game_GameState::SetEnvironmentGameTimeFactor	(ALife::_TIME_ID GameTime, con
 	m_fETimeFactor				= fTimeFactor;
 }
 
-#pragma message(" ===================== Compiling: 90% ===================== ")
+#pragma message(" ===================== Compiling: 97% ===================== ")

@@ -1,4 +1,7 @@
+#ifndef __XR_UIGAMECUSTOM_H__
+#define __XR_UIGAMECUSTOM_H__
 #pragma once
+
 
 #include "script_export_space.h"
 #include "object_interfaces.h"
@@ -27,6 +30,7 @@ struct SDrawStaticStruct :public IPureDestroyableObject{
 	}
 };
 
+
 typedef xr_vector<SDrawStaticStruct>	st_vec;
 #include "game_base_space.h"
 struct SGameTypeMaps
@@ -44,6 +48,24 @@ struct SGameWeathers
 typedef xr_vector<SGameWeathers>					GAME_WEATHERS;
 typedef xr_vector<SGameWeathers>::iterator			GAME_WEATHERS_IT;
 typedef xr_vector<SGameWeathers>::const_iterator	GAME_WEATHERS_CIT;
+
+class CMapListHelper
+{
+	typedef xr_vector<SGameTypeMaps>	TSTORAGE;
+	typedef TSTORAGE::iterator			TSTORAGE_IT;
+	typedef TSTORAGE::iterator			TSTORAGE_CIT;
+	TSTORAGE							m_storage;
+	GAME_WEATHERS						m_weathers;
+
+	void						Load			();
+	SGameTypeMaps*				GetMapListInt	(const shared_str& game_type);
+public:
+	const SGameTypeMaps&		GetMapListFor	(const shared_str& game_type);
+	const SGameTypeMaps&		GetMapListFor	(const EGameTypes game_id);
+	const GAME_WEATHERS&		GetGameWeathers	();
+};
+
+extern CMapListHelper	gMapListHelper;
 
 class CUIGameCustom :public DLL_Pure, public ISheduled
 {
@@ -104,3 +126,4 @@ add_to_type_list(CUIGameCustom)
 #undef script_type_list
 #define script_type_list save_type_list(CUIGameCustom)
 
+#endif // __XR_UIGAMECUSTOM_H__

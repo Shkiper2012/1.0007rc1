@@ -145,5 +145,3 @@ STRING_VALUE CStringTable::translate (const STRING_ID& str_id) const
 	}
 	return					pData->m_StringTable[str_id];
 }
-
-#pragma message(" ===================== Compiling: 46% ===================== ")

@@ -4,19 +4,19 @@
 #include "../xr_3da/xrGame/script_engine.h"
 
 string64 PacketName[] = {
-	"M_UPDATE",						// DUAL: Update state
-	"M_SPAWN",						// DUAL: Spawning, full state
+	"M_UPDATE",	// DUAL: Update state
+	"M_SPAWN",					// DUAL: Spawning, full state
 
 	"M_SV_CONFIG_NEW_CLIENT",
 	"M_SV_CONFIG_GAME",
 	"M_SV_CONFIG_FINISHED",
 
-	"M_MIGRATE_DEACTIVATE",			// TO:   Changing server, just deactivate
+	"M_MIGRATE_DEACTIVATE",		// TO:   Changing server, just deactivate
 	"M_MIGRATE_ACTIVATE",			// TO:   Changing server", full state
 
 	"M_CHAT",						// DUAL:
 
-	"M_EVENT",						// Game Event
+	"M_EVENT",					// Game Event
 	"M_CL_INPUT",					// Client Input Data
 	//----------- for E3 -----------------------------
 	"M_CL_UPDATE",

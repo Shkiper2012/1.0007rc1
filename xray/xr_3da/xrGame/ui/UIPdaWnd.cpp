@@ -94,34 +94,45 @@ void CUIPdaWnd::Init()
 	UIMapWnd				= xr_new<CUIMapWnd>();
 	UIMapWnd->Init			("pda_map.xml","map_wnd");
 
-	// Oкно коммуникaции
-	UIPdaContactsWnd		= xr_new<CUIPdaContactsWnd>();
-	UIPdaContactsWnd->Init	();
+	if( IsGameTypeSingle() )
+	{
+		// Oкно коммуникaции
+		UIPdaContactsWnd		= xr_new<CUIPdaContactsWnd>();
+		UIPdaContactsWnd->Init	();
 
-	// Oкно новостей
-	UIDiaryWnd				= xr_new<CUIDiaryWnd>();
-	UIDiaryWnd->Init		();
+		// Oкно новостей
+		UIDiaryWnd				= xr_new<CUIDiaryWnd>();
+		UIDiaryWnd->Init		();
 
-	// Окно энциклопедии
-	UIEncyclopediaWnd		= xr_new<CUIEncyclopediaWnd>();
-	UIEncyclopediaWnd->Init	();
+		// Окно энциклопедии
+		UIEncyclopediaWnd		= xr_new<CUIEncyclopediaWnd>();
+		UIEncyclopediaWnd->Init	();
 
-	// Окно статистики о актере
-	UIActorInfo				= xr_new<CUIActorInfoWnd>();
-	UIActorInfo->Init		();
+		// Окно статистики о актере
+		UIActorInfo				= xr_new<CUIActorInfoWnd>();
+		UIActorInfo->Init		();
 
-	// Окно рейтинга сталкеров
-	UIStalkersRanking		= xr_new<CUIStalkersRankingWnd>();
-	UIStalkersRanking->Init	();
+		// Окно рейтинга сталкеров
+		UIStalkersRanking		= xr_new<CUIStalkersRankingWnd>();
+		UIStalkersRanking->Init	();
 
-	UIEventsWnd				= xr_new<CUIEventsWnd>();
-	UIEventsWnd->Init		();
-
+		UIEventsWnd				= xr_new<CUIEventsWnd>();
+		UIEventsWnd->Init		();
+	}
 	// Tab control
-	UITabControl					= xr_new<CUITabControl>(); UITabControl->SetAutoDelete(true);
-	UIMainPdaFrame->AttachChild		(UITabControl);
-	xml_init.InitTabControl			(uiXml, "tab", 0, UITabControl);
-	UITabControl->SetMessageTarget	(this);
+	UITabControl				= xr_new<CUITabControl>(); UITabControl->SetAutoDelete(true);
+	UIMainPdaFrame->AttachChild	(UITabControl);
+	xml_init.InitTabControl		(uiXml, "tab", 0, UITabControl);
+	UITabControl->SetMessageTarget(this);
+
+	if(GameID()!=GAME_SINGLE){
+		UITabControl->GetButtonsVector()->at(0)->Enable(false);
+		UITabControl->GetButtonsVector()->at(2)->Enable(false);
+		UITabControl->GetButtonsVector()->at(3)->Enable(false);
+		UITabControl->GetButtonsVector()->at(4)->Enable(false);
+		UITabControl->GetButtonsVector()->at(5)->Enable(false);
+		UITabControl->GetButtonsVector()->at(6)->Enable(false);
+	}
 	
 	m_updatedSectionImage			= xr_new<CUIStatic>();
 	xml_init.InitStatic				(uiXml, "updated_section_static", 0, m_updatedSectionImage);

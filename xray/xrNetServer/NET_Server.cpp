@@ -501,7 +501,7 @@ HRESULT	IPureServer::net_Handler(u32 dwMessageType, PVOID pMessage)
 			if (0 == msg->dwReceivedDataSize) return S_FALSE;
 			if (!stricmp((const char*)msg->pvReceivedData, "ToConnect")) return S_OK;
 			if (*((const GUID*) msg->pvReceivedData) != NET_GUID) return S_FALSE;
-
+			if (!OnCL_QueryHost()) return S_FALSE;
 			return S_OK;
 		}break;
 	case DPN_MSGID_CREATE_PLAYER :

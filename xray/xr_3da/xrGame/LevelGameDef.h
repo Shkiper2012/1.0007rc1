@@ -22,9 +22,19 @@ enum EWayType{
 
 enum ERPpointType{		// [0..255]
 	rptActorSpawn		= 0,
+	rptArtefactSpawn	,
+	rptTeamBaseParticle,
 };
 
+
+enum ERPGameType{		// [0..255]
+	rpgtGameAny							= 0,
+	rpgtGameDeathmatch					= 1,
+	rpgtGameTeamDeathmatch				= 2,
+	rpgtGameArtefactHunt				= 3,
+};
 extern ECORE_API xr_token rpoint_type[];
+extern ECORE_API xr_token rpoint_game_type[];
 
 // BASE offset
 #define WAY_BASE					0x1000
@@ -50,7 +60,61 @@ extern ECORE_API xr_token rpoint_type[];
 #define NPC_POINT_CHUNK_VERSION		0x0001
 #define NPC_POINT_CHUNK_DATA		0x0002
 //----------------------------------------------------
+/*
+- chunk RPOINT_CHUNK
+	- chunk #0
+        vector3	(PPosition);
+        vector3	(PRotation);
+        u8		(team_id);
+        u8		(type)
+        u16		(reserved)
+    ...
+    - chunk #n
+    
+- chunk WAY_PATH_CHUNK
+	- chunk #0
+    	chunk WAYOBJECT_CHUNK_VERSION
+        	word (version)
+		chunk WAYOBJECT_CHUNK_NAME
+        	stringZ (Name)
+        chunk WAY_CHUNK_TYPE
+        	dword EWayType (type)
+        chunk WAY_CHUNK_POINTS
+            word (count)
+            for (i=0; i<count; ++i){
+            	Fvector (pos)
+                dword	(flags)
+                stringZ	(name)
+            }
+        chunk WAY_CHUNK_LINKS
+            word (count)
+            for (i=0; i<count; ++i){
+            	word 	(from)
+				word 	(to)
+                float	(probability)
+            }
+    ...
+    - chunk #n
+- chunk WAY_JUMP_CHUNK
+	-//-
+- chunk WAY_TRAFFIC_CHUNK
+	-//-
+- chunk WAY_CUSTOM_CHUNK
+	-//-
 
+- file level.env_mod
+	- chunk #0
+        w_fvector3		(m_EM_Position);
+        w_float			(m_EM_Radius);
+        w_float			(m_EM_Power);
+        w_float			(m_EM_ViewDist);
+        w_fvector3		(m_EM_FogColor);
+        w_float			(m_EM_FogDensity);
+        w_fvector3		(m_EM_AmbientColor);
+        w_fvector3		(m_EM_LMapColor);
+    ...
+    - chunk #n
+*/
 class CCustomGamePoint {
 public:
 	virtual void Save		(IReader&)							= 0;

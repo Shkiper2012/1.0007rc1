@@ -23,5 +23,3 @@ CTeamHierarchyHolder &CSeniorityHierarchyHolder::team	(u32 team_id)
 		m_teams[team_id]	= xr_new<CTeamHierarchyHolder>(this);
 	return					(*m_teams[team_id]);
 }
-
-#pragma message(" ===================== Compiling: 30% ===================== ")

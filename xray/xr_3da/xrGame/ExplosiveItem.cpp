@@ -98,5 +98,3 @@ void CExplosiveItem::GetRayExplosionSourcePos(Fvector &pos)
 {
 	random_point_in_object_box(pos,this);
 }
-
-#pragma message(" ===================== Compiling: 42% ===================== ")

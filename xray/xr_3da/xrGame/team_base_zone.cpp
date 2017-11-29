@@ -82,6 +82,14 @@ BOOL CTeamBaseZone::net_Spawn	(CSE_Abstract* DC)
 		setEnabled				(TRUE);
 	}
 
+	if (GameID() != GAME_SINGLE && !g_dedicated_server)
+	{
+		char BaseMapLocation[1024];
+		sprintf_s (BaseMapLocation, "mp_team_base_%d_location", m_Team);
+		(Level().MapManager().AddMapLocation(BaseMapLocation,ID()))->EnablePointer();
+		
+	};
+
 	return						(bOk);
 }
 

@@ -34,6 +34,7 @@ int		max_load_stage = 0;
 XRCORE_API	LPCSTR	build_date;
 XRCORE_API	u32		build_id;
 
+//#define NO_SINGLE
 #define NO_MULTI_INSTANCES
 
 static LPSTR month_id[12] = {
@@ -68,7 +69,7 @@ void compute_build_id	()
 	int					years;
 	string16			month;
 	string256			buffer;
-	strcpy_s			(buffer,__DATE__);
+	strcpy_s				(buffer,__DATE__);
 	sscanf				(buffer,"%s %d %d",month,&days,&years);
 
 	for (int i=0; i<12; i++) {
@@ -931,19 +932,28 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 		LPSTR		op_client		= LPSTR	(P2);
 		R_ASSERT	(0==g_pGameLevel);
 		R_ASSERT	(0!=g_pGamePersistent);
-		
-		Console->Execute("main_menu off");
-		Console->Hide();
-		Device.Reset					(false);
-		//-----------------------------------------------------------
-		g_pGamePersistent->PreStart		(op_server);
-		//-----------------------------------------------------------
-		g_pGameLevel					= (IGame_Level*)NEW_INSTANCE(CLSID_GAME_LEVEL);
-		pApp->LoadBegin					(); 
-		g_pGamePersistent->Start		(op_server);
-		g_pGameLevel->net_Start			(op_server,op_client);
-		pApp->LoadEnd					(); 
 
+#ifdef NO_SINGLE
+		Console->Execute("main_menu on");
+		if (	op_server == NULL					||
+				strstr(op_server, "/deathmatch")	||
+				strstr(op_server, "/teamdeathmatch")||
+				strstr(op_server, "/artefacthunt")
+			)
+#endif	
+		{		
+			Console->Execute("main_menu off");
+			Console->Hide();
+			Device.Reset					(false);
+			//-----------------------------------------------------------
+			g_pGamePersistent->PreStart		(op_server);
+			//-----------------------------------------------------------
+			g_pGameLevel					= (IGame_Level*)NEW_INSTANCE(CLSID_GAME_LEVEL);
+			pApp->LoadBegin					(); 
+			g_pGamePersistent->Start		(op_server);
+			g_pGameLevel->net_Start			(op_server,op_client);
+			pApp->LoadEnd					(); 
+		}
 		xr_free							(op_server);
 		xr_free							(op_client);
 	} 
@@ -1050,8 +1060,11 @@ void CApplication::LoadTitleInt(LPCSTR str)
 	Msg							("* phase cmem: %d K", Memory.mem_usage()/1024);
 //.	Console->Execute			("stat_memory");
 	Log							(app_title);
-	max_load_stage				= 18; 	// = 17 + st_actor_netspawn //
-
+	
+	if (g_pGamePersistent->GameType()==1) // Фикс полосы загрузки // by SkyLoader  //
+		max_load_stage			= 17;
+	else
+		max_load_stage			= 14;
 #ifndef DEDICATED_SERVER
 	UpdateTexture				(TRUE);
 #endif

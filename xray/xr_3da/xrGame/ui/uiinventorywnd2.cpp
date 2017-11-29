@@ -110,6 +110,7 @@ void CUIInventoryWnd::InitInventory()
 	}
 	
 #ifdef INV_NEW_SLOTS_SYSTEM
+	if (GameID() == GAME_SINGLE){
 			_itm								= m_pInv->m_slots[KNIFE_SLOT].m_pIItem;
 			if(_itm)
 			{
@@ -170,6 +171,7 @@ void CUIInventoryWnd::InitInventory()
 				CUICellItem* itm				= create_cell_item(_itm);
 				m_pUISlotQuickAccessList_3->SetItem		(itm);
 			}
+	}
 #endif
 
 	PIItem _outfit						= m_pInv->m_slots[OUTFIT_SLOT].m_pIItem;
@@ -663,6 +665,7 @@ void CUIInventoryWnd::ClearAllLists()
 	m_pUITorchList->ClearAll				(true);
 
 #ifdef INV_NEW_SLOTS_SYSTEM
+if (IsGameTypeSingle()) {
 	m_pUIKnifeList->ClearAll				(true);
 	m_pUIBinocularList->ClearAll			(true);
 	m_pUIDetectorList->ClearAll				(true);
@@ -673,6 +676,6 @@ void CUIInventoryWnd::ClearAllLists()
 	m_pUISlotQuickAccessList_1->ClearAll	(true);
 	m_pUISlotQuickAccessList_2->ClearAll	(true);
 	m_pUISlotQuickAccessList_3->ClearAll	(true);
+}
 #endif
 }
-

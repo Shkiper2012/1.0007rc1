@@ -111,7 +111,6 @@ void CMapManager::initialize(u16 id)
 	VERIFY(0);
 	m_locations->registry().init(id);// actor's id
 }
-
 CMapLocation* CMapManager::AddMapLocation(const shared_str& spot_type, u16 id)
 {
 	FindLocationBySpotID key(spot_type, id);
@@ -120,7 +119,7 @@ CMapLocation* CMapManager::AddMapLocation(const shared_str& spot_type, u16 id)
 		CMapLocation* l = xr_new<CMapLocation>(*key.spot_id, key.object_id);
 		Locations().push_back( SLocationKey(key.spot_id, key.object_id) );
 		Locations().back().location = l;
-		if( g_actor )
+		if (IsGameTypeSingle()&& g_actor)
 			Actor()->callback(GameObject::eMapLocationAdded)(*spot_type, id);
 		return l;
 	}else

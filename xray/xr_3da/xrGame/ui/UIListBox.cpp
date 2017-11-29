@@ -306,5 +306,3 @@ void CUIListBox::SetImmediateSelection(bool f)
 {
 	m_bImmediateSelection = f;
 }
-
-#pragma message(" ===================== Compiling: 64% ===================== ")

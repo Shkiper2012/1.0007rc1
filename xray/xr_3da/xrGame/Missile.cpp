@@ -439,7 +439,10 @@ void CMissile::Show()
 
 void CMissile::Hide() 
 {
-	SwitchState(MS_HIDING);
+	if(IsGameTypeSingle())
+		SwitchState(MS_HIDING);
+	else
+		SwitchState(MS_HIDDEN);
 }
 
 void CMissile::setup_throw_params()
@@ -616,6 +619,11 @@ void CMissile::activate_physic_shell()
 {
 	if (!smart_cast<CMissile*>(H_Parent())) {
 		inherited::activate_physic_shell();
+		if(m_pPhysicsShell&&m_pPhysicsShell->isActive()&&!IsGameTypeSingle())
+		{
+				m_pPhysicsShell->add_ObjectContactCallback		(ExitContactCallback);
+				m_pPhysicsShell->set_CallbackData	(smart_cast<CPhysicsShellHolder*>(H_Root()));
+		}
 		return;
 	}
 

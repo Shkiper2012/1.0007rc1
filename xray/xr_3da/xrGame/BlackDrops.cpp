@@ -21,3 +21,4 @@ void CBlackDrops::Load(LPCSTR section)
 	inherited::Load(section);
 }
 
+#pragma message(" ===================== Compiling: 40% ===================== ")

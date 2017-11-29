@@ -109,7 +109,7 @@ BOOL CAviPlayerCustom::Load (char* fname)
 	m_dwFrameTotal	= aviInfo.dwLength;
 	m_fCurrentRate	= (float) aviInfo.dwRate / (float)aviInfo.dwScale;
 
-	m_dwWidth		= aviInfo.dwWidth;
+	m_dwWidth			= aviInfo.dwWidth;
 	m_dwHeight		= aviInfo.dwHeight;
 
 	AVIFileRelease( aviFile );
