@@ -422,8 +422,7 @@ void CUIMainIngameWnd::Update()
 	{
 		
 		if(!(Device.dwFrame%30))
-		{							// COMMENT_shkiper_marker // чтобы иконка была только при режиме бога. //
-		// 	bool b_God = (GodMode()||(!Game().local_player)) ? true : Game().local_player->testFlag(GAME_PLAYER_FLAG_INVINCIBLE);
+		{
 			BOOL b_God = GodMode();
 			if(  b_God ){
 				SetWarningIconColor	(ewiInvincible,0xffffffff);
@@ -799,7 +798,7 @@ bool CUIMainIngameWnd::OnKeyboardPress(int dik)
 			static float rot_d = deg2rad(0.5f);
 			static float mov_d = 0.01f;
 			bool shift = !!pInput->iGetAsyncKeyState(DIK_LSHIFT);
-			flag = true;
+			bool flag = true;
 			switch (dik)
 			{
 				// Shift +x

@@ -42,6 +42,7 @@ public:
 
 private:
 	bool						m_reload_modules;
+	bool						m_G_already_loaded;
 
 protected:
 	CScriptProcessStorage		m_script_processes;

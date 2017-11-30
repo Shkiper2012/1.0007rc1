@@ -17,7 +17,7 @@ void CCameraLook::Load(LPCSTR section)
 	style				= csLookAt;
 	lim_zoom			= pSettings->r_fvector2	(section,"lim_zoom");
 	dist				= (lim_zoom[0]+lim_zoom[1])*0.5f;
-	prev_d				= 0;
+	prev_d				= 0.0f;
 }
 
 CCameraLook::~CCameraLook()

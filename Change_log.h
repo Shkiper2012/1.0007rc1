@@ -270,7 +270,7 @@ xxx	(=)		Отключил правку 					---> "Торговец не крутит головой вслед за ГГ" 				
 	(+)		xrGame\ui\UICarBodyWnd.cpp 			---> Заливка предметов, которые в слоте или на поясе, синим цветом. ---> ColorizeItem()
 			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	(-)		Вырезал все ссылки на "BATTLEYE"
-	(-)		Удалены все ссылки на "xrd3d9-null"
+	(-)		Удалены все ссылки на "xrD3D9-null"
 			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	======= build 6850 =======			
 	*/
@@ -353,6 +353,9 @@ xxx	(=)		xrGame\ActorAnimation.cpp 						---> Измененная анимация безоружного ГГ
 xxx															---> Вылет из-за отсутствия этой анимации: 'cl_torso_5_aim_0'
 xxx	(=)		xrGame\WeaponMagazinedWGrenade.cpp 				---> m_fZoomFactor = g_fov; 												// Karlan: сбрасываем зум. //
 	(=)		xrRender\xrRender_console.cpp					---> Исправлен "купол" над актором, вызывающий баг с тенями. 				// by Stalker_Monolit //
+															ps_r2_sun_near_border, 		---> r2_sun_near_border 		--->  0.5f,	 1.0
+															ps_r2_sun_depth_near_scale, ---> r2_sun_depth_near_scale 	--->  0.5, 	 1.5
+															ps_r2_sun_depth_near_bias. 	---> r2_sun_depth_near_bias 	---> -0.5, 	+0.5
 			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	(=)		xrGame\derived_client_classes.cpp 				---> scrope_zoom_factor ---> scope_zoom_factor
 	(-)		xrGame\alife_anomalous_zone.cpp 				---> ;;
@@ -377,8 +380,8 @@ xxx	(=)		xrGame\WeaponMagazinedWGrenade.cpp 				---> m_fZoomFactor = g_fov; 				
 	(~)		xrGame\NET_Queue.h 								---> static int g_dwEventDelay = 0;
 	(?)		rank
 	(+)		xrGame\script_engine.cpp 						---> Для дэбага. ---> Msg("* Loading script:  %s  ", S1 );
-	======= build 6856 =======
-	======= commit 15 =======
+	======= build 6856 	=======
+	======= commit 15 	=======
 	*/
 	
 	/*		16_11_2017
@@ -427,6 +430,38 @@ XXX	(~)		Вырезана ёще одна часть мультиплеерного кода. 	---> статистика для оруж
 			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	======= build 6872 	=======
 	======= commit 17 	=======
+	*/
+	
+	/* 		01_12_2017
+	(-)		Убрал некоторые маркеры типа: 			---> "TODO_shkiper_marker"
+			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	(~)		gamedata\scripts\_noclip.script 		---> Немного изменил.
+			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	(+)		xrGame\script_engine.h(cpp)				---> m_G_already_loaded 	---> Чтобы повторно не загружать '_G.script'
+	(+)		xrGame\script_storage.cpp				---> print_output 			---> Для вылeтов без лога! 					// by Krodin //
+	(/)		xrGame\CharacterPhysicsSupport.cpp 		---> Закомментил для коллизии с трупами. 								// by OGSR-engine //
+	(~)		xrGame\Level_start.cpp					---> "%s", ln.c_str() 		---> Переменная 'ln' был инициализирована, но нигде не применялась. Поправил.
+			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	(/)		xrGame\Level.cpp						---> Закомментил, т.к. сильно забивает лог сообщениями. ---> ProcessGameEvents, spawn event postponed. Events rest = %d
+	(+)		xrGame\ui\UIMainIngameWnd.cpp 			---> bool flag = true;
+	(+)		xrGame\ui\UIProgressShape.cpp 			---> Msg("! [CUIProgressShape::SetPos] max == 0 !");
+	(~)		xr_3da\CameraManager.cpp				---> Камерой не качаем! ---> psCamInert = 0.0f; psCamSlideInert = 0.0f;
+			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	>>> 	Исправлен сброс r2_tf_mipbias и r__tf_aniso на дефолтные значения в xrRender_apply_tf() 	// by Krodin // 
+	(-)		xrRender\xrRender_console.h(cpp)		---> xrRender_apply_tf()
+	(-)		xrRender_R1\FStaticRender.cpp			---> xrRender_apply_tf()
+	(-)		xrRender_R2\r2.cpp						---> xrRender_apply_tf()
+	(+)		xr_3da\device.cpp						---> xrRender_apply_tf()
+	<<<  	Ссылка: https://github.com/KRodinn/OGSR-Engine/commit/fa435b446a0a01578227454aabafeef314c49625
+			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	>>> 	Перенёс удаление худовых статиков в правильное место.										// by Krodin // 
+	(+)		xrGame\Level_network.cpp				---> Remove_all_statics()
+	(~)		xrGame\UIGameCustom.h					---> m_custom_statics
+	(-)		xrGame\UIGameCustom.cpp					---> - g_b_ClearGameCaptions, + Remove_all_statics()
+	<<<  	Ссылка: https://github.com/KRodinn/OGSR-Engine/commit/9272d9cec4bbddc589fe6fe9c92f590006ff90d4
+			-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	======= build 6873 	=======
+	======= commit 18 	=======
 	*/
 #endif
 

@@ -14,6 +14,11 @@ struct predicate_remove_stat {
 	}
 };
 
+void Remove_all_statics()
+{
+	delete_data(HUD().GetUI()->UIGame()->m_custom_statics);
+}
+
 CUIGameCustom::CUIGameCustom()
 {
 	uFlags					= 0;
@@ -44,8 +49,6 @@ void CUIGameCustom::shedule_Update		(u32 dt)
 	inherited::shedule_Update(dt);
 }
 
-bool g_b_ClearGameCaptions = false;
-
 void CUIGameCustom::OnFrame() 
 {
 	st_vec::iterator it = m_custom_statics.begin();
@@ -61,11 +64,6 @@ void CUIGameCustom::OnFrame()
 		m_custom_statics.end()
 	);
 	
-	if(g_b_ClearGameCaptions)
-	{
-		delete_data				(m_custom_statics);
-		g_b_ClearGameCaptions	= false;
-	}
 }
 
 void CUIGameCustom::Render()

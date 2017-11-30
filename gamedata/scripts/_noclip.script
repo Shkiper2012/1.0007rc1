@@ -3,28 +3,28 @@
 --[[ -------------------------------------------------------------------------------------------------------
 -- File: 			_noclip.script
 -- Description: 	Noclip режим (режим свободного полета).
--- Last edit:		17.11.2017. (by Shkiper2012)
+-- Last edit:		30.11.2017. (by Shkiper2012)
 --]] -------------------------------------------------------------------------------------------------------
 local noclip_active = false		-- Вкл. = true / ВЫКЛ. = false
 local distant_step 	= 1 		-- Кол-во метров(только целые числа), на который смещается камера в режиме NOclip.
--->								-- Кол-во метров не должно быть меньше 1, иначе камеру "колбасит".
+---->							-- Кол-во метров не должно быть меньше 1, иначе камеру "колбасит".
 
------------------------------------------------------------------------------------
------------------------------------------------------------------------------------
----- TODO_shkiper_marker: перенести этот режим в движок и вызывать из консоли. ----
------------------------------------------------------------------------------------
------------------------------------------------------------------------------------
-
--- Вкл./ВЫКЛ. режима NOclip. --
+-- Вкл./Выкл. режима NOclip. --
 function ON_OFF()
 	if (noclip_active == true) then
-		log1("~ noclip OFF ")
 		noclip_active = false
-		-- cmd("g_god off") -- Выкл. режим бога.
+		
+		cmd("ph_gravity", "19.62") 	-- Выкл. невесомость. -- Оригинальная гравитация = 19.62 --
+		cmd("g_god off") 			-- Выкл. режим бога.
+		cmd("g_unlimitedammo off") 	-- Выкл. бесконечные патроны.
+		log1("~ noclip OFF")
 	else
-		log1("- noclip ON ")
 		noclip_active = true
-		-- cmd("g_god on") -- Вкл. режим бога.
+		
+		cmd("ph_gravity", "0.0") 	-- Вкл. невесомость.
+		cmd("g_god on") 			-- Вкл. режим бога.
+		cmd("g_unlimitedammo on") 	-- Вкл. бесконечные патроны.
+		log1("- noclip ON")
 	end
 end
 
@@ -32,43 +32,43 @@ end
 function on_key_hold( key, bind )
 	if (noclip_active == false) then return true end
 	
-	-- kW -- Вперед! --
-	if key == 17 then
+	--  Вперед! --
+	if bind == key_bindings.kFWD then
 		local position 	= db.actor:position() 
 		local direction = device().cam_dir
 		db.actor:set_actor_position(position:mad(direction, distant_step))
 	end
 
-	-- kS -- Назад! --
-	if key == 31 then
+	-- Назад! --
+	if bind == key_bindings.kBACK then
 		local position 	= db.actor:position() 
 		local direction = device().cam_dir
 		db.actor:set_actor_position(position:mad(direction, (-distant_step)))
 	end
 
-	-- kA -- Стрейф влево! --
-	if key == 30 then
+	-- Стрейф влево! --
+	if bind == key_bindings.kL_STRAFE then
 		local position 	= db.actor:position() 
 		local direction = device().cam_right
 		db.actor:set_actor_position(position:mad(direction, (-distant_step)))
 	end 
 
-	-- kD -- Стрейф вправо! --
-	if key == 32 then
+	-- Стрейф вправо! --
+	if bind == key_bindings.kR_STRAFE then
 		local position 	= db.actor:position() 
 		local direction = device().cam_right
 		db.actor:set_actor_position(position:mad(direction, distant_step))
 	end
 
-	-- kSpace -- Наверх! --
-	if key == 57 then
+	-- Наверх! --
+	if bind == key_bindings.kJUMP then
 		local position 	= db.actor:position() 
 		local direction = device().cam_top
 		db.actor:set_actor_position(position:mad(direction, distant_step))
 	end
 
-	-- kLeftSHIFT -- Вниз! --
-	if key == 42 then
+	-- Вниз! --
+	if bind == key_bindings.kCROUCH_TOGGLE then
 		local position 	= db.actor:position() 
 		local direction = device().cam_top
 		db.actor:set_actor_position(position:mad(direction, (-distant_step)))
@@ -94,3 +94,4 @@ function on_mouse_wheel( vol )
 		end
 	end
 end
+

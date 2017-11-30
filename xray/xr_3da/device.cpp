@@ -17,6 +17,7 @@
 #include "x_ray.h"
 #include "render.h"
 #include "../../build_config_defines.h" // for: ECO_RENDER
+#include "XR_IOConsole.h"
 
 ENGINE_API CRenderDevice Device;
 ENGINE_API BOOL g_bRendering = FALSE; 
@@ -70,6 +71,14 @@ void CRenderDevice::Clear	()
 }
 
 extern void CheckPrivilegySlowdown();
+
+void	xrRender_apply_tf		()
+{
+	Console->Execute	("r__tf_aniso"	);
+	Console->Execute	("r1_tf_mipbias");
+	Console->Execute	("r2_tf_mipbias");
+}
+
 #include "resourcemanager.h"
 
 void CRenderDevice::End		(void)
@@ -98,6 +107,7 @@ void CRenderDevice::End		(void)
 			Memory.mem_compact								();
 			Msg												("* MEMORY USAGE: %d K",Memory.mem_usage()/1024);
 			CheckPrivilegySlowdown							();
+			xrRender_apply_tf								();
 		}
 	}
 

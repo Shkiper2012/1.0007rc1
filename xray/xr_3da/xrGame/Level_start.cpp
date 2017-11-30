@@ -85,7 +85,6 @@ BOOL CLevel::net_Start	( LPCSTR op_server, LPCSTR op_client )
 	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start6));
 	
 	return net_start_result_total;
-
 }
 
 bool CLevel::net_start1				()
@@ -101,7 +100,7 @@ bool CLevel::net_start1				()
 		if (!xr_strcmp(p.m_game_type,"single"))
 			Server					= xr_new<xrServer>();		
 		else{
-			FATAL(" deleted 'xr_new<xrGameSpyServer>()' (edit by Shkiper2012) ");
+			FATAL(" deleted 'xrGameSpyServer' (edit by Shkiper2012) ");
 		}
 		
 //		if (!strstr(*m_caServerOptions,"/alife")) 
@@ -207,7 +206,7 @@ struct LevelLoadFinalizer
 		if(g_pGameLevel && !g_start_total_res)
 		{
 			shared_str ln	= Level().name();
-			Msg				("! Failed to start client. Check the connection or level existance.");
+			Msg				("! Failed to start client. Check the connection or level existance: %s.", ln.c_str() );
 			DEL_INSTANCE	(g_pGameLevel);
 			Console->Execute("main_menu on");
 		}
@@ -248,7 +247,6 @@ bool CLevel::net_start6()
 
 	return false;
 }
-
 
 void CLevel::InitializeClientGame	(NET_Packet& P)
 {

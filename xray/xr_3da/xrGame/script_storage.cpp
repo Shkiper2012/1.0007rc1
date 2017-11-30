@@ -294,42 +294,30 @@ bool CScriptStorage::parse_namespace(LPCSTR caNamespaceName, LPSTR b, LPSTR c)
 
 bool CScriptStorage::load_buffer	(lua_State *L, LPCSTR caBuffer, size_t tSize, LPCSTR caScriptName, LPCSTR caNameSpaceName)
 {
-	int					l_iErrorCode;
-	if (caNameSpaceName && xr_strcmp("_G",caNameSpaceName)) {
+	int l_iErrorCode = 0;
+	if( caNameSpaceName && xr_strcmp("_G",caNameSpaceName) )
+	{		
 		string512		insert, a, b;
-
 		LPCSTR			header = file_header;
 
 		if (!parse_namespace(caNameSpaceName,a,b))
-			return		(false);
-		sprintf_s			(insert,header,caNameSpaceName,a,b);
-		u32				str_len = xr_strlen(insert);
-		LPSTR			script = xr_alloc<char>(str_len + tSize);
+			return 		false;
+			
+		sprintf_s		(insert,header,caNameSpaceName,a,b);
+		u32				str_len 	= xr_strlen(insert);
+		LPSTR			script 		= xr_alloc<char>(str_len + tSize);
 		strcpy			(script,insert);
-		CopyMemory	(script + str_len,caBuffer,u32(tSize));
-//		try 
-		{
-			l_iErrorCode= luaL_loadbuffer(L,script,tSize + str_len,caScriptName);
-		}
-//		catch(...) {
-//			l_iErrorCode= LUA_ERRSYNTAX;
-//		}
+		CopyMemory		(script + str_len,caBuffer,u32(tSize));
+		l_iErrorCode 	= luaL_loadbuffer(L,script,tSize + str_len,caScriptName);
 		xr_free			(script);
 	}
-	else {
-//		try
-		{
-			l_iErrorCode= luaL_loadbuffer(L,caBuffer,tSize,caScriptName);
-		}
-//		catch(...) {
-//			l_iErrorCode= LUA_ERRSYNTAX;
-//		}
+	else
+	{
+		l_iErrorCode 	= luaL_loadbuffer(L,caBuffer,tSize,caScriptName);
 	}
 
-	if (l_iErrorCode) {
-// #ifdef DEBUG
+	if( l_iErrorCode ){
 		print_output(L,caScriptName,l_iErrorCode);
-// #endif
 		return			(false);
 	}
 	return				(true);
@@ -342,17 +330,16 @@ bool CScriptStorage::do_file	(LPCSTR caScriptName, LPCSTR caNameSpaceName)
 	IReader			*l_tpFileReader = FS.r_open(caScriptName);
 	if (!l_tpFileReader) {
 		script_log	(eLuaMessageTypeError,"Cannot open file \"%s\"",caScriptName);
-		return		(false);
+		Msg("! [CScriptStorage::do_file] Cannot open file: %s", caScriptName );
+		return		false;
 	}
 	strconcat		(sizeof(l_caLuaFileName),l_caLuaFileName,"@",caScriptName);
 	
-	if (!load_buffer(lua(),static_cast<LPCSTR>(l_tpFileReader->pointer()),(size_t)l_tpFileReader->length(),l_caLuaFileName,caNameSpaceName)) {
-//		VERIFY		(lua_gettop(lua()) >= 4);
-//		lua_pop		(lua(),4);
-//		VERIFY		(lua_gettop(lua()) == start - 3);
+	bool loaded_file 	= load_buffer(lua(), static_cast<LPCSTR>(l_tpFileReader->pointer()),(size_t)l_tpFileReader->length(),l_caLuaFileName,caNameSpaceName);
+	if( !loaded_file ){
 		lua_settop	(lua(),start);
 		FS.r_close	(l_tpFileReader);
-		return		(false);
+		return		false;
 	}
 	FS.r_close		(l_tpFileReader);
 
@@ -391,7 +378,7 @@ bool CScriptStorage::do_file	(LPCSTR caScriptName, LPCSTR caNameSpaceName)
 		print_output(lua(), caScriptName, l_iErrorCode);
 #endif
 #ifdef DEBUG
-		print_output(lua(),caScriptName,l_iErrorCode);
+		print_output(lua(), caScriptName, l_iErrorCode);
 #endif
 		lua_settop	(lua(),start);
 		return		(false);
@@ -517,8 +504,13 @@ bool CScriptStorage::print_output(lua_State *L, LPCSTR caScriptFileName, int iEr
 		print_error(L, iErorCode);		
 	
 
-	if (!lua_isstring(L,-1))
+	if (!lua_isstring(L,-1)){	// Для вылeтов без лога! // by Krodin //
+		LPCSTR traceback = get_lua_traceback(L, 0);
+		Msg("*********************************************************************************");
+		Msg("[print_output(%s)] \n%s", caScriptFileName, traceback);
+		Msg("*********************************************************************************");
 		return			(false);
+	}
 
 	LPCSTR				S = lua_tostring(L,-1);
 	if (!xr_strcmp(S,"cannot resume dead coroutine")) {
@@ -550,9 +542,7 @@ bool CScriptStorage::print_output(lua_State *L, LPCSTR caScriptFileName, int iEr
 			LPCSTR traceback = get_lua_traceback(L, 0);
 			Msg("! %s", caScriptFileName, iErorCode, traceback);
 #endif 
-
 		}
-
 
 		if (ai().script_engine().debugger() && ai().script_engine().debugger()->Active()) {
 			ai().script_engine().debugger()->Write		(S);

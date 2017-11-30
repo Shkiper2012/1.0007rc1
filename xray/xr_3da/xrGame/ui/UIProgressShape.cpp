@@ -24,6 +24,7 @@ void CUIProgressShape::SetPos(float pos){
 void CUIProgressShape::SetPos(int pos, int max){
 	if( pos==0 || max==0 ){		// fixed C4723 // potential divide by 0 //
 		m_stage = 0.0f;
+		Msg("! [CUIProgressShape::SetPos] max == 0 !");
 	}else{
 		m_stage = float(pos)/float(max);
 	}

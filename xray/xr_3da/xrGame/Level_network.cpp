@@ -19,7 +19,7 @@ ENGINE_API bool g_dedicated_server;
 const int max_objects_size			= 2*1024;
 const int max_objects_size_in_save	= 6*1024;
 
-extern bool	g_b_ClearGameCaptions;
+extern void Remove_all_statics();
 
 void CLevel::remove_objects	()
 {
@@ -57,11 +57,11 @@ void CLevel::remove_objects	()
 		space_restriction_manager().clear	();
 
 	psDeviceFlags.set			(rsDisableObjectsAsCrows, b_stored);
-	g_b_ClearGameCaptions		= true;
 
 	if (!g_dedicated_server)
 		ai().script_engine().collect_all_garbage	();
 
+	Remove_all_statics();
 	stalker_animation_data_storage().clear		();
 	
 	VERIFY										(Render);
@@ -115,7 +115,8 @@ void CLevel::net_Stop		()
 
 	if (!g_dedicated_server)
 		ai().script_engine().collect_all_garbage	();
-
+	
+	Remove_all_statics();
 #ifdef DEBUG
 	show_animation_stats		();
 #endif // DEBUG

@@ -44,7 +44,7 @@ CScriptEngine::CScriptEngine			()
 	m_reload_modules		= false;
 	m_last_no_file_length	= 0;
 	*m_last_no_file			= 0;
-
+	m_G_already_loaded		= false;
 #ifdef USE_DEBUGGER
 	m_scriptDebugger		= NULL;
 	restartDebugger			();	
@@ -198,14 +198,12 @@ void CScriptEngine::init				()
 	bool								save = m_reload_modules;
 	m_reload_modules					= true;
 	process_file_if_exists				("_G",false);
+	m_G_already_loaded					= false;
 	m_reload_modules					= save;
 
 	register_script_classes				();
 	object_factory().register_script	();
 
-#ifdef XRGAME_EXPORTS
-	load_common_scripts					();
-#endif
 	m_stack_level						= lua_gettop(lua());
 	g_game_lua = lua();
 }
@@ -219,40 +217,21 @@ void CScriptEngine::remove_script_process	(const EScriptProcessors &process_id)
 	}
 }
 
-void CScriptEngine::load_common_scripts()
+void CScriptEngine::process_file_if_exists	(LPCSTR file_name, bool warn_if_not_exist)
 {
-#ifdef DBG_DISABLE_SCRIPTS
-	return;
-#endif
-	string_path		S;
-	FS.update_path	(S,"$game_config$","script.ltx");
-	CInifile		*l_tpIniFile = xr_new<CInifile>(S);
-	R_ASSERT		(l_tpIniFile);
-	if (!l_tpIniFile->section_exist("common")) {
-		xr_delete			(l_tpIniFile);
-		return;
-	}
-
-	if (l_tpIniFile->line_exist("common","script")) {
-		LPCSTR			caScriptString = l_tpIniFile->r_string("common","script");
-		u32				n = _GetItemCount(caScriptString);
-		string256		I;
-		for (u32 i=0; i<n; ++i) {
-			process_file(_GetItem(caScriptString,i,I));
-			if (object("_G",strcat(I,"_initialize"),LUA_TFUNCTION)) {
-//				lua_dostring			(lua(),strcat(I,"()"));
-				luabind::functor<void>	f;
-				R_ASSERT				(functor(I,f));
-				f						();
-			}
+	// ≈сли уже один раз загрузили _G, то больше не надо. //
+	if(	!xr_strcmp("_G", file_name) 
+	||	!xr_strcmp("_g", file_name) 
+	){
+		if( !m_G_already_loaded ){
+			m_G_already_loaded = true;
+		}else{
+			Msg("~ [CScriptEngine::process_file_if_exists] '_G.script' already loaded ");
+			m_reload_modules	= false;
+			return;
 		}
 	}
 
-	xr_delete			(l_tpIniFile);
-}
-
-void CScriptEngine::process_file_if_exists	(LPCSTR file_name, bool warn_if_not_exist)
-{
 	u32						string_length = xr_strlen(file_name);
 	if (!warn_if_not_exist && no_file_exists(file_name,string_length))
 		return;
@@ -422,7 +401,6 @@ LPCSTR CScriptEngine::try_call(LPCSTR func_name, LPCSTR param)
 		return "#ERROR: function not found";
 	}
 }
-
 
 DLL_API void log_script_error(LPCSTR format, ...)
 {

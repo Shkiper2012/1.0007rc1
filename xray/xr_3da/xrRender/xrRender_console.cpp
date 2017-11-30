@@ -91,11 +91,11 @@ float		ps_r2_ls_squality			= 1.0f;				// 1.00f
 float		ps_r2_sun_tsm_projection	= 0.18f;			// 0.18f
 float		ps_r2_sun_tsm_bias			= -0.05f;			// 
 float		ps_r2_sun_near				= 12.f;				// 12.0f
-float		ps_r2_sun_near_border		= 1.0f;				// 1.0f
+float		ps_r2_sun_near_border		= 1.0f;				// 1.0f			// -- 1/3 -- fixed: Исправлен "купол" над актором, вызывающий баг с тенями. // by Stalker_Monolit //
 float		ps_r2_sun_depth_far_scale	= 1.00000f;			// 1.00001f
 float		ps_r2_sun_depth_far_bias	= 0.00000f;			// -0.0000f
-float		ps_r2_sun_depth_near_scale	= 1.0f;				// 1.00001f
-float		ps_r2_sun_depth_near_bias	= 0.0f;				// -0.00005f
+float		ps_r2_sun_depth_near_scale	= 1.0f;				// 1.00001f		// -- 2/3 -- fixed //
+float		ps_r2_sun_depth_near_bias	= 0.0f;				// -0.00005f 	// -- 3/3 -- fixed //
 float		ps_r2_sun_lumscale			= 1.0f;				// 1.0f
 float		ps_r2_sun_lumscale_hemi		= 1.0f;				// 1.0f
 float		ps_r2_sun_lumscale_amb		= 1.0f;
@@ -324,11 +324,11 @@ void		xrRender_initconsole	()
 	CMD4(CCC_Float,		"r__detail_density",	&ps_current_detail_density/*&ps_r__Detail_density*/,		0.04f/*.2f*/,	0.6f	);	// KD: extended from 0.2 to 0.04 and replaced variable
 
 #ifdef DEBUG
-	CMD4(CCC_Float,		"r__detail_l_ambient",	&ps_r__Detail_l_ambient,	.5f,	.95f	);
-	CMD4(CCC_Float,		"r__detail_l_aniso",	&ps_r__Detail_l_aniso,		.1f,	.5f		);
+	CMD4(CCC_Float,		"r__detail_l_ambient",	&ps_r__Detail_l_ambient,	0.5f,	.95f	);
+	CMD4(CCC_Float,		"r__detail_l_aniso",	&ps_r__Detail_l_aniso,		0.1f,	.5f		);
 
-	CMD4(CCC_Float,		"r__d_tree_w_amp",		&ps_r__Tree_w_amp,			.001f,	1.f		);
-	CMD4(CCC_Float,		"r__d_tree_w_rot",		&ps_r__Tree_w_rot,			.01f,	100.f	);
+	CMD4(CCC_Float,		"r__d_tree_w_amp",		&ps_r__Tree_w_amp,			0.001f,	1.f		);
+	CMD4(CCC_Float,		"r__d_tree_w_rot",		&ps_r__Tree_w_rot,			0.01f,	100.f	);
 	CMD4(CCC_Float,		"r__d_tree_w_speed",	&ps_r__Tree_w_speed,		1.0f,	10.f	);
 
 	tw_min.set			(EPS,EPS,EPS);
@@ -370,17 +370,17 @@ void		xrRender_initconsole	()
 	CMD4(CCC_Float,		"r2_ls_bloom_threshold",&ps_r2_ls_bloom_threshold,	0.f,	1.f		);
 	CMD4(CCC_Float,		"r2_ls_bloom_speed",	&ps_r2_ls_bloom_speed,		0.f,	100.f	);
 	CMD3(CCC_Mask,		"r2_ls_bloom_fast",		&ps_r2_ls_flags,			R2FLAG_FASTBLOOM);
-	CMD4(CCC_Float,		"r2_ls_dsm_kernel",		&ps_r2_ls_dsm_kernel,		.1f,	3.f		);
-	CMD4(CCC_Float,		"r2_ls_psm_kernel",		&ps_r2_ls_psm_kernel,		.1f,	3.f		);
-	CMD4(CCC_Float,		"r2_ls_ssm_kernel",		&ps_r2_ls_ssm_kernel,		.1f,	3.f		);
-	CMD4(CCC_Float,		"r2_ls_squality",		&ps_r2_ls_squality,			.5f,	1.f		);
+	CMD4(CCC_Float,		"r2_ls_dsm_kernel",		&ps_r2_ls_dsm_kernel,		0.1f,	3.f		);
+	CMD4(CCC_Float,		"r2_ls_psm_kernel",		&ps_r2_ls_psm_kernel,		0.1f,	3.f		);
+	CMD4(CCC_Float,		"r2_ls_ssm_kernel",		&ps_r2_ls_ssm_kernel,		0.1f,	3.f		);
+	CMD4(CCC_Float,		"r2_ls_squality",		&ps_r2_ls_squality,			0.5f,	1.f		);
 
 	CMD3(CCC_Mask,		"r2_zfill",				&ps_r2_ls_flags,			R2FLAG_ZFILL	);
-	CMD4(CCC_Float,		"r2_zfill_depth",		&ps_r2_zfill,				.001f,	.5f		);
+	CMD4(CCC_Float,		"r2_zfill_depth",		&ps_r2_zfill,				0.001f,	.5f		);
 	CMD3(CCC_Mask,		"r2_allow_r1_lights",	&ps_r2_ls_flags,			R2FLAG_R1LIGHTS	);
 
 	//- Mad Max
-	CMD4(CCC_Float,		"r2_gloss_factor",		&ps_r2_gloss_factor,		.0f,	10.f	);
+	CMD4(CCC_Float,		"r2_gloss_factor",		&ps_r2_gloss_factor,		0.0f,	10.f	);
 	//- Mad Max
 
 #ifdef DEBUG
@@ -397,10 +397,10 @@ void		xrRender_initconsole	()
 //	CMD3(CCC_Mask,		"r2_exp_donttest_uns",	&ps_r2_ls_flags,			R2FLAG_EXP_DONT_TEST_UNSHADOWED);
 	
 	CMD3(CCC_Mask,		"r2_sun_tsm",			&ps_r2_ls_flags,			R2FLAG_SUN_TSM	);
-	CMD4(CCC_Float,		"r2_sun_tsm_proj",		&ps_r2_sun_tsm_projection,	.001f,	0.8f	);
+	CMD4(CCC_Float,		"r2_sun_tsm_proj",		&ps_r2_sun_tsm_projection,	0.001f,	0.8f	);
 	CMD4(CCC_Float,		"r2_sun_tsm_bias",		&ps_r2_sun_tsm_bias,		-0.5,	+0.5	);
 	CMD4(CCC_Float,		"r2_sun_near",			&ps_r2_sun_near,			1.f,	/*50.f*/150.f	);	// KD: extended from 50 to 150
-	CMD4(CCC_Float,		"r2_sun_near_border",	&ps_r2_sun_near_border,		.5f,	1.0f	);
+	CMD4(CCC_Float,		"r2_sun_near_border",	&ps_r2_sun_near_border,		0.5f,	1.0f	);
 	CMD4(CCC_Float,		"r2_sun_depth_far_scale",&ps_r2_sun_depth_far_scale,0.5,	1.5		);
 	CMD4(CCC_Float,		"r2_sun_depth_far_bias",&ps_r2_sun_depth_far_bias,	-0.5,	+0.5	);
 	CMD4(CCC_Float,		"r2_sun_depth_near_scale",&ps_r2_sun_depth_near_scale,0.5,	1.5		);
@@ -423,17 +423,17 @@ void		xrRender_initconsole	()
 
 #ifdef DEBUG
 	CMD4(CCC_Integer,	"r2_dhemi_count",		&ps_r2_dhemi_count,			4,		25		);
-	CMD4(CCC_Float,		"r2_dhemi_scale",		&ps_r2_dhemi_scale,			.5f,	3.f		);
+	CMD4(CCC_Float,		"r2_dhemi_scale",		&ps_r2_dhemi_scale,			0.5f,	3.f		);
 	CMD4(CCC_Float,		"r2_dhemi_smooth",		&ps_r2_lt_smooth,			0.f,	10.f	);
 #endif // DEBUG
 
 	CMD4(CCC_Float,		"r2_ls_depth_scale",	&ps_r2_ls_depth_scale,		0.5,	1.5		);
 	CMD4(CCC_Float,		"r2_ls_depth_bias",		&ps_r2_ls_depth_bias,		-0.5,	+0.5	);
 
-	CMD4(CCC_Float,		"r2_parallax_h",		&ps_r2_df_parallax_h,		.0f,	.5f		);
+	CMD4(CCC_Float,		"r2_parallax_h",		&ps_r2_df_parallax_h,		0.0f,	.5f		);
 //	CMD4(CCC_Float,		"r2_parallax_range",	&ps_r2_df_parallax_range,	5.0f,	175.0f	);
 
-	CMD4(CCC_Float,		"r2_slight_fade",		&ps_r2_slight_fade,			.02f,	2.f		);
+	CMD4(CCC_Float,		"r2_slight_fade",		&ps_r2_slight_fade,			0.02f,	2.f		);
 
 	tw_min.set			(0,0,0);	tw_max.set	(1,1,1);
 	CMD4(CCC_Vector3,	"r2_aa_break",			&ps_r2_aa_barier,			tw_min, tw_max	);
@@ -452,15 +452,5 @@ void		xrRender_initconsole	()
 #endif
 	CMD3(CCC_Mask,			"r__actor_shadow",		&ps_common_flags,			RFLAG_ACTOR_SHADOW	);
 }
-
-void	xrRender_apply_tf		()
-{
-	Console->Execute	("r__tf_aniso"	);
-#if RENDER==R_R1
-	Console->Execute	("r1_tf_mipbias");
-#else
-	Console->Execute	("r2_tf_mipbias");
 #endif
-}
 
-#endif
