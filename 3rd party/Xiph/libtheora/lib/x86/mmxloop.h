@@ -91,7 +91,8 @@
  "paddusb %%mm6,%%mm2\n\t" \
 
 #define OC_LOOP_FILTER_V_MMX(_pix,_ystride,_ll) \
-  do{ \
+  for(;;){ \
+    { \
     ptrdiff_t ystride3__; \
     __asm__ __volatile__( \
       /*mm0={a0,...,a7}*/ \
@@ -113,11 +114,13 @@
        [ll]"r"(_ll) \
       :"memory" \
     ); \
+    } \
+    break; \
   } \
-  while(0)
 
 #define OC_LOOP_FILTER_H_MMX(_pix,_ystride,_ll) \
-  do{ \
+  for(;;){ \
+    { \
     unsigned char *pix__; \
     ptrdiff_t      ystride3__; \
     ptrdiff_t      d__; \
@@ -208,8 +211,9 @@
       :[ystride]"r"((ptrdiff_t)(_ystride)),[ll]"r"(_ll) \
       :"memory" \
     ); \
+    } \
+    break; \
   } \
-  while(0)
 
 # endif
 #endif

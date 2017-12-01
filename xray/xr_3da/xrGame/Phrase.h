@@ -21,10 +21,11 @@ public:
 	void				SetText			(LPCSTR text)		{m_text = text;}
 	LPCSTR				GetText			()	const;
 
-	void				SetID		(const shared_str& id)			{m_ID = id;}
-	const shared_str&	GetID		()	const						{return m_ID;}
-
-	int					GoodwillLevel	()	const			{return m_iGoodwillLevel;}
+	void				SetID			(const shared_str& id)			{ m_ID = id; 				}
+	const shared_str&	GetID			()	const						{ return m_ID; 				}
+	bool 				IsFinalizer		() const 						{ return m_b_finalizer; 	}
+	void 				SetFinalizer	(bool b) 						{ m_b_finalizer = b; 		}
+	int					GoodwillLevel	()	const						{ return m_iGoodwillLevel;	}
 
 	bool				IsDummy			()	const;
 	CPhraseScript*		GetPhraseScript	()					{return &m_PhraseScript;};
@@ -38,7 +39,8 @@ protected:
 	//минимальный уровень благосклоггости, необходимый для того
 	//чтоб фразу можно было сказать
 	int				m_iGoodwillLevel;
-	
+	bool            m_b_finalizer;
+
 	//для вызова скриптовых функций
 	CPhraseScript	m_PhraseScript;
 };

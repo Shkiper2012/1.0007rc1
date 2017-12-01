@@ -91,7 +91,8 @@
 }
 
 #define OC_LOOP_FILTER_V_MMX(_pix,_ystride,_ll) \
-  do{ \
+  for(;;){ \
+    { \
     /*Used local variable pix__ in order to fix compilation errors like: \
        "error C2425: 'SHL' : non-constant expression in 'second operand'".*/ \
     unsigned char *pix__; \
@@ -117,13 +118,15 @@
     /*Write it back out.*/ \
     __asm movq [PIX+YSTRIDE],mm1 \
     __asm movq [PIX+YSTRIDE*2],mm2 \
+    } \
+    break; \
   } \
-  while(0)
 
 #define OC_LOOP_FILTER_H_MMX(_pix,_ystride,_ll) \
-  do{ \
+  for(;;){ \
     /*Used local variable ll__ in order to fix compilation errors like: \
        "error C2443: operand size conflict".*/ \
+    { \
     unsigned char *ll__; \
     unsigned char *pix__; \
     ll__=(_ll); \
@@ -212,8 +215,9 @@
     __asm mov [PIX+YSTRIDE*2+1],D_WORD \
     __asm shr D,16 \
     __asm mov [PIX+YSTRIDE3+1],D_WORD \
+    } \
+    break; \
   } \
-  while(0)
 
 # endif
 #endif

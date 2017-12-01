@@ -439,7 +439,7 @@ void CWeaponMagazined::StateSwitchCallback(GameObject::ECallbackType actor_type,
 			Actor()->callback(npc_type)(
 				smart_cast<CEntityAlive*>(H_Parent())->lua_game_object(),       // The owner of the weapon.
 				lua_game_object(),                                              // The weapon itself.
-                                ammo_type.c_str()                                               // The caliber of the weapon.
+				ammo_type.c_str()                                               // The caliber of the weapon.
 			);
 		}
 	}

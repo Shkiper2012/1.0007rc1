@@ -92,17 +92,6 @@
 #define OC_DIV_POW2_RE(_x,_shift) \
   ((_x)+((_x)>>(_shift)&1)+((1<<(_shift))-1>>1)>>(_shift))
 /*Swaps two integers _a and _b if _a>_b.*/
-/*
-#define OC_SORT2I(_a,_b) \
-  do{ \
-    int t__; \
-    t__=((_a)^(_b))&-((_b)<(_a)); \
-    (_a)^=t__; \
-    (_b)^=t__; \
-  } \
-  while(0)
-*/
-/*Swaps two integers _a and _b if _a>_b.*/
 #define OC_SORT2I(_a,_b) \
   for ( ; ; ){ \
     int t__; \

@@ -69,7 +69,7 @@ void compute_build_id	()
 	int					years;
 	string16			month;
 	string256			buffer;
-	strcpy_s				(buffer,__DATE__);
+	strcpy_s			(buffer,__DATE__);
 	sscanf				(buffer,"%s %d %d",month,&days,&years);
 
 	for (int i=0; i<12; i++) {

@@ -11,8 +11,6 @@
 #define PUSH_OFFSET_RIGHT 1
 #define PUSH_OFFSET_DOWN  1
 
-
-
 CUIButton:: CUIButton()
 {
 	m_eButtonState				= BUTTON_NORMAL;
@@ -48,8 +46,6 @@ void CUIButton::Reset()
 	m_bCursorOverWindow			= false;
 	inherited::Reset			();
 }
-
-
 
 void CUIButton::Enable(bool status){
 	CUIStatic::Enable			(status);
@@ -137,7 +133,8 @@ bool  CUIButton::OnMouse(float x, float y, EUIMessages mouse_action)
 	return false;
 }
 
-void CUIButton::OnClick(){
+void CUIButton::OnClick()
+{
 	GetMessageTarget()->SendMessage(this, BUTTON_CLICKED);
 	m_bButtonClicked = true;
 }
@@ -219,8 +216,8 @@ void CUIButton::DrawText()
 		g_btnHint->Draw_();
 }
 
-
-bool is_in2(const Frect& b1, const Frect& b2){
+bool is_in2(const Frect& b1, const Frect& b2)
+{
 	return (b1.x1<b2.x1)&&(b1.x2>b2.x2)&&(b1.y1<b2.y1)&&(b1.y2>b2.y2);
 }
 
@@ -273,3 +270,10 @@ bool CUIButton::OnKeyboard(int dik, EUIMessages keyboard_action)
 	}
 	return inherited::OnKeyboard(dik, keyboard_action);
 }
+
+void CUIButton::SetAccelerator(int iAccel, int idx)
+{
+	VERIFY(idx >= 0 && idx < 4);
+	m_uAccelerator[idx] = s16(iAccel);
+}
+

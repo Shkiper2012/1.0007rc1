@@ -453,7 +453,7 @@ LPCSTR CMainMenu::GetGSVer()
 {
 	static char 		id[6];
 	static string1024  	version;
-	itoa( build_id, id, 10);
-	strconcat( sizeof(version), version, "1.0007rc1, build ", id, " (", build_date, ") "  );
-	return version;
+	itoa				(build_id, id, 10);
+	strconcat			(sizeof(version), version, "1.0007rc1, build ", id, " (", build_date, ") ");
+	return				version;
 }

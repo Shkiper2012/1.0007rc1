@@ -13,8 +13,6 @@ SPhraseDialogData::SPhraseDialogData ()
 SPhraseDialogData::~SPhraseDialogData ()
 {}
 
-
-
 CPhraseDialog::CPhraseDialog()
 {
 	m_bFinished			= false;
@@ -26,7 +24,6 @@ CPhraseDialog::CPhraseDialog()
 CPhraseDialog::~CPhraseDialog()
 {
 }
-
 
 void CPhraseDialog::Init(CPhraseDialogManager* speaker_first, 
 						 CPhraseDialogManager* speaker_second)
@@ -60,16 +57,15 @@ CPhraseDialogManager* CPhraseDialog::OurPartner	(CPhraseDialogManager* dialog_ma
 		return FirstSpeaker();
 }
 
-
 CPhraseDialogManager* CPhraseDialog::CurrentSpeaker()	const 
 {
 	return FirstIsSpeaking()?m_pSpeakerFirst:m_pSpeakerSecond;
 }
+
 CPhraseDialogManager* CPhraseDialog::OtherSpeaker	()	const 
 {
 	return (!FirstIsSpeaking())?m_pSpeakerFirst:m_pSpeakerSecond;
 }
-
 
 //предикат для сортировки вектора фраз
 static bool PhraseGoodwillPred(const CPhrase* phrase1, const CPhrase* phrase2)
@@ -157,6 +153,14 @@ bool CPhraseDialog::SayPhrase (DIALOG_SHARED_PTR& phrase_dialog, const shared_st
 	return phrase_dialog?!phrase_dialog->m_bFinished:true;
 }
 
+CPhrase* CPhraseDialog::GetPhrase(const shared_str& phrase_id)
+{
+	CPhraseGraph::CVertex* phrase_vertex = data()->m_PhraseGraph.vertex(phrase_id);
+	THROW(phrase_vertex);
+
+	return phrase_vertex->data();
+}
+
 LPCSTR CPhraseDialog::GetPhraseText	(const shared_str& phrase_id, bool current_speaking)
 {
 	
@@ -171,12 +175,10 @@ LPCSTR CPhraseDialog::DialogCaption()
 	return data()->m_sCaption.size()?*data()->m_sCaption:GetPhraseText("0");
 }
 
-
 int	 CPhraseDialog::Priority()
 {
 	return data()->m_iPriority;
 }
-
 
 void CPhraseDialog::Load(shared_str dialog_id)
 {
@@ -272,12 +274,13 @@ CPhrase* CPhraseDialog::AddPhrase	(LPCSTR text, const shared_str& phrase_id, con
 
 void CPhraseDialog::AddPhrase	(CUIXml* pXml, XML_NODE* phrase_node, const shared_str& phrase_id, const shared_str& prev_phrase_id)
 {
-
 	LPCSTR sText		= pXml->Read		(phrase_node, "text", 0, "");
 	int		gw			= pXml->ReadInt		(phrase_node, "goodwill", 0, -10000);
 	CPhrase* ph			= AddPhrase			(sText, phrase_id, prev_phrase_id, gw);
 	if(!ph)				return;
 
+	int fin 			= pXml->ReadInt		(phrase_node, "is_final", 0, 0);
+	ph->SetFinalizer 	(fin == 1);
 	ph->m_PhraseScript.Load					(pXml, phrase_node);
 
 	//фразы которые собеседник может говорить после этой
@@ -287,8 +290,6 @@ void CPhraseDialog::AddPhrase	(CUIXml* pXml, XML_NODE* phrase_node, const shared
 		LPCSTR next_phrase_id_str		= pXml->Read(phrase_node, "next", i, "");
 		XML_NODE* next_phrase_node		= pXml->NavigateToNodeWithAttribute("phrase", "id", next_phrase_id_str);
 		R_ASSERT2						(next_phrase_node, next_phrase_id_str );
-//.		int next_phrase_id				= atoi(next_phrase_id_str);
-
 		AddPhrase						(pXml, next_phrase_node, next_phrase_id_str, phrase_id);
 	}
 }

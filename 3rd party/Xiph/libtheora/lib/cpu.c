@@ -67,18 +67,6 @@ static void oc_cpuid_helper(ogg_uint32_t _cpu_info[4],ogg_uint32_t _op){
   }
 }
 
-/*
-#  define cpuid(_op,_eax,_ebx,_ecx,_edx) \
-  do{ \
-    ogg_uint32_t cpu_info[4]; \
-    oc_cpuid_helper(cpu_info,_op); \
-    (_eax)=cpu_info[0]; \
-    (_ebx)=cpu_info[1]; \
-    (_ecx)=cpu_info[2]; \
-    (_edx)=cpu_info[3]; \
-  }while(0)
-
-*/
 #  define cpuid(_op,_eax,_ebx,_ecx,_edx) \
   for ( ; ; ){ \
     ogg_uint32_t cpu_info[4]; \

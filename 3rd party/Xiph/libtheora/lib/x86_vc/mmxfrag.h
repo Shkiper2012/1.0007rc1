@@ -8,7 +8,8 @@
 /*Copies an 8x8 block of pixels from _src to _dst, assuming _ystride bytes
    between rows.*/
 #define OC_FRAG_COPY_MMX(_dst,_src,_ystride) \
-  do{ \
+  for(;;){ \
+    { \
     const unsigned char *src; \
     unsigned char       *dst; \
     src=(_src); \
@@ -54,8 +55,9 @@
     __asm  movq [DST+YSTRIDE*2],mm2 \
     /*dst+3*ystride*/ \
     __asm  movq [DST+YSTRIDE3],mm3 \
+    } \
+    break; \
   } \
-  while(0)
 
 # endif
 #endif
