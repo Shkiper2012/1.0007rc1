@@ -487,6 +487,14 @@ XXX	(~)		Вырезана ёще одна часть мультиплеерного кода. 	---> статистика для оруж
 	======= build 6874 	=======
 	======= commit 20 	=======
 	*/
+	
+	/*		27_09_2018
+xxx	(-)		xrGame\script_engine.h(cpp) 	---> Убрал, ибо вылет при начале новой игры! ---> m_G_already_loaded ---> Чтобы повторно не загружать '_G.script'
+	(+) 	Order_Build_Xray_Engine.h 		---> Порядок сборки движка X-Ray 1.0007rc1
+	======= build 7174 	=======
+	======= commit 21 	=======
+	*/
+
 #endif
 
 #ifndef Legend & Shkiper_Marker's

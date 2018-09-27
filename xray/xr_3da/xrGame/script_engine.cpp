@@ -44,7 +44,6 @@ CScriptEngine::CScriptEngine			()
 	m_reload_modules		= false;
 	m_last_no_file_length	= 0;
 	*m_last_no_file			= 0;
-	m_G_already_loaded		= false;
 #ifdef USE_DEBUGGER
 	m_scriptDebugger		= NULL;
 	restartDebugger			();	
@@ -198,7 +197,6 @@ void CScriptEngine::init				()
 	bool								save = m_reload_modules;
 	m_reload_modules					= true;
 	process_file_if_exists				("_G",false);
-	m_G_already_loaded					= false;
 	m_reload_modules					= save;
 
 	register_script_classes				();
@@ -219,19 +217,6 @@ void CScriptEngine::remove_script_process	(const EScriptProcessors &process_id)
 
 void CScriptEngine::process_file_if_exists	(LPCSTR file_name, bool warn_if_not_exist)
 {
-	// ≈сли уже один раз загрузили _G, то больше не надо. //
-	if(	!xr_strcmp("_G", file_name) 
-	||	!xr_strcmp("_g", file_name) 
-	){
-		if( !m_G_already_loaded ){
-			m_G_already_loaded = true;
-		}else{
-			Msg("~ [CScriptEngine::process_file_if_exists] '_G.script' already loaded ");
-			m_reload_modules	= false;
-			return;
-		}
-	}
-
 	u32						string_length = xr_strlen(file_name);
 	if (!warn_if_not_exist && no_file_exists(file_name,string_length))
 		return;
